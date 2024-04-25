@@ -1,0 +1,27 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "drinkapp-41889",
+          "appId": "1:954277256054:android:add850114e8186d457f857",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "drinkapp-41889",
+          "configurations": {
+            "android": "1:954277256054:android:add850114e8186d457f857",
+            "ios": "1:954277256054:ios:d8ba4c78b1e41aeb57f857",
+            "web": "1:954277256054:web:79dd0230a1435cd957f857",
+            "windows": "1:954277256054:web:f0ebcaabe51507d457f857"
+          }
+        }
+      }
+    }
+  },
+  "emulators": {
+    "singleProjectMode": true
+  }
+}
