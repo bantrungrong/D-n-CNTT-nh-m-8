@@ -1,20 +1,10 @@
 import 'dart:convert';
+import 'package:drink_app_getx/app/core/values/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-// void main() {
-//   runApp(MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: UserListScreen(),
-//     );
-//   }
-// }
-
+import '../../core/values/colors.dart';
+import 'package:get/get.dart';
 class UserListScreen extends StatefulWidget {
   @override
   _UserListScreenState createState() => _UserListScreenState();
@@ -26,13 +16,12 @@ class _UserListScreenState extends State<UserListScreen> {
   @override
   void initState() {
     super.initState();
-    getUsers();
+    getRecord();
   }
 
-  Future<void> getUsers() async {
+  Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.5/practice_api/login_data.php'));
-
+      final response = await http.get(Uri.parse('http://192.168.1.5/practice_api/TT_daily.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -49,15 +38,67 @@ class _UserListScreenState extends State<UserListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User List'),
+        automaticallyImplyLeading: false,
+        toolbarHeight: 100 - 44,
+        backgroundColor: AppColors.primary,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: Container(
+                padding: const EdgeInsets.only(left: 7),
+                height: 36,
+                width: 36,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: Colors.white),
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  size: 20,
+                  color: AppColors.primary,
+                ),
+
+              ),
+            ),
+            Text('Đại lý',style: AppStyle.bold(color: Colors.white),),
+            IconButton(onPressed: (){}, icon: Icon(Icons.filter_alt_outlined,color: Colors.white,))
+          ],
+        ),
       ),
       body: ListView.builder(
         itemCount: users.length,
         itemBuilder: (context, index) {
-          final user = users[index];
-          return ListTile(
-            title: Text(user['uname']),
-            subtitle: Text(user['uemail']),
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(0, 2), // changes the direction of shadow
+                ),
+              ],
+            ),
+            child: ListTile(
+              title:Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${users[index]['TenDaiLy']}'),
+                  Text('${users[index]['DiaChi']}'),
+                  Text('${users[index]['SoDienThoai']}'),
+                  Text('${users[index]['Email']}'),
+                  // Text('${users[index]['DiaChi']}'),
+                  // Text('${users[index]['DiaChi']}'),
+                ],
+              ),
+              subtitle: Text(''),
+            ),
           );
         },
       ),

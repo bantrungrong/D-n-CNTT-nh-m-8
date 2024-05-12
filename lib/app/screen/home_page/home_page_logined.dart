@@ -1,21 +1,23 @@
 
 
+
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:drink_app_getx/app/core/values/icons.dart';
 import 'package:drink_app_getx/app/screen/shop/shop.dart';
-import 'package:drink_app_getx/app/screen/shop/shop_controller.dart';
-import 'package:drink_app_getx/app/travel_product/travel_product.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:drink_app_getx/app/screen/travel_product/travel_product.dart';
+import 'package:drink_app_getx/app/widget/widget_detail_user.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:gap/gap.dart';
-import 'package:http/http.dart' as http;
 import '../../core/values/strings.dart';
-import '../../data/data_base_helper.dart';
-import '../event_screen/event_screen.dart';
+import '../home_page_guest.dart/home_page_guest.dart';
+import '../noti_screen/noti_screeen.dart';
 import '../product/product.dart';
+import 'home_page.dart';
+import 'package:http/http.dart' as http;
+
 class HomePageScreenLogined extends StatefulWidget {
 
   const HomePageScreenLogined({super.key});
@@ -25,16 +27,50 @@ class HomePageScreenLogined extends StatefulWidget {
 }
 
 class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
-
-
-
+  late String arg1;
+  late String arg2;
+  final selectedIndex = RxInt(0);
+  final List<IconData> selectedIcons = [
+    Icons.home,
+    Icons.notification_add,
+    Icons.person,
+  ];
+  final List<IconData> unselectedIcons = [
+    Icons.home_outlined,
+    Icons.notifications,
+    Icons.person_outline,
+  ];
+  final List<Widget> widgetOptions = <Widget>[
+    const HomePageScreen(),
+    const NotiScreen(),
+    const HomePageGuest(),
+  ];
+  List<Map<String, dynamic>> product = [];
+  Future<void> getRecord() async {
+    try {
+      final response = await http.get(Uri.parse('http://192.168.1.5/practice_api/view_data.php'));
+      if (response.statusCode == 200) {
+        setState(() {
+          product = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+        });
+      } else {
+        print('Failed to load users: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    final arguments = Get.arguments;
+    if (arguments != null) {
+      arg1 = arguments['arg1'] ?? '';
+      arg2 = arguments['arg2'] ?? '';
+    }
+  }
   @override
   Widget build(BuildContext context) {
-    final arguments = Get.arguments;
-
-    // Extract the arguments
-    final arg1 = arguments['arg1'];
-    final arg2 = arguments['arg2'];
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -56,20 +92,8 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  //   Text(
-                  // users[1]['uname'],
-                  //     style: AppStyle.bold(fontSize: 15, color: Colors.white),
-                  //   ),
                     Text('Tên người dùng: $arg1',style: AppStyle.bold(fontSize: 13, color: Colors.white),),
                     Text('Công ty : $arg2',style: AppStyle.bold(fontSize: 15, color: Colors.white),),
-                    // Text(
-                    //   'Tên: $args',
-                    //   style: AppStyle.bold(fontSize: 15, color: Colors.white),
-                    // ),
-                    // Text(
-                    //   'Công ty nước giải khát X',
-                    //   style: AppStyle.bold(fontSize: 13, color: Colors.white),
-                    // ),
                   ],
                 )
               ],
@@ -77,15 +101,72 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
           ),
         ]),
       ),
-      body: _buildBodyContent(),
-
+      body: ListView(
+        children: [
+          _buildBodyContent()
+        ],
+      ),
+      bottomNavigationBar: Obx(() => BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(selectedIndex.value == 0
+                ? selectedIcons[0]
+                : unselectedIcons[0]),
+            label: 'Trang chủ',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(selectedIndex.value == 1
+                ? selectedIcons[1]
+                : unselectedIcons[1]),
+            label: 'Thông báo',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(selectedIndex.value == 2
+                ? selectedIcons[2]
+                : unselectedIcons[2]),
+            label: 'Cá nhân',
+          ),
+        ],
+        currentIndex: selectedIndex.value,
+        onTap: (index) {
+          selectedIndex.value = index;
+        },
+        fixedColor: Colors.red,
+      )),
     );
   }
-
+  String getGreeting(int hour) {
+    if (hour >= 0 && hour < 12) {
+      return 'Xin chào buổi sáng $arg1 !';
+    } else if (hour >= 12 && hour < 18) {
+      return 'Xin chào buổi chiều $arg1!';
+    } else {
+      return 'Xin chào buổi tối $arg1!';
+    }
+  }
   Widget _buildBodyContent() {
+
+    DateTime currentDate = DateTime.now();
+    // Format ngày tháng năm sang chuỗi để hiển thị
+    String formattedDate = "${currentDate.day}/${currentDate.month}";
+    String dayOfWeek = getDayOfWeek(currentDate.weekday);
+    DateTime now = DateTime.now();
+    String greeting = getGreeting(now.hour);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const Gap(12),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        //   child: Text(
+        //     '',
+        //     style: AppStyle.bold(
+        //       fontSize: 18,
+        //     ),
+        //   ),
+        // ),
+        DetailBox(company: 'Nhà cung cấp',time: formattedDate,name: greeting,location: 'Địa chỉ',monday: dayOfWeek,
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
           child: Text(
@@ -112,20 +193,38 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                   child: _buildCell('Quản lý thông tin đại lý',MyIcon.shop)),
               GestureDetector(
                 onTap: (){
-                  Get.to(LoginPage());
+                  Get.to(TravelProduct());
                 },
                   child: _buildCell('Quản lý xuất hàng',MyIcon.travel)),
               _buildCell('Quản lý nhập hàng',MyIcon.take),
               _buildCell('Thống kê báo cáo',MyIcon.detail),
               _buildCell('Xưởng sản xuất',MyIcon.factory),
-
             ],
           ),
         )
       ],
     );
   }
-
+  String getDayOfWeek(int day) {
+    switch (day) {
+      case 1:
+        return 'Thứ hai';
+      case 2:
+        return 'Thứ ba';
+      case 3:
+        return 'Thứ tư';
+      case 4:
+        return 'Thứ năm';
+      case 5:
+        return 'Thứ sáu';
+      case 6:
+        return 'Thứ bảy';
+      case 7:
+        return 'Chủ nhật';
+      default:
+        return '';
+    }
+  }
   Widget _buildCell(String data,String icon) {
     return Container(
       height: Get.width/3-20,
@@ -154,7 +253,7 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
               )
           ),
         ),
-        Gap(5),
+        const Gap(5),
         Text(
           data,
           style: AppStyle.bold(fontSize: 12, color: Colors.red),

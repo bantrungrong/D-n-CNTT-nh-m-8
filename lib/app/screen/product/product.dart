@@ -2,14 +2,18 @@
 
 import 'dart:convert';
 
+import 'package:drink_app_getx/app/screen/product/product_update.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../../core/values/colors.dart';
 import '../../core/values/strings.dart';
 import 'package:gap/gap.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key});
 
@@ -18,26 +22,93 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
+  final TextEditingController id = TextEditingController();
+  final TextEditingController namepro = TextEditingController();
+  final TextEditingController count = TextEditingController();
+  final TextEditingController type = TextEditingController();
+  final TextEditingController pice = TextEditingController();
+  final TextEditingController count_item = TextEditingController();
+  List<Map<String, dynamic>> users = [];
+  Future<void> getRecord() async {
+    try {
+      final response = await http.get(Uri.parse('http://192.168.1.5/practice_api/view_data.php'));
+      if (response.statusCode == 200) {
+        setState(() {
+          users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+        });
+      } else {
+        print('Failed to load users: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
-  List userData = [];
-  List<String> searchItem = [];
-  Future<void> getRecord()async {
-    String uri="http://192.168.1.5/practice_api/view_data.php";
+  Future<void> insertRecord()async{
+    if( id.text != ""
+        && namepro.text != ""
+        && count.text!=""
+        && type.text != ""
+        && pice.text != ""
+        && count_item.text != ""
+    )
+    {
+      try{
+        String uri = "http://192.168.25.249/practice_api/add_product.php";
+        var res = await http.post(Uri.parse(uri),body: {
+          "MaSanPham": id.text,
+          "TenSanPham": namepro.text,
+          "LoaiSanPham":type.text,
+          "DungTich": count.text,
+          "DonGia":pice.text,
+          "count_item":pice.text,
+        });
+        var reponse = jsonDecode(res.body);
+        if(reponse["success"]=="true"){
+          Fluttertoast.showToast(msg: 'Thêm thành công');
+        }
+        else{
+          print("some issue");
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+    else Fluttertoast.showToast(msg: 'Nhập đầy đủ thông tin mới thêm');
+  }
+  Future<void> delProduct(String id)async{
     try{
-      var reponse = await http.get(Uri.parse(uri));
-      setState(() {
-        userData = jsonDecode(reponse.body);
-      });
-
-    }catch(e){
+      String uri = "http://192.168.1.5/practice_api/delete_product.php";
+      var res = await http.post(Uri.parse(uri),body: {"MaSanPham":id});
+      var response = jsonDecode(res.body);
+      if(response['success'] == 'true'){
+        print('record delete complete');
+      } else {
+        print('some issue');
+      }
+    } catch (e){
       print(e);
     }
   }
-  bool isSearch = true;
-  //
+  final searchController = TextEditingController();
+  RefreshController _refreshController =
+  RefreshController(initialRefresh: false);
+  bool isCheckBox = false;
+  List<Map<String, dynamic>> filteredUsers = [];
+
+  // Hàm tìm kiếm sản phẩm theo tên
+  void _searchProduct(String keyword) {
+    setState(() {
+      filteredUsers = users
+          .where((user) =>
+          user['TenSanPham'].toString().toLowerCase().contains(keyword.toLowerCase()))
+          .toList();
+    });
+  }
   @override
   void initState(){
     getRecord();
+    searchController.dispose();
     super.initState();
   }
   Widget build(BuildContext context) {
@@ -47,35 +118,204 @@ class _ProductScreenState extends State<ProductScreen> {
         automaticallyImplyLeading: false,
         toolbarHeight: 100 - 44,
         backgroundColor: AppColors.primary,
-        title:isSearch?_buildAppBar():_buildTextField(),
+        title:_buildAppBar(),
       ),
       body: _buildBodyContext(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
+          showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                backgroundColor: Colors.grey.shade50,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Thêm sản phẩm',style: AppStyle.bold(fontSize: 18),),
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.close),
+                    )
+                  ],
+                ),
+                insetPadding: const EdgeInsets.all(12),
+                content: Container(
+                  height: Get.height*0.75,
+                  width: Get.width*1,
+                  // margin: EdgeInsets.symmetric(horizontal: 33),
+                  child: ListView(
+                    children: [
+                      _buildTextField('Mã sản phẩm',id),
+                      Gap(8),
+                      _buildTextField('Tên sản phẩm',namepro),
+                      Gap(8),
+                      _buildTextField('Loại sản phẩm',type),
+                      Gap(8),
+                      _buildTextField('Dung tích',count),
+                      Gap(8),
+                      _buildTextField('Đơn giá',pice),
+                      Gap(8),
+                      _buildTextField('Số lượng',count_item),
+                      // Gap(8),
+                      // _buildTextField('Nhập link sản pẩm',image_item),
+                      Gap(30),
+                      InkWell(
+                        onTap: (){
+                          insertRecord();
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          child: Center(child: Text('Xác nhận thêm',style: AppStyle.bold(),)),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
+          );
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blue, // Optional: Set background color
       ),
     );
   }
+  Widget _buildTextField(String title,TextEditingController name) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: AppStyle.medium(
+            fontSize: 14,
+          ),
+        ),
+        const Gap(8),
+        SizedBox(
+          width: MediaQuery.of(context).size.height,
+          child: TextFormField(
+            controller: name,
+            readOnly: false,
+            maxLines: 1,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: const InputDecoration(
+              errorStyle: TextStyle(height: 0),
+              contentPadding: EdgeInsets.all(10),
+            ),
+          ),
+        )
+      ],
+    );
+  }
 
   Widget _buildBodyContext() {
-    return SingleChildScrollView(
-      child: Column(
-          children: List.generate(
-              userData.length,
-              (index) =>GestureDetector(
-                  onTap: () {},
-                  child: _widgetUser(userData[index]['image_item'],userData[index]['id_item'],userData[index]['name_item'],userData[index]['type_item'],userData[index]['count_item'],userData[index]['pice_item'],userData[index]['status_item'],)
-              )
-              )
-          )
-      );
-
+    String searchKeyword = searchController.text;
+    if (searchKeyword.isNotEmpty) {
+      _searchProduct(searchKeyword);
+    } else {
+      filteredUsers = List.from(users);
+    }
+    return  SmartRefresher(
+      controller: _refreshController,
+      onRefresh: _handleRefresh,
+      child: ListView.builder(
+          itemCount: filteredUsers.length,
+          itemBuilder: (context,index){
+            return  Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 1,
+                      offset: const Offset(0, 2), // changes the direction of shadow
+                    ),
+                  ],
+                ),
+                child: GestureDetector(
+                  onTap: (){
+                    Get.to(ProductAdd(), arguments: index);
+                  },
+                  child: ListTile(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Mã SP: ${users[index]['MaSanPham']}',
+                          style: AppStyle.medium(fontSize: 14)
+                              .copyWith(fontWeight: FontWeight.w500),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'Tên SP: ${users[index]['TenSanPham']}',
+                          style: AppStyle.medium(fontSize: 14)
+                              .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'Loại SP: ${users[index]['LoaiSanPham']}',
+                          style: AppStyle.medium(fontSize: 14)
+                              .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'Dung tích: ${users[index]['DungTich']}',
+                          style: AppStyle.medium(fontSize: 14)
+                              .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'Đơn giá: ${users[index]['DonGia']}',
+                          style: AppStyle.medium(fontSize: 14)
+                              .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'Số lượng: ${users[index]['count_item']}',
+                          style: AppStyle.medium(fontSize: 14)
+                              .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'Trạng thái:',
+                              style: AppStyle.regular(fontSize: 13),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                              },
+                              child: Text(
+                                users[index]['count_item'] == '0'  ? 'Hết hàng':'Còn hàng',
+                                style: AppStyle.regular(
+                                    fontSize: 13, color: users[index]['count_item']== '0'? Colors.red:Colors.green),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    trailing: IconButton(
+                      onPressed: (){
+                        delProduct(users[index]['MaSanPham']);
+                      },
+                      icon: Icon(Icons.delete),
+                    ),
+                  ),
+                )
+            );
+          })
+    );
   }
 
   Widget _buildAppBar() {
+    final searchController = Get.put(SearchController());
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -98,17 +338,37 @@ class _ProductScreenState extends State<ProductScreen> {
 
           ),
         ),
-        Text(
-          'Quản lý danh mục sản phẩm',
-          style: AppStyle.bold(color: Colors.white, fontSize: 16),
+        // Text(
+        //   'Quản lý danh mục sản phẩm',
+        //   style: AppStyle.bold(color: Colors.white, fontSize: 16),
+        // ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: TextField(
+              controller: searchController,
+              onChanged: (value) {
+                setState(() {
+                  _searchProduct(value);
+                });
+              },
+              decoration: InputDecoration(
+                hintText: 'Tìm kiếm...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                prefixIcon: Icon(Icons.search),
+              ),
+            ),
+          ),
         ),
         GestureDetector(
           onTap: () {
-            setState(() {
-              setState(() {
-                isSearch = false;
-              });
-            });
+
           },
           child: Container(
               height: 36,
@@ -117,148 +377,31 @@ class _ProductScreenState extends State<ProductScreen> {
                   borderRadius: BorderRadius.circular(100),
                   color: Colors.white),
               child: const Icon(
-                Icons.search_outlined,
+                Icons.delete,
                 color: AppColors.primary,
-                size: 20,
+                size: 22,
               )),
         ),
       ],
     );
   }
+  Future<void> _handleRefresh() async {
+    try {
+      final response = await http.get(Uri.parse('http://192.168.1.5/practice_api/view_data.php'));
 
-  Widget _buildTextField() {
-    TextEditingController searchText = TextEditingController();
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              isSearch = true;
-            });
-
-          },
-          child: const Icon(
-            Icons.arrow_back_ios,
-            size: 24,
-            color: Colors.white,
-          ),
-        ),
-        const Gap(8),
-        Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          height: 46,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-          child: TextFormField(
-            controller: searchText,
-            readOnly: false,
-            maxLines: 1,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              filled: true,
-              errorStyle: TextStyle(height: 0),
-              hintText: 'Tìm kiếm ...',
-              prefixIcon: Icon(
-                Icons.search,
-                color: AppColors.primary,
-              ),
-              contentPadding: EdgeInsets.all(12),
-            ),
-            onChanged: (value) async {
-              // _searchUsers(value);
-            },
-          ),
-        )
-      ],
-    );
+      if (response.statusCode == 200) {
+        setState(() {
+          users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+        });
+      } else {
+        print('Failed to load users: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    } finally {
+      // Complete the refresh indicator
+      _refreshController.refreshCompleted();
+    }
   }
-  Widget _widgetUser(
-      String avatar,
-      String id_item,
-      String name_item,
-      String type_item,
-      String count_item,
-      String pice_item,
-      String status_item,
 
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: const Offset(0, 2), // changes the direction of shadow
-          ),
-        ],
-      ),
-      child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Container(
-          height: 40,
-          width: 40,
-          decoration: BoxDecoration(
-            
-              borderRadius: BorderRadius.circular(100),
-            image: DecorationImage(
-              image: NetworkImage('$avatar')
-            )
-          ),
-        ),
-        const Gap(12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Mã sản phẩm: $id_item',
-              style: AppStyle.medium(fontSize: 14)
-                  .copyWith(fontWeight: FontWeight.w500),
-            ),
-            Text(
-              'Tên sản phẩm: $name_item',
-              style: AppStyle.medium(fontSize: 14)
-                  .copyWith(fontWeight: FontWeight.w500),
-            ),
-            Text(
-              'Loại sản phẩm: $type_item',
-              style: AppStyle.medium(fontSize: 14)
-                  .copyWith(fontWeight: FontWeight.w500),
-            ),
-            Text(
-              'Số lượng có: $count_item',
-              style: AppStyle.medium(fontSize: 14)
-                  .copyWith(fontWeight: FontWeight.w500),
-            ),
-            Text(
-              'Đơn giá: $pice_item',
-              style: AppStyle.medium(fontSize: 14)
-                  .copyWith(fontWeight: FontWeight.w500),
-            ),
-            Row(
-              children: [
-                Text(
-                  'Trạng thái:',
-                  style: AppStyle.regular(fontSize: 13),
-                ),
-                TextButton(
-                  onPressed: () {
-                  },
-                  child: Text(
-                    count_item == '0' ? 'Hết hàng':'Còn hàng',
-                    style: AppStyle.regular(
-                        fontSize: 13, color: count_item == '0'? Colors.red:Colors.green),
-                  ),
-                ),
-              ],
-            ),
-
-          ],
-        )
-      ]),
-    );
-  }
 }

@@ -14,6 +14,7 @@ class MyImage {
   static const String imagePath = 'assets/images/';
   static const String back_ground_image = imagePath + 'trongdong.png';
   static const String back_ground = imagePath + 'trong_dong.png';
+  static const String frame = imagePath + 'Frame.png';
 }
 
 class AppIconData extends StatelessWidget {
