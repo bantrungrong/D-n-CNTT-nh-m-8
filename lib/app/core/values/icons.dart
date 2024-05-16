@@ -9,11 +9,13 @@ class MyIcon {
   static const String shop = imagePath + 'shop.jpeg';
   static const String take = imagePath + 'take.png';
   static const String travel = imagePath + 'travel.png';
+  static const String xeno = imagePath + 'xeno.png';
 }
 class MyImage {
   static const String imagePath = 'assets/images/';
   static const String back_ground_image = imagePath + 'trongdong.png';
   static const String back_ground = imagePath + 'trong_dong.png';
+  static const String frame = imagePath + 'Frame.png';
 }
 
 class AppIconData extends StatelessWidget {

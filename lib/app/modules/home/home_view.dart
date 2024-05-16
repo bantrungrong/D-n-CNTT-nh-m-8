@@ -90,6 +90,7 @@ class HomePage extends GetView<HomeController> {
                     Expanded(
                       child: GestureDetector(
                           onTap: () {
+                            Navigator.of(context).pop();
                             Get.to(const LoginScreen());
                           },
                           child: const ButtonApp(

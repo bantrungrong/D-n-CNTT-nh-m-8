@@ -1,24 +1,14 @@
 
-// import 'dart:convert';
-
 import 'dart:convert';
-
-import 'package:drink_app_getx/app/screen/login_screen/login_controller.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../core/values/colors.dart';
 import '../../core/values/icons.dart';
 import '../../core/values/strings.dart';
-import '../../data/models/user.dart';
-import '../../data/providers/api_provider.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import '../../widget/button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import '../home_page/home_page_logined.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -42,56 +32,63 @@ class _LoginScreenState extends State<LoginScreen> {
   ///
   bool signUp = false;
   Future<void> insertRecord()async{
-    if(name.text != "" && email.text != "" && password.text!=""&& company.text!="")
-      {
-        try{
-          String uri = "http://192.168.1.5/practice_api/insert_record.php";
-          var res = await http.post(Uri.parse(uri),body: {
-            "name": name.text,
-            "company": company.text,
-            "email":email.text,
-            "password":password.text,
-          });
-          var reponse = jsonDecode(res.body);
-          if(reponse["success"]=="true"){
-            Fluttertoast.showToast(msg: 'Đăng ký thành công');
-          }
-          else{
-            print("some issue");
-          }
-        } catch (e) {
-          print(e);
+    if( name.text != ""
+        && email.text != ""
+        && password.text!=""
+        && company.text != ""
+    )
+    {
+      try{
+        String uri = "http://192.168.160.249/practice_api/insert_record.php";
+        var res = await http.post(Uri.parse(uri),body: {
+          "user_name": name.text,
+          "user_email": email.text,
+          "user_password":password.text,
+          "user_company": company.text,
+        });
+        var reponse = jsonDecode(res.body);
+        if(reponse["success"]=="true"){
+          Fluttertoast.showToast(msg: 'Thêm thành công');
         }
+        else{
+          print("some issue");
+        }
+      } catch (e) {
+        print(e);
       }
-    else Fluttertoast.showToast(msg: 'Nhập đầy đủ thông tin mới đăng ký');
+    }
+    else Fluttertoast.showToast(msg: 'Nhập đầy đủ thông tin mới thêm');
   }
+
+
 
   /// đăng nhập
   String message = '';
 
   Future<void> login() async {
+
     final response = await http.post(
-      Uri.parse('http://192.168.1.5/practice_api/login_data.php'),
+      Uri.parse('http://192.168.160.249/practice_api/login_data.php'),
       body: {
-        'uname': name.text,
-        'password': password.text,
-        'ucompany': company.text,
+        'user_name': name.text,
+        'user_password': password.text,
+        'user_company': company.text,
       },
+
     );
 
     if (response.statusCode == 200) {
       final List<dynamic> responseData = json.decode(response.body);
 
       for (var user in responseData) {
-        if (user['uname'] == name.text &&
-            user['upassword'] == password.text) {
-          // Đăng nhập thành công, chuyển sang màn hình khác
-
-          Get.to(HomePageScreenLogined(), arguments: {
-            'arg1':user['uname'] ,
-            'arg2': user['ucompany']
+        if (user['user_name'] == name.text &&
+            user['user_password'] == password.text) {
+          // Đăng nhập thành công, chuyển sang màn hình khác11
+          Get.to(const HomePageScreenLogined(), arguments: {
+            'arg1':user['user_name'] ,
+            'arg2': user['user_company']
           });
-          return;
+          return ;
         }
       }
 
@@ -113,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Container(
         decoration: BoxDecoration(
           color: Colors.red.shade50,
-          image: DecorationImage(
+          image: const DecorationImage(
             image: AssetImage(MyImage.back_ground),
 
           )
@@ -170,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 _buildTextFieldUserName(),
                 const Gap(10),
                 isContainerVisible ? _buildTextFieldCompany():Container(),
-                Gap(10),
+                const Gap(10),
                 isContainerVisible ? _buildTextFieldEmail():Container(),
                 const Gap(10),
                 _buildTextFieldPassword(),
@@ -198,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: RichText(
                       text: TextSpan(
                         text: isContainerVisible ?'Đăng nhập':'Đăng ký',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
                           color: AppColors.primary,

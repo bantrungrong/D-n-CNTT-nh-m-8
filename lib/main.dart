@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart';
 
-import 'app/data/data_base_helper.dart';
 import 'app/data/services/services.dart';
 import 'app/modules/home/home_bindings.dart';
 import 'app/modules/home/home_view.dart';
@@ -10,8 +9,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'app/screen/shop/shop_controller.dart';
-import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
