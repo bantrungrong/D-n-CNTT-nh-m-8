@@ -1,11 +1,9 @@
-
-
 import 'dart:convert';
 
 import 'package:drink_app_getx/app/core/values/icons.dart';
 import 'package:drink_app_getx/app/screen/shop/shop.dart';
 import 'package:drink_app_getx/app/screen/shop/shop_controller.dart';
-import 'package:drink_app_getx/app/travel_product/travel_product.dart';
+import 'package:drink_app_getx/app/screen/travel_product/travel_product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -16,8 +14,8 @@ import '../../core/values/strings.dart';
 import '../../data/data_base_helper.dart';
 import '../event_screen/event_screen.dart';
 import '../product/product.dart';
-class HomePageScreenLogined extends StatefulWidget {
 
+class HomePageScreenLogined extends StatefulWidget {
   const HomePageScreenLogined({super.key});
 
   @override
@@ -25,9 +23,6 @@ class HomePageScreenLogined extends StatefulWidget {
 }
 
 class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
-
-
-
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments;
@@ -56,12 +51,18 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  //   Text(
-                  // users[1]['uname'],
-                  //     style: AppStyle.bold(fontSize: 15, color: Colors.white),
-                  //   ),
-                    Text('Tên người dùng: $arg1',style: AppStyle.bold(fontSize: 13, color: Colors.white),),
-                    Text('Công ty : $arg2',style: AppStyle.bold(fontSize: 15, color: Colors.white),),
+                    //   Text(
+                    // users[1]['uname'],
+                    //     style: AppStyle.bold(fontSize: 15, color: Colors.white),
+                    //   ),
+                    Text(
+                      'Tên người dùng: $arg1',
+                      style: AppStyle.bold(fontSize: 13, color: Colors.white),
+                    ),
+                    Text(
+                      'Công ty : $arg2',
+                      style: AppStyle.bold(fontSize: 15, color: Colors.white),
+                    ),
                     // Text(
                     //   'Tên: $args',
                     //   style: AppStyle.bold(fontSize: 15, color: Colors.white),
@@ -78,7 +79,6 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
         ]),
       ),
       body: _buildBodyContent(),
-
     );
   }
 
@@ -104,21 +104,22 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                   onTap: () {
                     // Navigator.pushNamed(context, ProductScreen() );
                     Get.to(const ProductScreen());
-                  }, child: _buildCell('Quản lý danh mục sản phẩm',MyIcon.product)),
+                  },
+                  child:
+                      _buildCell('Quản lý danh mục sản phẩm', MyIcon.product)),
               GestureDetector(
-                onTap: (){
-                  Get.to(UserListScreen());
-                },
-                  child: _buildCell('Quản lý thông tin đại lý',MyIcon.shop)),
+                  onTap: () {
+                    Get.to(UserListScreen());
+                  },
+                  child: _buildCell('Quản lý thông tin đại lý', MyIcon.shop)),
               GestureDetector(
-                onTap: (){
-                  Get.to(LoginPage());
-                },
-                  child: _buildCell('Quản lý xuất hàng',MyIcon.travel)),
-              _buildCell('Quản lý nhập hàng',MyIcon.take),
-              _buildCell('Thống kê báo cáo',MyIcon.detail),
-              _buildCell('Xưởng sản xuất',MyIcon.factory),
-
+                  onTap: () {
+                    Get.to(LoginPage());
+                  },
+                  child: _buildCell('Quản lý xuất hàng', MyIcon.travel)),
+              _buildCell('Quản lý nhập hàng', MyIcon.take),
+              _buildCell('Thống kê báo cáo', MyIcon.detail),
+              _buildCell('Xưởng sản xuất', MyIcon.factory),
             ],
           ),
         )
@@ -126,10 +127,10 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
     );
   }
 
-  Widget _buildCell(String data,String icon) {
+  Widget _buildCell(String data, String icon) {
     return Container(
-      height: Get.width/3-20,
-      width: Get.width/3 -20,
+      height: Get.width / 3 - 20,
+      width: Get.width / 3 - 20,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -148,11 +149,8 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
           height: 23,
           width: 23,
           decoration: BoxDecoration(
-            color: Colors.red,
-              image: DecorationImage(
-                  image: AssetImage(icon)
-              )
-          ),
+              color: Colors.red,
+              image: DecorationImage(image: AssetImage(icon))),
         ),
         Gap(5),
         Text(
