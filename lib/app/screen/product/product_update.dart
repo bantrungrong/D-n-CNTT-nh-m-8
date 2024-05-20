@@ -29,7 +29,7 @@ class _ProductAddState extends State<ProductAdd> {
   List<Map<String, dynamic>> users = [];
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.203.241/practice_api/view_data.php'));
+      final response = await http.get(Uri.parse('http://192.168.1.2/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -48,7 +48,7 @@ class _ProductAddState extends State<ProductAdd> {
       return; // Trả về khỏi phương thức nếu có bất kỳ trường nào trống
     }
     try{
-      String uri = "http://192.168.203.241/practice_api/update_product.php";
+      String uri = "http://192.168.1.2/practice_api/update_product.php";
       var res = await http.post(Uri.parse(uri),body: {
         "TenSanPham": NameProduct.text,
         "LoaiSanPham":TypeProduct.text,
@@ -71,7 +71,7 @@ class _ProductAddState extends State<ProductAdd> {
   Future<void> delProduct()async{
     try{
       final value = Get.arguments as int;
-      String urli = "http://192.168.203.241/practice_api/delete_product.php";
+      String urli = "http://192.168.1.2/practice_api/delete_product.php";
       var resDel = await http.post(Uri.parse(urli),body: {"MaSanPham": users[value]['MaSanPham'],});
       var responseDel = jsonDecode(resDel.body);
       if(responseDel['success'] == 'true'){
