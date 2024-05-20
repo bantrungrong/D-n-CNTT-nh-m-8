@@ -20,17 +20,16 @@ class ProductAdd extends StatefulWidget {
 }
 
 class _ProductAddState extends State<ProductAdd> {
-  final TextEditingController id = TextEditingController();
-  final TextEditingController namepro = TextEditingController();
-  final TextEditingController count = TextEditingController();
-  final TextEditingController type = TextEditingController();
-  final TextEditingController pice = TextEditingController();
-  final TextEditingController count_item = TextEditingController();
+
+  final TextEditingController NameProduct = TextEditingController();
+  final TextEditingController TypeProduct = TextEditingController();
+  final TextEditingController PiceProduct = TextEditingController();
+  final TextEditingController CountProduct = TextEditingController();
 
   List<Map<String, dynamic>> users = [];
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.160.249/practice_api/view_data.php'));
+      final response = await http.get(Uri.parse('http://192.168.203.241/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -44,18 +43,17 @@ class _ProductAddState extends State<ProductAdd> {
   }
   Future<void> updateProduct()async{
     final value = Get.arguments as int;
-    if (count_item.text.isEmpty) {
+    if (CountProduct.text.isEmpty) {
       Fluttertoast.showToast(msg: 'Vui lòng nhập đầy đủ thông tin');
       return; // Trả về khỏi phương thức nếu có bất kỳ trường nào trống
     }
     try{
-      String uri = "http://192.168.160.249/practice_api/update_product.php";
+      String uri = "http://192.168.203.241/practice_api/update_product.php";
       var res = await http.post(Uri.parse(uri),body: {
-        "TenSanPham": namepro.text,
-        "LoaiSanPham":type.text,
-        "DungTich": count.text,
-        "DonGia":pice.text,
-        "count_item":count_item.text,
+        "TenSanPham": NameProduct.text,
+        "LoaiSanPham":TypeProduct.text,
+        "SoLuongTon":CountProduct.text,
+        "DonGia":PiceProduct.text,
         "MaSanPham": users[value]['MaSanPham'],
       });
       var reponse = jsonDecode(res.body);
@@ -70,12 +68,13 @@ class _ProductAddState extends State<ProductAdd> {
     }
   }
 
-  Future<void> delProduct(String id)async{
+  Future<void> delProduct()async{
     try{
-      String uri = "http://192.168.1.46/practice_api/delete_product.php";
-      var res = await http.post(Uri.parse(uri),body: {"MaSanPham":id});
-      var response = jsonDecode(res.body);
-      if(response['success'] == 'true'){
+      final value = Get.arguments as int;
+      String urli = "http://192.168.203.241/practice_api/delete_product.php";
+      var resDel = await http.post(Uri.parse(urli),body: {"MaSanPham": users[value]['MaSanPham'],});
+      var responseDel = jsonDecode(resDel.body);
+      if(responseDel['success'] == 'true'){
         print('record delete complete');
       } else {
         print('some issue');
@@ -87,6 +86,8 @@ class _ProductAddState extends State<ProductAdd> {
   @override
   void initState(){
     getRecord();
+    delProduct();
+    updateProduct();
     super.initState();
   }
   @override
@@ -114,23 +115,20 @@ class _ProductAddState extends State<ProductAdd> {
                   ],
                 ),
                 Gap(12),
-                _buildTextField('Tên Sản phẩm: ${users[value]['TenSanPham']}', namepro),
+                _buildTextField('Tên Sản phẩm: ${users[value]['TenSanPham']}', NameProduct),
                 Gap(10),
-                _buildTextField('Loại sản phẩm: ${users[value]['LoaiSanPham']}', type),
+                _buildTextField('Loại sản phẩm: ${users[value]['LoaiSanPham']}', TypeProduct),
                 Gap(10),
-                _buildTextField('Dung tích: ${users[value]['DungTich']}', count),
+                _buildTextField('Đơn giá: ${users[value]['DonGia']}', PiceProduct),
                 Gap(10),
-                _buildTextField('Đơn giá: ${users[value]['DonGia']}', pice),
-                Gap(10),
-                _buildTextField('Số lượng: ${users[value]['count_item']}', count_item),
+                _buildTextField('Số lượng: ${users[value]['SoLuongTon']}', CountProduct),
                 Gap(23),
                 GestureDetector(
                   onTap: (){
-                    if (namepro.text.isEmpty ||
-                        type.text.isEmpty ||
-                        count.text.isEmpty ||
-                        pice.text.isEmpty ||
-                        count_item.text.isEmpty) {
+                    if (NameProduct.text.isEmpty ||
+                        TypeProduct.text.isEmpty ||
+                        PiceProduct.text.isEmpty ||
+                        CountProduct.text.isEmpty) {
                       Fluttertoast.showToast(msg: 'Vui lòng nhập đầy đủ thông tin');
                       return; // Trả về khỏi phương thức nếu có bất kỳ trường nào trống
                     }
@@ -176,8 +174,8 @@ class _ProductAddState extends State<ProductAdd> {
         ),
         GestureDetector(
           onTap: () {
-            delProduct(users[value]['MaSanPham']);
-            // Get.back();
+            delProduct();
+            Get.back();
           },
           child: Container(
               height: 36,

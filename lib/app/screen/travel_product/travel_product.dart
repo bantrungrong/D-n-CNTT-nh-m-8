@@ -26,7 +26,7 @@ class _TravelProductState extends State<TravelProduct> {
 
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.160.249/practice_api/view_data.php'));
+      final response = await http.get(Uri.parse('http://192.168.203.241/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -40,7 +40,7 @@ class _TravelProductState extends State<TravelProduct> {
   }
   Future<void> getNhapKho() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.160.249/practice_api/nhap_kho.php'));
+      final response = await http.get(Uri.parse('http://192.168.203.241/practice_api/nhap_kho.php'));
       if (response.statusCode == 200) {
         setState(() {
           save = List<Map<String, dynamic>>.from(jsonDecode(response.body));

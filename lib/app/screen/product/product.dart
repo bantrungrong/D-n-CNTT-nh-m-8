@@ -32,7 +32,7 @@ class _ProductScreenState extends State<ProductScreen> {
   List<Map<String, dynamic>> users = [];
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.160.249/practice_api/view_data.php'));
+      final response = await http.get(Uri.parse('http://192.168.203.241/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -48,21 +48,19 @@ class _ProductScreenState extends State<ProductScreen> {
   Future<void> insertRecord()async{
     if( id.text != ""
         && namepro.text != ""
-        && count.text!=""
         && type.text != ""
         && pice.text != ""
         && count_item.text != ""
     )
     {
       try{
-        String uri = "http://192.168.160.249/practice_api/add_product.php";
+        String uri = "http://192.168.203.241/practice_api/add_product.php";
         var res = await http.post(Uri.parse(uri),body: {
           "MaSanPham": id.text,
           "TenSanPham": namepro.text,
           "LoaiSanPham":type.text,
-          "DungTich": count.text,
+          "SoLuongTon":count_item.text,
           "DonGia":pice.text,
-          "count_item":pice.text,
         });
         var reponse = jsonDecode(res.body);
         if(reponse["success"]=="true"){
@@ -79,7 +77,7 @@ class _ProductScreenState extends State<ProductScreen> {
   }
   Future<void> delProduct(String id)async{
     try{
-      String uri = "http://192.168.1.46/practice_api/delete_product.php";
+      String uri = "http://192.168.1.13/practice_api/delete_product.php";
       var res = await http.post(Uri.parse(uri),body: {"MaSanPham":id});
       var response = jsonDecode(res.body);
       if(response['success'] == 'true'){
@@ -146,8 +144,6 @@ class _ProductScreenState extends State<ProductScreen> {
                       Gap(8),
                       _buildTextField('Loại sản phẩm',type),
                       Gap(8),
-                      _buildTextField('Dung tích',count),
-                      Gap(8),
                       _buildTextField('Đơn giá',pice),
                       Gap(8),
                       _buildTextField('Số lượng',count_item),
@@ -178,7 +174,7 @@ class _ProductScreenState extends State<ProductScreen> {
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ButtonApp(height: 55, width: Get.width*0.5, title: '+ Thêm sản phẩm', color: Colors.white , colorTitle: Colors.red),
+          child: ButtonApp(height: 40, width: Get.width*0.5, title: '+ Thêm sản phẩm', color: Colors.white , colorTitle: Colors.red),
         ),
         // Optional: Set background color
       ),
@@ -222,8 +218,8 @@ class _ProductScreenState extends State<ProductScreen> {
             return  Column(
               children: [
                 Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
                     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       color: Colors.white,
@@ -263,17 +259,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                       .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  'Dung tích: ${users[index]['DungTich']}',
-                                  style: AppStyle.medium(fontSize: 14)
-                                      .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
                                   'Đơn giá: ${users[index]['DonGia']}',
                                   style: AppStyle.medium(fontSize: 14)
                                       .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  'Số lượng: ${users[index]['count_item']}',
+                                  'Số lượng: ${users[index]['SoLuongTon']}',
                                   style: AppStyle.medium(fontSize: 14)
                                       .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
                                 ),
@@ -358,7 +349,7 @@ class _ProductScreenState extends State<ProductScreen> {
   }
   Future<void> _handleRefresh() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.160.249/practice_api/view_data.php'));
+      final response = await http.get(Uri.parse('http://192.168.203.241/practice_api/view_data.php'));
 
       if (response.statusCode == 200) {
         setState(() {

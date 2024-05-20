@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/values/colors.dart';
@@ -16,22 +17,70 @@ class Shopdetail extends StatefulWidget {
 
 class _ShopdetailState extends State<Shopdetail> {
   List<Map<String, dynamic>> users = [];
+  List<Map<String, dynamic>> shop = [];
+  List<Map<String, dynamic>> ticket = [];
+  List<Map<String, dynamic>> product = [];
 
   @override
   void initState() {
     super.initState();
     getRecord();
+    getRecordSanPham();
+    getRecordChiTietPhieuXuat();
+    getRecordTTPhieuXuat();
   }
 
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.46/practice_api/TT_daily.php'));
+      final response = await http.get(Uri.parse('http://192.168.203.241/practice_api/TT_daily.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
         });
       } else {
         print('Failed to load users: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+  Future<void> getRecordSanPham() async {
+    try {
+      final responseSP = await http.get(Uri.parse('http://192.168.203.241/practice_api/view_data.php'));
+      if (responseSP.statusCode == 200) {
+        setState(() {
+          product = List<Map<String, dynamic>>.from(jsonDecode(responseSP.body));
+        });
+      } else {
+        print('Failed to load users: ${responseSP.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+  Future<void> getRecordChiTietPhieuXuat() async {
+    try {
+      final responseTT = await http.get(Uri.parse('http://192.168.203.241/practice_api/TT_chitietPhieuXuat.php'));
+      if (responseTT.statusCode == 200) {
+        setState(() {
+          ticket = List<Map<String, dynamic>>.from(jsonDecode(responseTT.body));
+        });
+      } else {
+        print('Failed to load users: ${responseTT.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+  Future<void> getRecordTTPhieuXuat() async {
+    try {
+      final responseTT = await http.get(Uri.parse('http://192.168.203.241/practice_api/TT_Phieuxuat.php'));
+      if (responseTT.statusCode == 200) {
+        setState(() {
+          shop = List<Map<String, dynamic>>.from(jsonDecode(responseTT.body));
+        });
+      } else {
+        print('Failed to load users: ${responseTT.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
@@ -74,32 +123,63 @@ class _ShopdetailState extends State<Shopdetail> {
       ),
       body: Container(
         margin: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black),
-          borderRadius: BorderRadius.circular(12)
-        ),
         child: ListView(
           children: [
-            _buildCell('Mã đại lý', '${users[value]['MaDaiLy']}'),
-            _buildCell('Tên đại lý', '${users[value]['TenDaiLy']}'),
-            _buildCell('Địa chỉ', '${users[value]['DiaChi']}'),
-            _buildCell('Số điện thoại', '${users[value]['SoDienThoai']}'),
-            _buildCell('email', '${users[value]['Email']}'),
+            _buildCell( 'Mã đại lý: ${users[value]['MaDaiLy']}'),
+            _buildCell( 'Tên đại lý: ${users[value]['TenDaiLy']}'),
+            _buildCell('Địa chỉ: ${users[value]['DiaChi']}'),
+            _buildCell('Số điện thoại: ${users[value]['DienThoai']}'),
+            _buildCell('Số tiền nợ: ${users[value]['SoTienNo']}'),
+            // users[value]['MaDaiLy'] ==  shop[value]['MaSanPham']? Container():Container(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+              child: Text('Chi tiết xuất hàng đại lý',style: AppStyle.bold(),),
+            ),
+            Container(
+              height: Get.height*0.5,
+              child: ListView.builder(
+                itemCount: shop.length,
+                itemBuilder: (context,index){
+                  int selectedIndex = 0;
+                  return users[value]['MaDaiLy'] == shop[index]['MaDaiLy']?Container(
+                    child: Column(
+                      children: [
+                        users[value]['MaDaiLy'] == shop[index]['MaDaiLy'] ?Column(
+                          children: [
+                            Text('Mã phiếu xuất: ${shop[index]['MaPhieu']}'),
+                            shop[index]['MaPhieu'] == ticket[index]['MaPhieu'] ||  product[index]['MaSanPham'] == ticket[index]['MaSanPham'] ? Column(
+                              children: [
+                                _buildCell('Mã sản phẩm đã xuất: ${ticket[index]['MaSanPham']}'),
+                                // _buildCell('Tên sản phẩm: ${product[index]['TenSanPham']}'),
+                                // _buildCell('Số lượng: ${ticket[index]['SoLuongXuat']}'),
+                              ],
+                            ):Container(),
+                          ],
+                        ):Container(),
+
+
+                      ],
+                    ),
+                  ):Container();
+                },
+              ),
+            )
           ],
         ),
       ),
     );
   }
-  Widget _buildCell(String title,String infor ){
-    return Padding(
+  Widget _buildCell(String infor ){
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title,style: AppStyle.regular(),),
-              Text(infor,style: AppStyle.regular(),),
+              Container(
+                width: Get.width*0.7,
+                  child: Text(infor,style: AppStyle.regular(),overflow: TextOverflow.ellipsis,)),
             ],
           ),
           SizedBox(height: 10,),

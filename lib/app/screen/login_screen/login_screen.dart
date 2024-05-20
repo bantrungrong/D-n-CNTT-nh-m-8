@@ -39,12 +39,12 @@ class _LoginScreenState extends State<LoginScreen> {
     )
     {
       try{
-        String uri = "http://192.168.160.249/practice_api/insert_record.php";
+        String uri = "http://192.168.203.241/practice_api/insert_record.php";
         var res = await http.post(Uri.parse(uri),body: {
-          "user_name": name.text,
-          "user_email": email.text,
-          "user_password":password.text,
-          "user_company": company.text,
+          "TenDangNhap": name.text,
+          "MatKhau": password.text,
+          "Congty": company.text,
+          "email": email.text,
         });
         var reponse = jsonDecode(res.body);
         if(reponse["success"]=="true"){
@@ -68,11 +68,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> login() async {
 
     final response = await http.post(
-      Uri.parse('http://192.168.160.249/practice_api/login_data.php'),
+      Uri.parse('http://192.168.203.241/practice_api/login_data.php'),
       body: {
-        'user_name': name.text,
-        'user_password': password.text,
-        'user_company': company.text,
+        'TenDangNhap': name.text,
+        'MatKhau': password.text,
+        'Congty': company.text,
       },
 
     );
@@ -81,12 +81,12 @@ class _LoginScreenState extends State<LoginScreen> {
       final List<dynamic> responseData = json.decode(response.body);
 
       for (var user in responseData) {
-        if (user['user_name'] == name.text &&
-            user['user_password'] == password.text) {
-          // Đăng nhập thành công, chuyển sang màn hình khác11
+        if (user['TenDangNhap'] == name.text &&
+            user['MatKhau'] == password.text) {
+          // Đăng nhập thành công, chuyển sang màn hình khác
           Get.to(const HomePageScreenLogined(), arguments: {
-            'arg1':user['user_name'] ,
-            'arg2': user['user_company']
+            'arg1':user['TenDangNhap'] ,
+            'arg2': user['Congty']
           });
           return ;
         }

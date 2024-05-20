@@ -26,7 +26,7 @@ class _FactoryScreenState extends State<FactoryScreen> {
   }
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.160.249/practice_api/factory_view.php'));
+      final response = await http.get(Uri.parse('http://192.168.203.241/practice_api/factory_view.php'));
       if (response.statusCode == 200) {
         setState(() {
           factory = List<Map<String, dynamic>>.from(jsonDecode(response.body));

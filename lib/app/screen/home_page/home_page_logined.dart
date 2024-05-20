@@ -1,11 +1,10 @@
 
-
-
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:drink_app_getx/app/core/values/icons.dart';
 import 'package:drink_app_getx/app/screen/input_product/input_product.dart';
+import 'package:drink_app_getx/app/screen/product/product_service.dart';
 import 'package:drink_app_getx/app/screen/report/report_screen.dart';
 import 'package:drink_app_getx/app/screen/shop/shop.dart';
 import 'package:drink_app_getx/app/screen/travel_product/travel_product.dart';
@@ -20,6 +19,7 @@ import '../factory/factory_screen.dart';
 import '../home_page_guest.dart/home_page_guest.dart';
 import '../noti_screen/noti_screeen.dart';
 import '../product/product.dart';
+import '../travel_product/travel_ticket.dart';
 import 'home_page.dart';
 import 'package:http/http.dart' as http;
 
@@ -194,7 +194,7 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                   child: _buildCell('Quản lý thông tin đại lý',MyIcon.shop)),
               GestureDetector(
                 onTap: (){
-                  Get.to(TravelProduct());
+                  Get.to(TicketTravel());
                 },
                   child: _buildCell('Quản lý xuất hàng',MyIcon.travel)),
               GestureDetector(

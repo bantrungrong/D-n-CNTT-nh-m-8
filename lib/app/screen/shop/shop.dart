@@ -22,7 +22,7 @@ class _UserListScreenState extends State<UserListScreen> {
 
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.160.249/practice_api/TT_daily.php'));
+      final response = await http.get(Uri.parse('http://192.168.203.241/practice_api/TT_daily.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -114,18 +114,16 @@ class _UserListScreenState extends State<UserListScreen> {
                       Row(children: [
                         Icon(Icons.account_tree_outlined,size: 18,),
                         SizedBox(width: 10,),
-                        Text('Số điện thoại: ${users[index]['SoDienThoai']}',overflow: TextOverflow.ellipsis,),
+                        Text('Số điện thoại: ${users[index]['DienThoai']}',overflow: TextOverflow.ellipsis,),
                       ],),
                       Row(children: [
                         Icon(Icons.account_tree_outlined,size: 18,),
                         SizedBox(width: 10,),
                         Container(
                           width: Get.width*0.6,
-                            child: Text('Email: ${users[index]['Email']}',overflow: TextOverflow.ellipsis,)),
+                            child: Text('Email: ${users[index]['SoTienNo']}',overflow: TextOverflow.ellipsis,)),
                       ],),
 
-                      // Text('${users[index]['DiaChi']}'),
-                      // Text('${users[index]['DiaChi']}'),
                     ],
                   ),
 

@@ -67,7 +67,7 @@ import '../../core/values/strings.dart';
     }
     Future<void> getRecord() async {
       try {
-        final response = await http.get(Uri.parse('http://192.168.160.249/practice_api/TT_daily.php'));
+        final response = await http.get(Uri.parse('http://192.168.203.241/practice_api/TT_daily.php'));
         if (response.statusCode == 200) {
           setState(() {
             users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -82,26 +82,27 @@ import '../../core/values/strings.dart';
 
     Future<void> insertPhieuXuat()async{
       if(
-      id.text != ''
+      id.text != '' && output_count.text != ''
       )
       {
         try{
-          String uri = "http://192.168.160.249/practice_api/add_phieu_xuat.php";
-
+          String uri = "http://192.168.203.241/practice_api/add_phieu_xuat.php";
+            List<String> productID = widget.selectedProducts.where((product) => product.containsKey('MaSanPham')).map((product) => product['MaSanPham'].toString()).toList();
+            String productIDJSON = jsonEncode(productID);
             var res = await http.post(Uri.parse(uri),body: {
               "MaPhieuXuat": id.text,
-              "MaSanPham": '1',
+              "MaSanPham": productIDJSON,
               "MaDaiLy": selectedMaDaiLy.value,
               "count_item": output_count.text,
               "NgayXuat": selectedDate.toIso8601String(),
-              "DonGia": '22',
-              "TenSanPham": widget.selectedProducts.toString(),
-              "TenDaiLy": 'ad',
-              "DiaChi": selectedDiaChi.value,
-              "SoDienThoai": selectedSDT.value,
-              "NguoiNhan": namePeople.text,
-              "TongTien": '${widget.totalValue.abs().toStringAsFixed(2)}',
-              "TongSP": '${widget.totalSelectedCount.abs()}',
+              // "DonGia": '',
+              // "TenSanPham": widget.selectedProducts.toString(),
+              // "TenDaiLy": selectedTendaiLy.value,
+              // "DiaChi": selectedDiaChi.value,
+              // "SoDienThoai": selectedSDT.value,
+              // "NguoiNhan": namePeople.text,
+              // "TongTien": '${widget.totalValue.abs().toStringAsFixed(2)}',
+              // "TongSP": '${widget.totalSelectedCount.abs()}',
             });
             var reponse = jsonDecode(res.body);
             if(reponse["success"]=="true"){
@@ -147,8 +148,8 @@ import '../../core/values/strings.dart';
 
                   ),
                 ),
-                Text('Tạo phiếu xuất hàng',style: AppStyle.bold(color: Colors.white),),
-                IconButton(onPressed: (){}, icon: Icon(Icons.apps,color: Colors.white,))
+                // Text('Tạo phiếu xuất hàng',style: AppStyle.bold(color: Colors.white),),
+                // IconButton(onPressed: (){}, icon: Icon(Icons.apps,color: Colors.white,))
               ],
             ),
           ),
@@ -183,9 +184,9 @@ import '../../core/values/strings.dart';
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Mã SP: ${widget.selectedProducts[index]['MaSanPham']}',style: AppStyle.medium(fontSize: 14)),
                             Text('Tên SP: ${widget.selectedProducts[index]['TenSanPham']}',style: AppStyle.medium(fontSize: 14)
                                 .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,),
+
                             Text(
                               'Đơn giá: ${widget.selectedProducts[index]['DonGia']}',
                               style: AppStyle.medium(fontSize: 14)
@@ -198,7 +199,20 @@ import '../../core/values/strings.dart';
                             ),
                           ],
                         ),
-
+                         // Container(
+                         //   height: 55,
+                         //   width: 70,
+                         //   child: TextField(
+                         //      decoration: const InputDecoration(
+                         //        labelText: 'Số lượng',
+                         //        errorStyle: TextStyle(height: 0),
+                         //        contentPadding: EdgeInsets.all(10),
+                         //        border: OutlineInputBorder(
+                         //        ),
+                         //      ),
+                         //    ),
+                         // ),
+                        // TextButton(onPressed: (){}, child: Text('thêm'))
                       ],
                     ),
                   );
@@ -354,11 +368,10 @@ import '../../core/values/strings.dart';
                 },
                 child: GestureDetector(
                   onTap: (){
-                    if(int.parse(output_count.text) < widget.totalSelectedCount.abs())
+                    if(int.parse(output_count.text) > widget.totalSelectedCount.abs())
                       {
                         Fluttertoast.showToast(msg: 'Số lượng xuất không hợp lệ');
                       } else insertPhieuXuat();
-
                   },
                   child: Container(
                     height: 55,
