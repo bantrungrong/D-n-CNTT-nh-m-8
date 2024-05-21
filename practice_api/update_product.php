@@ -2,11 +2,6 @@
 include("dbconnection.php");
 $con=dbconnection();
 
-if(isset($_POST["MaSanPham"]))
-{
-    $MaSanPham=$_POST["MaSanPham"];
-}
-else return;
 if(isset($_POST["TenSanPham"]))
 {
     $TenSanPham=$_POST["TenSanPham"];
@@ -17,9 +12,9 @@ if(isset($_POST["LoaiSanPham"]))
     $LoaiSanPham=$_POST["LoaiSanPham"];
 }
 else return;
-if(isset($_POST["DungTich"]))
+if(isset($_POST["SoLuongTon"]))
 {
-    $DungTich=$_POST["DungTich"];
+    $SoLuongTon=$_POST["SoLuongTon"];
 }
 else return;
 if(isset($_POST["DonGia"]))
@@ -27,13 +22,13 @@ if(isset($_POST["DonGia"]))
     $DonGia=$_POST["DonGia"];
 }
 else return;
-if(isset($_POST["count_item"]))
+if(isset($_POST["MaSanPham"]))
 {
-    $count_item=$_POST["count_item"];
+    $MaSanPham=$_POST["MaSanPham"];
 }
 else return;
     
-$query="UPDATE `sanpham` SET `TenSanPham`='$TenSanPham',`LoaiSanPham`='$LoaiSanPham',`DungTich`='$DungTich',`DonGia`='$DonGia',`count_item`='$count_item' WHERE `MaSanPham`='$MaSanPham'"; 
+$query="UPDATE `sanpham` SET `TenSanPham`='$TenSanPham',`LoaiSanPham`='$LoaiSanPham',`SoLuongTon`='$SoLuongTon',`DonGia`='$DonGia' WHERE `MaSanPham`='$MaSanPham'"; 
 $exe=mysqli_query($con,$query);
 $arr=[];
 if($exe)

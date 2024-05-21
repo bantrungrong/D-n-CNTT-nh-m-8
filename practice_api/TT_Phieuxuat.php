@@ -2,7 +2,7 @@
 include("dbconnection.php");
 $con=dbconnection();
 
-$query="SELECT `MaDaiLy`, `TenDaiLy`, `DiaChi`, `DienThoai`, `SoTienNo` FROM `daily`";
+$query="SELECT `MaPhieu`, `MaDaiLy`, `TenNguoiNhan`, `NgayXuat`, `ChuKyViet`, `ChuKyNhan`, `ChuKyTruongDonVi`, `NgayCapMinistry`, `SoGiayChungNhan` FROM `phieuxuathang`";
 
 $exe=mysqli_query($con,$query);
 $arr=[];

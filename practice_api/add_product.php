@@ -17,23 +17,19 @@ if(isset($_POST["LoaiSanPham"]))
     $LoaiSanPham=$_POST["LoaiSanPham"];
 }
 else return;
-if(isset($_POST["DungTich"]))
+if(isset($_POST["SoLuongTon"]))
 {
-    $DungTich=$_POST["DungTich"];
+    $SoLuongTon=$_POST["SoLuongTon"];
 }
 else return;
-if(isset($_POST["count_item"]))
+if(isset($_POST["DonGia"]))
 {
-    $count_item=$_POST["count_item"];
+    $DonGia=$_POST["DonGia"];
 }
 else return;
-// if(isset($_POST["image_item"]))
-// {
-//     $image_item=$_POST["image_item"];
-// }
-// else return;
 
-$query="INSERT INTO `sanpham`(`MaSanPham`, `TenSanPham`, `LoaiSanPham`, `DungTich`, `count_item`) VALUES ('$MaSanPham','$TenSanPham','$LoaiSanPham','$DungTich','$count_item')";
+
+$query="INSERT INTO `sanpham`(`MaSanPham`, `TenSanPham`, `LoaiSanPham`, `SoLuongTon`, `DonGia`) VALUES ('$MaSanPham','$TenSanPham','$LoaiSanPham','$SoLuongTon','$DonGia')";
 $exe=mysqli_query($con,$query);
 $arr=[];
 if($exe)

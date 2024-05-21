@@ -8,7 +8,7 @@ if(isset($_POST["MaSanPham"]))
 }
 else return;
 
-$query = "DELETE FROM `nhapkho` WHERE `MaSanPham`='$MaSanPham'";
+$query = "DELETE FROM `sanpham` WHERE `MaSanPham`='$MaSanPham'";
 $exe = mysqli_query($con, $query);
 $arr = [];
 while ($row = mysqli_fetch_array($exe)) {

@@ -2,28 +2,28 @@
 include("dbconnection.php");
 $con=dbconnection();
 
-if(isset($_POST["user_name"]))
+if(isset($_POST["TenDangNhap"]))
 {
-    $user_name=$_POST["user_name"];
+    $TenDangNhap=$_POST["TenDangNhap"];
 }
 else return;
-if(isset($_POST["user_email"]))
+if(isset($_POST["MatKhau"]))
 {
-    $user_email=$_POST["user_email"];
+    $MatKhau=$_POST["MatKhau"];
 }
 else return;
-if(isset($_POST["user_password"]))
+if(isset($_POST["Congty"]))
 {
-    $user_password=$_POST["user_password"];
+    $Congty=$_POST["Congty"];
 }
 else return;
-if(isset($_POST["user_company"]))
+if(isset($_POST["email"]))
 {
-    $user_company=$_POST["user_company"];
+    $email=$_POST["email"];
 }
 else return;
 
-$query="INSERT INTO `user_table`(`user_name`, `user_email`, `user_password`, `user_company`) VALUES ('$user_name','$user_email','$user_password','$user_company')";
+$query="INSERT INTO `nguoidung`(`TenDangNhap`, `MatKhau`, `Congty`, `email`) VALUES ('$TenDangNhap','$MatKhau','$Congty','$email')";
 $exe=mysqli_query($con,$query);
 $arr=[];
 if($exe)

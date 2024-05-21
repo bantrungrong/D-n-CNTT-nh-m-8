@@ -2,14 +2,9 @@
 include("dbconnection.php");
 $con=dbconnection();
 
-if(isset($_POST["MaPhieuXuat"]))
+if(isset($_POST["MaPhieu"]))
 {
-    $MaPhieuXuat=$_POST["MaPhieuXuat"];
-}
-else return;
-if(isset($_POST["MaSanPham"]))
-{
-    $MaSanPham=$_POST["MaSanPham"];
+    $MaPhieu=$_POST["MaPhieu"];
 }
 else return;
 if(isset($_POST["MaDaiLy"]))
@@ -17,9 +12,9 @@ if(isset($_POST["MaDaiLy"]))
     $MaDaiLy=$_POST["MaDaiLy"];
 }
 else return;
-if(isset($_POST["count_item"]))
+if(isset($_POST["TenNguoiNhan"]))
 {
-    $count_item=$_POST["count_item"];
+    $TenNguoiNhan=$_POST["TenNguoiNhan"];
 }
 else return;
 if(isset($_POST["NgayXuat"]))
@@ -27,48 +22,35 @@ if(isset($_POST["NgayXuat"]))
     $NgayXuat=$_POST["NgayXuat"];
 }
 else return;
-if(isset($_POST["DonGia"]))
+if(isset($_POST["ChuKyViet"]))
 {
-    $DonGia=$_POST["DonGia"];
+    $ChuKyViet=$_POST["ChuKyViet"];
 }
 else return;
-if(isset($_POST["TenSanPham"]))
+if(isset($_POST["ChuKyNhan"]))
 {
-    $TenSanPham=$_POST["TenSanPham"];
+    $ChuKyNhan=$_POST["ChuKyNhan"];
 }
 else return;
-if(isset($_POST["TenDaiLy"]))
+if(isset($_POST["ChuKyTruongDonVi"]))
 {
-    $TenDaiLy=$_POST["TenDaiLy"];
+    $ChuKyTruongDonVi=$_POST["ChuKyTruongDonVi"];
 }
 else return;
-if(isset($_POST["DiaChi"]))
+if(isset($_POST["NgayCapMinistry"]))
 {
-    $DiaChi=$_POST["DiaChi"];
+    $NgayCapMinistry=$_POST["NgayCapMinistry"];
 }
 else return;
-if(isset($_POST["SoDienThoai"]))
+if(isset($_POST["SoGiayChungNhan"]))
 {
-    $SoDienThoai=$_POST["SoDienThoai"];
-}
-else return;
-if(isset($_POST["NguoiNhan"]))
-{
-    $NguoiNhan=$_POST["NguoiNhan"];
-}
-else return;
-if(isset($_POST["TongTien"]))
-{
-    $TongTien=$_POST["TongTien"];
-}
-else return;
-if(isset($_POST["TongSP"]))
-{
-    $TongSP=$_POST["TongSP"];
+    $SoGiayChungNhan=$_POST["SoGiayChungNhan"];
 }
 else return;
 
-$query="INSERT INTO `phieuxuathang`(`MaPhieuXuat`, `MaSanPham`, `MaDaiLy`, `count_item`, `NgayXuat`, `DonGia`, `TenSanPham`, `TenDaiLy`, `DiaChi`, `SoDienThoai`, `NguoiNhan`,`TongTien`,`TongSP`) VALUES ('$MaPhieuXuat','$MaSanPham','$MaDaiLy','$count_item','$NgayXuat','$DonGia','$TenSanPham','$TenDaiLy','$DiaChi','$SoDienThoai','$NguoiNhan','$TongTien','$TongSP')";
+
+
+$query="INSERT INTO `phieuxuathang`(`MaPhieu`, `MaDaiLy`, `TenNguoiNhan`, `NgayXuat`, `ChuKyViet`, `ChuKyNhan`, `ChuKyTruongDonVi`, `NgayCapMinistry`, `SoGiayChungNhan`) VALUES ('$MaPhieu','$MaDaiLy','$TenNguoiNhan','$NgayXuat','$ChuKyViet','$ChuKyNhan','$ChuKyTruongDonVi','$NgayCapMinistry','$SoGiayChungNhan')";
 $exe=mysqli_query($con,$query);
 $arr=[];
 if($exe)
