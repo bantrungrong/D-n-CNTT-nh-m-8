@@ -211,7 +211,7 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                   child: _buildCell('Quản lý xuất hàng', MyIcon.travel)),
               GestureDetector(
                   onTap: () {
-                    Get.to(InPutProduct());
+                    Get.to(TicketInput());
                   },
                   child: _buildCell('Quản lý nhập hàng', MyIcon.take)),
               GestureDetector(

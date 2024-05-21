@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:drink_app_getx/app/screen/travel_product/detail_ticket.dart';
+import 'package:drink_app_getx/app/widget/button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -8,6 +10,8 @@ import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import '../../core/values/strings.dart';
 import 'SelectedProductScreen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class AddTicket extends StatefulWidget {
   const AddTicket({
@@ -91,6 +95,46 @@ class _AddTicketState extends State<AddTicket> {
     }
   }
 
+  Future<void> insertRecord() async {
+    print(idTicket.text);
+    print('${selectedMaDaiLy.value}');
+    print(nameUser.text);
+    print('${selectedDateExport.toLocal()}'.split(' ')[0].toString());
+    print(write.text);
+    print(writeTake.text);
+    print(writeManager.text);
+    print('${selectedDate.toLocal()}'.split(' ')[0].toString());
+    print(number.text);
+    if (idTicket.text != "" &&
+        nameUser.text != "" &&
+        write.text != "" &&
+        writeManager.text != "") {
+      try {
+        String uri = "http://192.168.1.2/practice_api/add_phieu_xuat.php";
+        var res = await http.post(Uri.parse(uri), body: {
+          "MaPhieu": idTicket.text,
+          "MaDaiLy": '${selectedMaDaiLy.value}',
+          "TenNguoiNhan": nameUser.text,
+          "NgayXuat": '${selectedDateExport.toLocal()}'.split(' ')[0],
+          "ChuKyViet": write.text,
+          "ChuKyNhan": writeTake.text,
+          "ChuKyTruongDonVi": writeManager.text,
+          "NgayCapMinistry": '${selectedDate.toLocal()}'.split(' ')[0],
+          "SoGiayChungNhan": number.text,
+        });
+        var reponse = jsonDecode(res.body);
+        if (reponse["success"] == "true") {
+          Fluttertoast.showToast(msg: 'Thêm thành công');
+        } else {
+          print("some issue");
+        }
+      } catch (e) {
+        print(e);
+      }
+    } else
+      Fluttertoast.showToast(msg: 'Nhập đầy đủ thông tin mới thêm');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,7 +182,7 @@ class _AddTicketState extends State<AddTicket> {
 
   Widget _buildBodyContext() {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ListView(
         children: [
           _buildTextField('Nhập mã phiếu xuất', idTicket),
@@ -156,25 +200,71 @@ class _AddTicketState extends State<AddTicket> {
               },
               child: _buildSelectedDate(
                   'Chọn ngày xuất', '${selectedDateExport.toLocal()}')),
-          _buildTextField('Tên người nhận', idTicket),
-          _buildTextField('Chữ ký viết', idTicket),
-          _buildTextField('Chữ ký nhận', idTicket),
-          _buildTextField('Chữ ký trưởng đơn vị', idTicket),
+          _buildTextField('Tên người nhận', nameUser),
+          _buildTextField('Chữ ký viết', write),
+          _buildTextField('Chữ ký nhận', writeTake),
+          _buildTextField('Chữ ký trưởng đơn vị', writeManager),
           GestureDetector(
               onTap: () {
                 _selectDate(context);
               },
               child: _buildSelectedDate(
                   'Chọn ngày cấp', '${selectedDate.toLocal()}')),
-          _buildTextField('Số giấy chứng nhận', idTicket),
+          _buildTextField('Số giấy chứng nhận', number),
           GestureDetector(
               onTap: () {
+                insertRecord();
                 Get.to(SelectedProductScreen(
-                  idShop: idShop.text,
+                  idShop: selectedMaDaiLy.value,
                   idTicket: idTicket.text,
+                  nameTake: nameUser.text,
+                  dateExport: '${selectedDateExport.toLocal()}'.split(' ')[0],
+                  write: write.text,
+                  writeTake: writeTake.text,
+                  writeManager: writeManager.text,
+                  dateImport: '${selectedDate.toLocal()}'.split(' ')[0],
+                  numberNote: number.text,
                 ));
               },
-              child: _buildSelectedDate('Chọn sản phẩm xuất', ''))
+              child: _buildSelectedDate('Chọn sản phẩm xuất', '')),
+          SizedBox(
+            height: 12,
+          ),
+          GestureDetector(
+            onTap: () {
+              if (idTicket.text != '' &&
+                  '${selectedMaDaiLy.value}' != '' &&
+                  nameUser.text != '' &&
+                  '${selectedDateExport.toLocal()}'.split(' ')[0] != '' &&
+                  write.text != '' &&
+                  writeTake.text != '' &&
+                  writeManager.text != '' &&
+                  '${selectedDate.toLocal()}'.split(' ')[0] != '' &&
+                  number.text != '') {
+                Get.to(DetailTicket(
+                  idTicketInfor: idTicket.text,
+                  idShopInfor: '${selectedMaDaiLy.value}',
+                  nameInfor: nameUser.text,
+                  dateInfor: '${selectedDateExport.toLocal()}'.split(' ')[0],
+                  writeInfor: write.text,
+                  wireTakeInfor: writeTake.text,
+                  writeManagerInfor: writeManager.text,
+                  dateImportInfor: '${selectedDate.toLocal()}'.split(' ')[0],
+                  numberInfor: number.text,
+                ));
+              } else
+                Fluttertoast.showToast(msg: 'Nhập đủ thông tin mới thêm');
+            },
+            child: ButtonApp(
+                height: 55,
+                width: Get.width * 0.7,
+                title: '+ Thêm phiếu xuất',
+                color: Colors.red,
+                colorTitle: Colors.white),
+          ),
+          SizedBox(
+            height: 24,
+          ),
         ],
       ),
     );

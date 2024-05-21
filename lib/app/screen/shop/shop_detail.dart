@@ -81,7 +81,7 @@ class _ShopdetailState extends State<Shopdetail> {
   Future<void> getRecordTTPhieuXuat() async {
     try {
       final responseTT = await http
-          .get(Uri.parse('http://192.168.1.2/practice_api/TT_Phieuxuat.php'));
+          .get(Uri.parse('http://1192.168.1.2/practice_api/TT_Phieuxuat.php'));
       if (responseTT.statusCode == 200) {
         setState(() {
           shop = List<Map<String, dynamic>>.from(jsonDecode(responseTT.body));
@@ -177,9 +177,9 @@ class _ShopdetailState extends State<Shopdetail> {
                               _buildCell(
                                   'Mã sản phẩm đã xuất: ${ticket[index]['MaSanPham']}'),
                               _buildCell(
-                                  'Tên sản phẩm: ${product[index]['TenSanPham']}'),
-                              _buildCell(
                                   'Số lượng: ${ticket[index]['SoLuongXuat']}'),
+                              _buildCell(
+                                  'Thành tiền: ${ticket[index]['TongTien']} VNĐ'),
                             ],
                           ),
                         ],

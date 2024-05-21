@@ -1,139 +1,137 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-
-import '../../core/values/colors.dart';
-import '../../core/values/strings.dart';
-import 'package:get/get.dart';
-import 'package:gap/gap.dart';
 import 'package:http/http.dart' as http;
+import 'package:fl_chart/fl_chart.dart';
+import 'package:get/get.dart';
 
-import 'chart_output.dart';
 class ReportScreen extends StatefulWidget {
-  const ReportScreen({super.key});
+  const ReportScreen({Key? key}) : super(key: key);
 
   @override
   State<ReportScreen> createState() => _ReportScreenState();
 }
 
 class _ReportScreenState extends State<ReportScreen> {
+  List<Map<String, dynamic>> report = [];
+  List<Map<String, dynamic>> product = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getRecord();
+    getRecordProduct();
+  }
+
+  Future<void> getRecord() async {
+    try {
+      final response = await http
+          .get(Uri.parse('http://192.168.1.2/practice_api/TT_thong_ke.php'));
+      if (response.statusCode == 200) {
+        setState(() {
+          report = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+        });
+      } else {
+        print('Failed to load users: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> getRecordProduct() async {
+    try {
+      final responseProduct = await http
+          .get(Uri.parse('http://192.168.1.2/practice_api/view_data.php'));
+      if (responseProduct.statusCode == 200) {
+        setState(() {
+          product =
+              List<Map<String, dynamic>>.from(jsonDecode(responseProduct.body));
+        });
+      } else {
+        print('Failed to load users: ${responseProduct.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 100 - 44,
-        backgroundColor: AppColors.primary,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: Container(
-                padding: const EdgeInsets.only(left: 7),
-                height: 36,
-                width: 36,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: Colors.white),
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  size: 20,
-                  color: AppColors.primary,
-                ),
-
-              ),
-            ),
-            Text('Báo cáo thống kê',style: AppStyle.bold(color: Colors.white),),
-            IconButton(onPressed: (){}, icon: Icon(Icons.filter_alt_outlined,color: Colors.white,))
-          ],
-        ),
+        title: const Text('Báo cáo thống kê'),
       ),
-      body: Column(crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 22,vertical: 12),
-            child: Text('Thống kê trong tháng',style: AppStyle.bold(),),
-          ),
-          Center(
-            child: Wrap(
-              spacing: 20,
-              runSpacing: 10,
-              children: [
-                _buildCell('Sản phẩm xuất'),
-                _buildCell('Tiền xuất'),
-                _buildCell('Sản phẩm nhập'),
-                _buildCell('Tiền nhập'),
-              ],
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 22,vertical: 16),
+          Container(
+            padding: EdgeInsets.all(16.0),
+            height: MediaQuery.of(context).size.height * 0.6,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Biểu đồ tổng hợp',style: AppStyle.bold(),),
-                Gap(11),
-                GestureDetector(
-                  onTap: (){
-                    Get.to(PieChartSample());
-                  },
-                  child: Container(
-                    height: 55,
-                    width: Get.width*0.4,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          offset: const Offset(0, 2), // changes the direction of shadow
+                Expanded(
+                  child: BarChart(
+                    BarChartData(
+                      alignment: BarChartAlignment.spaceAround,
+                      maxY:
+                          10000, // You can adjust the maximum value accordingly
+                      barTouchData: BarTouchData(enabled: false),
+                      titlesData: FlTitlesData(
+                        bottomTitles: SideTitles(
+                          showTitles: true,
+                          getTextStyles: (context, value) => const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14),
+                          margin: 20,
+                          getTitles: (double value) {
+                            // Display product names as x-axis labels
+                            if (value.toInt() >= 0 &&
+                                value.toInt() < product.length + 1) {
+                              return value.truncate().toString();
+                            }
+                            return '';
+                          },
                         ),
-                      ],
+                        leftTitles: SideTitles(
+                          showTitles: true,
+                          getTextStyles: (context, value) => const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14),
+                          margin: 20,
+                        ),
+                      ),
+                      borderData: FlBorderData(
+                        show: true,
+                      ),
+                      barGroups: List.generate(
+                        product.length,
+                        (index) => BarChartGroupData(
+                          x: index + 1,
+                          barRods: [
+                            BarChartRodData(
+                              y: double.parse(product[index]['SoLuongTon']),
+                              colors: [Colors.blue],
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    child: Center(child: Text('Biểu đồ xuất'),),
                   ),
+                ),
+                Container(
+                  height: Get.height * 0.6,
+                  child: ListView.builder(itemBuilder: (context, index) {
+                    return Column(
+                      children: [],
+                    );
+                  }),
                 )
               ],
             ),
           ),
-
-        ],
-      )
-    );
-  }
-  Widget _buildCell(String data) {
-    return Container(
-      height: Get.width*0.3,
-      width: Get.width*0.4,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: const Offset(0, 2), // changes the direction of shadow
-          ),
         ],
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 22),
-              child: Text(
-                        data,
-                        style: AppStyle.bold(fontSize: 12, color: Colors.red),
-                        textAlign: TextAlign.center,
-                      ),
-            ),
-      ]),
     );
   }
 }

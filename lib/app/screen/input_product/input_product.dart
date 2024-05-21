@@ -1,79 +1,71 @@
 import 'dart:convert';
 
+import 'package:drink_app_getx/app/screen/input_product/add_ticket_input.dart';
+import 'package:drink_app_getx/app/screen/input_product/detail_ticket_input.dart';
+import 'package:drink_app_getx/app/screen/travel_product/detail_ticket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../core/values/colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import '../../core/values/colors.dart';
 import '../../core/values/strings.dart';
-class InPutProduct extends StatefulWidget {
-  const InPutProduct({super.key});
+import '../../widget/button.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+
+class TicketInput extends StatefulWidget {
+  const TicketInput({super.key});
 
   @override
-  State<InPutProduct> createState() => _InPutProductState();
+  State<TicketInput> createState() => _TicketInputState();
 }
 
-class _InPutProductState extends State<InPutProduct> {
-  List<Map<String, dynamic>> users = [];
-  List<Map<String, dynamic>> save = [];
+class _TicketInputState extends State<TicketInput> {
+  List<Map<String, dynamic>> ticket = [];
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   @override
   void initState() {
     super.initState();
-    getRecord();
-    getNhapKho();
+    getRecordTTPhieuXuat();
   }
 
-  Future<void> getRecord() async {
+  Future<void> getRecordTTPhieuXuat() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.160.249/practice_api/view_data.php'));
+      final responseTT = await http
+          .get(Uri.parse('http://192.168.1.2/practice_api/TT_phieu_nhap.php'));
+      if (responseTT.statusCode == 200) {
+        setState(() {
+          ticket = List<Map<String, dynamic>>.from(jsonDecode(responseTT.body));
+        });
+      } else {
+        print('Failed to load users: ${responseTT.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> _handleRefresh() async {
+    try {
+      final response = await http
+          .get(Uri.parse('http://192.168.1.2/practice_api/TT_phieu_nhap.php'));
+
       if (response.statusCode == 200) {
         setState(() {
-          users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+          ticket = List<Map<String, dynamic>>.from(jsonDecode(response.body));
         });
       } else {
         print('Failed to load users: ${response.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
+    } finally {
+      // Complete the refresh indicator
+      _refreshController.refreshCompleted();
     }
   }
-  Future<void> getNhapKho() async {
-    try {
-      final response = await http.get(Uri.parse('http://192.168.160.249/practice_api/nhap_kho.php'));
-      if (response.statusCode == 200) {
-        setState(() {
-          save = List<Map<String, dynamic>>.from(jsonDecode(response.body));
-        });
-      } else {
-        print('Failed to load users: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
-  List<Map<String, dynamic>> selectedProducts = [];
-  int totalSelectedCount = 0;
-  double totalValue = 0.0;
 
-  void toggleProductSelection(int index) async  {
-    setState(() {
-      if (users[index]['isChecked'] == true) {
-        users[index]['isChecked'] = false;
-        selectedProducts.remove(users[index]);
-        totalSelectedCount -= int.parse(users[index]['count_item']);
-        totalValue -= double.parse(users[index+1]['count_item']) * double.parse(users[index+1]['DonGia']);
-      } else {
-        users[index]['isChecked'] = true;
-        selectedProducts.add(users[index]);
-        totalSelectedCount += int.parse(users[index]['count_item']);
-        totalValue += double.parse(users[index]['count_item']) * double.parse(users[index]['DonGia']);
-      }
-      totalValue = 0;
-      for (var product in selectedProducts) {
-        totalValue += double.parse(product['count_item']) * double.parse(product['DonGia']);
-      }
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,134 +92,137 @@ class _InPutProductState extends State<InPutProduct> {
                   size: 20,
                   color: AppColors.primary,
                 ),
-
               ),
             ),
-            Text('Chọn sản phẩm nhập',style: AppStyle.bold(color: Colors.white),),
-            IconButton(onPressed: (){}, icon: Icon(Icons.apps,color: Colors.white,))
+            Text(
+              'Phiếu nhập hàng',
+              style: AppStyle.bold(color: Colors.white),
+            ),
+            IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.apps,
+                  color: Colors.white,
+                ))
           ],
         ),
       ),
-      body:_buildBodyContext(),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      // floatingActionButton: GestureDetector(
-      //   onTap: (){
-      //
-      //   },
-      //   child: Container(
-      //     height: 55,
-      //     width: Get.width*0.5,
-      //     margin: EdgeInsets.symmetric(vertical: 12),
-      //     decoration: BoxDecoration(
-      //         color: Colors.white,
-      //         border: Border.all(color: Colors.red),
-      //         borderRadius: BorderRadius.circular(12)
-      //     ),
-      //     child: Center(child: Text('Đồng ý Nhập',style: AppStyle.bold(color: Colors.red),)),
-      //   ),
-      // ),
-    );
-  }
-  Widget _buildBodyContext(){
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        ListView.builder(
-          itemCount: users.length,
-          itemBuilder: (context,index){
-            return GestureDetector(
-              onTap: (){
-              },
-              child: users[index]['count_item'] != '0'? Container(): Container(
-
-                  margin: EdgeInsets.symmetric(vertical: 6,horizontal: 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 1,
-                        offset: const Offset(0, 2), // changes the direction of shadow
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: GestureDetector(
+        onTap: () {
+          Get.to(AddInput());
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: ButtonApp(
+              height: 55,
+              width: Get.width * 0.7,
+              title: '+ Thêm phiếu xuất',
+              color: Colors.white,
+              colorTitle: Colors.red),
+        ),
+      ),
+      body: SmartRefresher(
+        controller: _refreshController,
+        onRefresh: _handleRefresh,
+        child: ListView.builder(
+            itemCount: ticket.length,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Container(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            offset: const Offset(
+                                0, 2), // changes the direction of shadow
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  // color: Colors.red,
-                  child:CheckboxListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Mã SP: ${users[index]['MaSanPham']}',
-                          style: AppStyle.medium(fontSize: 14)
-                              .copyWith(fontWeight: FontWeight.w500),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'Tên SP: ${users[index]['TenSanPham']}',
-                          style: AppStyle.medium(fontSize: 14)
-                              .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'Đơn giá: ${users[index]['DonGia']}',
-                          style: AppStyle.medium(fontSize: 14)
-                              .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'Số lượng sản phẩm: ${users[index]['count_item']}',
-                          style: AppStyle.medium(fontSize: 14)
-                              .copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              'Trạng thái:',
-                              style: AppStyle.regular(fontSize: 13),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                              },
-                              child: Text(
-                                users[index]['count_item'] == '0'  ? 'Hết hàng':'Còn hàng',
-                                style: AppStyle.regular(
-                                    fontSize: 13, color: users[index]['count_item']== '0'? Colors.red:Colors.green),
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(DetailInput(
+                                  ChuKyNhan: ticket[index]['ChuKyNhan'],
+                                  ChuKyTruongDonVi: ticket[index]
+                                      ['ChuKyTruongDonVi'],
+                                  ChuKyViet: ticket[index]['ChuKyViet'],
+                                  DonGia: ticket[index]['DonGia'],
+                                  MaPhieuNhap: ticket[index]['MaPhieuNhap'],
+                                  MaSanPham: ticket[index]['MaSanPham'],
+                                  SoHieuXuong: ticket[index]['SoHieuXuong'],
+                                  SoLuongNhap: ticket[index]['SoLuongNhap'],
+                                  TenNguoiGiaoHang: ticket[index]
+                                      ['TenNguoiGiaoHang'],
+                                  TenSanPham: ticket[index]['TenSanPham'],
+                                  ThanhTien: ticket[index]['ThanhTien'],
+                                  TongTien: ticket[index]['TongTien']));
+                            },
+                            child: ListTile(
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Mã phiếu nhập: ${ticket[index]['MaPhieuNhap']}',
+                                    style: AppStyle.medium(fontSize: 14)
+                                        .copyWith(fontWeight: FontWeight.w500),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Text(
+                                    'Mã sản phẩm: ${ticket[index]['MaSanPham']}',
+                                    style: AppStyle.medium(fontSize: 14)
+                                        .copyWith(fontWeight: FontWeight.w500),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Text(
+                                    'Số hiệu xưởng nhập: ${ticket[index]['SoHieuXuong']}',
+                                    style: AppStyle.medium(fontSize: 14)
+                                        .copyWith(fontWeight: FontWeight.w500),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Text(
+                                    'Sản phẩm nhập: ${ticket[index]['TenSanPham']}',
+                                    style: AppStyle.medium(fontSize: 14)
+                                        .copyWith(fontWeight: FontWeight.w500),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Text(
+                                    'Số lượng nhập: ${ticket[index]['SoLuongNhap']}',
+                                    style: AppStyle.medium(fontSize: 14)
+                                        .copyWith(fontWeight: FontWeight.w500),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    value: users[index]['isChecked'] ?? false,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        toggleProductSelection(index);
-                      });
-                    },
-                  )
-              ),
-            );
-          },
-        ),
-
-        Container(
-          child: GestureDetector(
-            onTap: (){
-            },
-            child: Container(
-              height: 55,
-              width: Get.width*0.5,
-              margin: EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.red),
-                  borderRadius: BorderRadius.circular(12)
-              ),
-              child: Center(child: Text('Đồng ý Nhập',style: AppStyle.bold(color: Colors.red),)),
-            ),
-          ),
-        ),
-      ],
+                          ),
+                        ],
+                      )),
+                ],
+              );
+            }),
+      ),
     );
   }
 }

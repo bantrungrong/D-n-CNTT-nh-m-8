@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +9,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import '../../widget/button.dart';
 import '../home_page/home_page_logined.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -29,44 +29,39 @@ class _LoginScreenState extends State<LoginScreen> {
       isContainerVisible = !isContainerVisible;
     });
   }
+
   ///
   bool signUp = false;
-  Future<void> insertRecord()async{
-    if( name.text != ""
-        && email.text != ""
-        && password.text!=""
-        && company.text != ""
-    )
-    {
-      try{
+  Future<void> insertRecord() async {
+    if (name.text != "" &&
+        email.text != "" &&
+        password.text != "" &&
+        company.text != "") {
+      try {
         String uri = "http://192.168.1.2/practice_api/insert_record.php";
-        var res = await http.post(Uri.parse(uri),body: {
+        var res = await http.post(Uri.parse(uri), body: {
           "TenDangNhap": name.text,
           "MatKhau": password.text,
           "Congty": company.text,
           "email": email.text,
         });
         var reponse = jsonDecode(res.body);
-        if(reponse["success"]=="true"){
+        if (reponse["success"] == "true") {
           Fluttertoast.showToast(msg: 'Thêm thành công');
-        }
-        else{
+        } else {
           print("some issue");
         }
       } catch (e) {
         print(e);
       }
-    }
-    else Fluttertoast.showToast(msg: 'Nhập đầy đủ thông tin mới thêm');
+    } else
+      Fluttertoast.showToast(msg: 'Nhập đầy đủ thông tin mới thêm');
   }
-
-
 
   /// đăng nhập
   String message = '';
 
   Future<void> login() async {
-
     final response = await http.post(
       Uri.parse('http://192.168.1.2/practice_api/login_data.php'),
       body: {
@@ -74,7 +69,6 @@ class _LoginScreenState extends State<LoginScreen> {
         'MatKhau': password.text,
         'Congty': company.text,
       },
-
     );
 
     if (response.statusCode == 200) {
@@ -84,11 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
         if (user['TenDangNhap'] == name.text &&
             user['MatKhau'] == password.text) {
           // Đăng nhập thành công, chuyển sang màn hình khác
-          Get.to(const HomePageScreenLogined(), arguments: {
-            'arg1':user['TenDangNhap'] ,
-            'arg2': user['Congty']
-          });
-          return ;
+          Get.to(const HomePageScreenLogined(),
+              arguments: {'arg1': user['TenDangNhap'], 'arg2': user['Congty']});
+          return;
         }
       }
 
@@ -105,16 +97,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          color: Colors.red.shade50,
-          image: const DecorationImage(
-            image: AssetImage(MyImage.back_ground),
-
-          )
-        ),
+            color: Colors.red.shade50,
+            image: const DecorationImage(
+              image: AssetImage(MyImage.back_ground),
+            )),
         child: ListView(
           scrollDirection: Axis.vertical,
           children: [_buildBody(context)],
@@ -166,9 +155,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Gap(20),
                 _buildTextFieldUserName(),
                 const Gap(10),
-                isContainerVisible ? _buildTextFieldCompany():Container(),
+                isContainerVisible ? _buildTextFieldCompany() : Container(),
                 const Gap(10),
-                isContainerVisible ? _buildTextFieldEmail():Container(),
+                isContainerVisible ? _buildTextFieldEmail() : Container(),
                 const Gap(10),
                 _buildTextFieldPassword(),
                 Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -194,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     child: RichText(
                       text: TextSpan(
-                        text: isContainerVisible ?'Đăng nhập':'Đăng ký',
+                        text: isContainerVisible ? 'Đăng nhập' : 'Đăng ký',
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
@@ -211,12 +200,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     //   validateUser();
                     // }
 
-                    isContainerVisible ?insertRecord():login();
+                    isContainerVisible ? insertRecord() : login();
                   },
                   child: ButtonApp(
                       height: 50,
                       width: Get.width * 0.9,
-                      title: isContainerVisible ?'Đăng ký':'Đăng nhập',
+                      title: isContainerVisible ? 'Đăng ký' : 'Đăng nhập',
                       color: Colors.red,
                       colorTitle: Colors.white),
                 )
@@ -237,7 +226,6 @@ class _LoginScreenState extends State<LoginScreen> {
             fontSize: 14,
           ),
         ),
-        
         const Gap(8),
         SizedBox(
           width: MediaQuery.of(context).size.height,
@@ -283,6 +271,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
     );
   }
+
   Widget _buildTextFieldCompany() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -310,6 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
     );
   }
+
   Widget _buildTextFieldPassword() {
     bool passwordVisible = false;
     return Column(

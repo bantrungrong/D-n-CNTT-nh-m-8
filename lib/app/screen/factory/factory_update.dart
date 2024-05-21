@@ -12,25 +12,24 @@ import '../../core/values/strings.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
-class ProductAdd extends StatefulWidget {
-  const ProductAdd({super.key});
+class FactoryAdd extends StatefulWidget {
+  const FactoryAdd({super.key});
 
   @override
-  State<ProductAdd> createState() => _ProductAddState();
+  State<FactoryAdd> createState() => _FactoryAddState();
 }
 
-class _ProductAddState extends State<ProductAdd> {
-  final TextEditingController NameProduct = TextEditingController();
-  final TextEditingController TypeProduct = TextEditingController();
-  final TextEditingController PiceProduct = TextEditingController();
-  final TextEditingController CountProduct = TextEditingController();
+class _FactoryAddState extends State<FactoryAdd> {
+  final TextEditingController TenPhanXuong = TextEditingController();
+  final TextEditingController DiaChi = TextEditingController();
+  final TextEditingController MaSanPham = TextEditingController();
 
   List<Map<String, dynamic>> users = [];
 
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.2/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.1.2/practice_api/TT_xuong_sx.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -47,21 +46,16 @@ class _ProductAddState extends State<ProductAdd> {
     final value = Get.arguments as int?;
     if (value == null || value >= users.length) return;
 
-    if (NameProduct.text.isEmpty ||
-        TypeProduct.text.isEmpty ||
-        PiceProduct.text.isEmpty ||
-        CountProduct.text.isEmpty) {
+    if (TenPhanXuong.text.isEmpty || DiaChi.text.isEmpty) {
       Fluttertoast.showToast(msg: 'Vui lòng nhập đầy đủ thông tin');
       return;
     }
     try {
-      String uri = "http://192.168.1.2/practice_api/update_product.php";
+      String uri = "http://192.168.1.2/practice_api/update_xuong_san_xuat.php";
       var res = await http.post(Uri.parse(uri), body: {
-        "TenSanPham": NameProduct.text,
-        "LoaiSanPham": TypeProduct.text,
-        "SoLuongTon": CountProduct.text,
-        "DonGia": PiceProduct.text,
-        "MaSanPham": users[value]['MaSanPham'],
+        "TenPhanXuong": TenPhanXuong.text,
+        "DiaChi": DiaChi.text,
+        "MaPhanXuong": users[value]['MaPhanXuong'],
       });
       var response = jsonDecode(res.body);
       if (response["success"] == "true") {
@@ -124,49 +118,39 @@ class _ProductAddState extends State<ProductAdd> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Mã Sản phẩm: ${users[value]['MaSanPham']}',
-                      style: AppStyle.medium(fontSize: 16),
-                    )
-                  ],
+                Text(
+                  'Mã phân xưởng: ${users[value]['MaPhanXuong']}',
+                  style: AppStyle.medium(),
                 ),
                 Gap(12),
                 _buildTextField(
-                    'Tên Sản phẩm: ${users[value]['TenSanPham']}', NameProduct),
+                    'Tên phân xưởng: ${users[value]['TenPhanXuong']}',
+                    TenPhanXuong),
                 Gap(10),
-                _buildTextField('Loại sản phẩm: ${users[value]['LoaiSanPham']}',
-                    TypeProduct),
-                Gap(10),
-                _buildTextField(
-                    'Đơn giá: ${users[value]['DonGia']}', PiceProduct),
-                Gap(10),
-                _buildTextField(
-                    'Số lượng: ${users[value]['SoLuongTon']}', CountProduct),
+                _buildTextField('Địa chỉ: ${users[value]['DiaChi']}', DiaChi),
                 Gap(23),
                 GestureDetector(
                   onTap: () {
-                    if (NameProduct.text.isEmpty ||
-                        TypeProduct.text.isEmpty ||
-                        PiceProduct.text.isEmpty ||
-                        CountProduct.text.isEmpty) {
+                    if (TenPhanXuong.text.isEmpty || DiaChi.text.isEmpty) {
                       Fluttertoast.showToast(
                           msg: 'Vui lòng nhập đầy đủ thông tin');
                       return;
                     }
                     updateProduct();
-                    Get.back();
                   },
-                  child: ButtonApp(
-                    height: 55,
-                    width: 200,
-                    title: 'Xác nhận lưu',
-                    color: Colors.white,
-                    colorTitle: Colors.red,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ButtonApp(
+                        height: 55,
+                        width: 200,
+                        title: 'Xác nhận lưu',
+                        color: Colors.white,
+                        colorTitle: Colors.red,
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -199,7 +183,7 @@ class _ProductAddState extends State<ProductAdd> {
           ),
         ),
         Text(
-          'Sửa thông tin sản phẩm',
+          'Sửa thông tin xưởng sản xuất',
           style: AppStyle.bold(color: Colors.white, fontSize: 16),
         ),
         GestureDetector(

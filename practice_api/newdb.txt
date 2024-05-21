@@ -1,104 +1,172 @@
--- Tạo database cho công ty nước giải khát
-CREATE DATABASE IF NOT EXISTS cong_ty_nuoc_giai_khat;
-USE cong_ty_nuoc_giai_khat;
+-- Tạo cơ sở dữ liệu cho công ty sản xuất đồ uống X
+CREATE DATABASE IF NOT EXISTS drink_company;
 
--- Tạo bảng sản phẩm
-CREATE TABLE SanPham (
-    MaSanPham INT PRIMARY KEY AUTO_INCREMENT,
-    TenSanPham VARCHAR(255),
-    LoaiSanPham VARCHAR(255),
-    DungTich DECIMAL(5, 2),  -- Dung tích sản phẩm (ml)
-    DonGia DECIMAL(10, 2),
-    count_item INT
+-- Sử dụng cơ sở dữ liệu vừa tạo
+USE drink_company;
+
+-- Tạo bảng quản lý danh mục sản phẩm
+CREATE TABLE IF NOT EXISTS SanPham (
+    MaSanPham VARCHAR(10) PRIMARY KEY,
+    TenSanPham VARCHAR(100),
+    LoaiSanPham VARCHAR(50),
+    SoLuongTon INT  CHECK (SoLuongTon >= 0),
+    DonGia DECIMAL(10, 2) CHECK (DonGia >= 0)
 );
 
--- Tạo bảng nhà sản xuất
-CREATE TABLE NhaSanXuat (
-    MaNSX INT PRIMARY KEY AUTO_INCREMENT,
-    TenNSX VARCHAR(255),
-    DiaChi VARCHAR(255),
-    SoDienThoai VARCHAR(15)
+-- Tạo bảng quản lý thông tin đại lý
+CREATE TABLE IF NOT EXISTS DaiLy (
+    MaDaiLy VARCHAR(10) PRIMARY KEY,
+    TenDaiLy VARCHAR(100),
+    DiaChi VARCHAR(200),
+    DienThoai VARCHAR(20),
+    SoTienNo DECIMAL(10, 2) CHECK (SoTienNo >= 0)
 );
 
--- Tạo bảng đại lý phân phối
-CREATE TABLE DaiLy (
-    MaDaiLy INT PRIMARY KEY AUTO_INCREMENT,
-    TenDaiLy VARCHAR(255),
-    DiaChi VARCHAR(255),
-    SoDienThoai VARCHAR(15),
-    Email VARCHAR(255)
-);
-
--- Tạo bảng phiếu nhập hàng
-CREATE TABLE PhieuNhapHang (
-    MaPhieuNhap INT PRIMARY KEY AUTO_INCREMENT,
-    MaSanPham INT,
-    MaNSX INT,
-    MaDaiLy INT,
-    count_item INT,
-    NgayNhap DATE,
-    FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham),
-    FOREIGN KEY (MaNSX) REFERENCES NhaSanXuat(MaNSX),
+-- Tạo bảng quản lý phiếu xuất hàng
+CREATE TABLE IF NOT EXISTS PhieuXuatHang (
+    MaPhieu INT AUTO_INCREMENT PRIMARY KEY,
+    MaDaiLy VARCHAR(10),
+    TenNguoiNhan VARCHAR(100),
+    NgayXuat DATE,
+    ChuKyViet VARCHAR(100),
+    ChuKyNhan VARCHAR(100),
+    ChuKyTruongDonVi VARCHAR(100),
+    NgayCapMinistry DATE,
+    SoGiayChungNhan VARCHAR(20),
     FOREIGN KEY (MaDaiLy) REFERENCES DaiLy(MaDaiLy)
 );
 
--- Tạo bảng phiếu xuất hàng
-CREATE TABLE PhieuXuatHang (
-    MaPhieuXuat INT PRIMARY KEY AUTO_INCREMENT,
-    MaSanPham INT,
-    MaDaiLy INT,
-    count_item INT,
-    NgayXuat DATE,
-    FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham),
-    FOREIGN KEY (MaDaiLy) REFERENCES DaiLy(MaDaiLy)
-);
-
--- Tạo bảng nhập kho
-CREATE TABLE NhapKho (
-    MaPhieuNhap INT PRIMARY KEY,
-    MaSanPham INT,
-    count_item INT,
-    NgayNhap DATE,
-    FOREIGN KEY (MaPhieuNhap) REFERENCES PhieuNhapHang(MaPhieuNhap),
+-- Create the table if it doesn't exist
+CREATE TABLE IF NOT EXISTS ChiTietPhieuXuatHang (
+    MaPhieu INT,
+    MaDaiLy VARCHAR(10),
+    MaSanPham VARCHAR(10),
+    SoLuongXuat INT CHECK (SoLuongXuat >= 0),
+    DonGia DECIMAL(10, 2)  CHECK (DonGia >= 0),
+    TongTien DECIMAL(10, 2) CHECK (TongTien >= 0),
+    PRIMARY KEY (MaPhieu, MaSanPham),
+    FOREIGN KEY (MaPhieu) REFERENCES PhieuXuatHang(MaPhieu),
+    FOREIGN KEY (MaDaiLy) REFERENCES PhieuXuatHang(MaDaiLy),
     FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham)
 );
 
--- Tạo bảng xuất kho
-CREATE TABLE XuatKho (
-    MaPhieuXuat INT PRIMARY KEY,
-    MaSanPham INT,
-    count_item INT,
-    NgayXuat DATE,
-    FOREIGN KEY (MaPhieuXuat) REFERENCES PhieuXuatHang(MaPhieuXuat),
+
+-- Tạo bảng quản lý phiếu nhập hàng
+CREATE TABLE IF NOT EXISTS PhieuNhapHang (
+    MaPhieuNhap INT,
+    MaSanPham VARCHAR(10),
+    SoHieuXuong VARCHAR(10),
+    TenNguoiGiaoHang VARCHAR(100),
+    TenSanPham VARCHAR(100),
+    DonGia DECIMAL(10, 2) CHECK (DonGia >= 0),
+    SoLuongNhap INT CHECK (SoLuongNhap >= 0),
+    ThanhTien DECIMAL(10, 2) CHECK (ThanhTien >= 0),
+    TongTien DECIMAL(10, 2) CHECK (TongTien >= 0),
+    ChuKyViet VARCHAR(100),
+    ChuKyNhan VARCHAR(100),
+    ChuKyTruongDonVi VARCHAR(100),
+    PRIMARY KEY (MaPhieuNhap, MaSanPham),
     FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham)
 );
-CREATE TABLE user_table (
-    user_id  INT AUTO_INCREMENT PRIMARY KEY,
-    user_name VARCHAR(255) UNIQUE,
-    user_email VARCHAR(255),
-    user_password VARCHAR(255),
-    user_company VARCHAR(255)
+
+-- Tạo bảng quản lý thông tin xưởng sản xuất
+CREATE TABLE IF NOT EXISTS XuongSanXuat (
+    MaPhanXuong VARCHAR(10) PRIMARY KEY,
+    TenPhanXuong VARCHAR(100),
+    DiaChi VARCHAR(200),
+    MaSanPham VARCHAR(10) UNIQUE,
+    FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham)
 );
+CREATE TABLE IF NOT EXISTS ThongKeHangThang (
+    Thang INT,
+    Nam INT,
+    SoLuongXuat INT,
+    MaSanPham VARCHAR(10),
+    DoanhThu DECIMAL(10, 2),
+    PRIMARY KEY (Thang, Nam),
+    FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham)
+);
+-- Tạo bảng NguoiDung
+CREATE TABLE IF NOT EXISTS NguoiDung (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    TenDangNhap VARCHAR(50) NOT NULL UNIQUE,
+    MatKhau VARCHAR(100) NOT NULL,
+    Congty VARCHAR(100),
+    email VARCHAR(100) NOT NULL,
+    ChucVu VARCHAR(50) NOT NULL DEFAULT 'user'
+);
+
+
 DELIMITER //
 
-CREATE TRIGGER Before_Insert_PhieuXuatHang
-BEFORE INSERT ON PhieuXuatHang
+CREATE TRIGGER tr_after_insert_PhieuNhapHang
+AFTER INSERT ON PhieuNhapHang
 FOR EACH ROW
 BEGIN
-    DECLARE remaining_count INT;
+    DECLARE quantity INT;
+    -- Lấy số lượng tồn của sản phẩm trước khi thêm phiếu nhập hàng
+    SELECT SoLuongTon INTO quantity FROM SanPham WHERE MaSanPham = NEW.MaSanPham;
+    -- Cập nhật số lượng tồn mới sau khi cộng thêm số lượng nhập hàng vào số lượng tồn hiện tại
+    UPDATE SanPham SET SoLuongTon = quantity + NEW.SoLuongNhap WHERE MaSanPham = NEW.MaSanPham;
+END;
+//
 
-    -- Tính toán số lượng còn lại của sản phẩm
-    SELECT (count_item - NEW.count_item) INTO remaining_count
-    FROM SanPham
-    WHERE MaSanPham = NEW.MaSanPham;
+DELIMITER ;
 
-    -- Nếu số lượng còn lại ít hơn 2/3
-    IF remaining_count < (2 * NEW.count_item / 3) THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Không thể tạo phiếu xuất hàng vì số lượng sản phẩm còn lại quá ít!';
+
+DELIMITER //
+
+CREATE TRIGGER tr_after_insert_ChiTietPhieuXuatHang
+AFTER INSERT ON ChiTietPhieuXuatHang
+FOR EACH ROW
+BEGIN
+    DECLARE quantity INT;
+    -- Lấy số lượng tồn của sản phẩm trước khi thêm phiếu xuất hàng
+    SELECT SoLuongTon INTO quantity FROM SanPham WHERE MaSanPham = NEW.MaSanPham;
+    -- Cập nhật số lượng tồn mới sau khi trừ đi số lượng xuất trong phiếu xuất hàng mới
+    UPDATE SanPham SET SoLuongTon = quantity - NEW.SoLuongXuat WHERE MaSanPham = NEW.MaSanPham;
+END;
+//
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER tr_after_insert_ThongKeHangThang
+AFTER INSERT ON ChiTietPhieuXuatHang
+FOR EACH ROW
+BEGIN
+    DECLARE currentMonth INT;
+    DECLARE currentYear INT;
+    DECLARE existingCount INT;
+
+    -- Lấy tháng và năm hiện tại từ phiếu xuất hàng
+    SELECT MONTH(px.NgayXuat), YEAR(px.NgayXuat)
+    INTO currentMonth, currentYear
+    FROM PhieuXuatHang px
+    WHERE px.MaPhieu = NEW.MaPhieu;
+
+    -- Kiểm tra xem đã có bản ghi cho tháng và năm này trong bảng ThongKeHangThang chưa
+    SELECT COUNT(*) INTO existingCount
+    FROM ThongKeHangThang
+    WHERE Thang = currentMonth AND Nam = currentYear;
+
+    IF existingCount > 0 THEN
+        -- Cập nhật bảng ThongKeHangThang nếu đã có bản ghi cho tháng và năm này
+        UPDATE ThongKeHangThang
+        SET SoLuongXuat = SoLuongXuat + NEW.SoLuongXuat,
+            DoanhThu = DoanhThu + (NEW.SoLuongXuat * NEW.DonGia)
+        WHERE Thang = currentMonth AND Nam = currentYear;
+    ELSE
+        -- Chèn bản ghi mới vào bảng ThongKeHangThang nếu chưa có bản ghi cho tháng và năm này
+        INSERT INTO ThongKeHangThang (Thang, Nam, SoLuongXuat, DoanhThu)
+        VALUES (currentMonth, currentYear, NEW.SoLuongXuat, NEW.SoLuongXuat * NEW.DonGia);
     END IF;
 END;
 //
 
 DELIMITER ;
+
+
+
 
