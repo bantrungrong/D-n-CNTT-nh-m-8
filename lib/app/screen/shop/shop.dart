@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 import '../../core/values/colors.dart';
 import 'package:get/get.dart';
+
 class UserListScreen extends StatefulWidget {
   @override
   _UserListScreenState createState() => _UserListScreenState();
@@ -22,7 +23,8 @@ class _UserListScreenState extends State<UserListScreen> {
 
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.2/practice_api/TT_daily.php'));
+      final response = await http
+          .get(Uri.parse('http://192.168.1.2/practice_api/TT_daily.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -61,11 +63,18 @@ class _UserListScreenState extends State<UserListScreen> {
                   size: 20,
                   color: AppColors.primary,
                 ),
-
               ),
             ),
-            Text('Đại lý',style: AppStyle.bold(color: Colors.white),),
-            IconButton(onPressed: (){}, icon: Icon(Icons.filter_alt_outlined,color: Colors.white,))
+            Text(
+              'Đại lý',
+              style: AppStyle.bold(color: Colors.white),
+            ),
+            IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.filter_alt_outlined,
+                  color: Colors.white,
+                ))
           ],
         ),
       ),
@@ -73,8 +82,10 @@ class _UserListScreenState extends State<UserListScreen> {
         itemCount: users.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: (){
-              Get.to(Shopdetail(), arguments: index);
+            onTap: () {
+              Get.to(Shopdetail(
+                idShop: index,
+              ));
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -86,47 +97,96 @@ class _UserListScreenState extends State<UserListScreen> {
                     color: Colors.grey.withOpacity(0.1),
                     spreadRadius: 1,
                     blurRadius: 1,
-                    offset: const Offset(0, 2), // changes the direction of shadow
+                    offset:
+                        const Offset(0, 2), // changes the direction of shadow
                   ),
                 ],
               ),
               child: ListTile(
                 title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(children: [
-                        Icon(Icons.account_tree_outlined,size: 18,),
-                        SizedBox(width: 10,),
-                        Text('Mã đại lý ${users[index]['MaDaiLy']}',overflow: TextOverflow.ellipsis,),
-                      ],),
-                      Row(children: [
-                        Icon(Icons.account_tree_outlined,size: 18,),
-                        SizedBox(width: 10,),
-                        Text('Tên đại lý: ${users[index]['TenDaiLy']}',overflow: TextOverflow.ellipsis,),
-                      ],),
-                      Row(children: [
-                        Icon(Icons.account_tree_outlined,size: 18,),
-                        SizedBox(width: 10,),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.account_tree_outlined,
+                          size: 18,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          'Mã đại lý ${users[index]['MaDaiLy']}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.account_tree_outlined,
+                          size: 18,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          'Tên đại lý: ${users[index]['TenDaiLy']}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.account_tree_outlined,
+                          size: 18,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
                         Container(
-                          width: Get.width*0.7,
-                            child: Text('Địa chỉ: ${users[index]['DiaChi']}',overflow: TextOverflow.ellipsis,)),
-                      ],),
-                      Row(children: [
-                        Icon(Icons.account_tree_outlined,size: 18,),
-                        SizedBox(width: 10,),
-                        Text('Số điện thoại: ${users[index]['DienThoai']}',overflow: TextOverflow.ellipsis,),
-                      ],),
-                      Row(children: [
-                        Icon(Icons.account_tree_outlined,size: 18,),
-                        SizedBox(width: 10,),
+                            width: Get.width * 0.7,
+                            child: Text(
+                              'Địa chỉ: ${users[index]['DiaChi']}',
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.account_tree_outlined,
+                          size: 18,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          'Số điện thoại: ${users[index]['DienThoai']}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.account_tree_outlined,
+                          size: 18,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
                         Container(
-                          width: Get.width*0.6,
-                            child: Text('Email: ${users[index]['SoTienNo']}',overflow: TextOverflow.ellipsis,)),
-                      ],),
-
-                    ],
-                  ),
-
+                            width: Get.width * 0.6,
+                            child: Text(
+                              'Số tiền nợ: ${users[index]['SoTienNo']}',
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                      ],
+                    ),
+                  ],
+                ),
                 subtitle: Text(''),
               ),
             ),
