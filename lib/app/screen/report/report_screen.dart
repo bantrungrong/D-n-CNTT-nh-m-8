@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:drink_app_getx/app/core/values/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fl_chart/fl_chart.dart';
@@ -47,8 +48,10 @@ class _ReportScreenState extends State<ReportScreen> {
           product =
               List<Map<String, dynamic>>.from(jsonDecode(responseProduct.body));
         });
+        // Debug print the product data
+        print('Product Data: $product');
       } else {
-        print('Failed to load users: ${responseProduct.statusCode}');
+        print('Failed to load products: ${responseProduct.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
@@ -85,9 +88,9 @@ class _ReportScreenState extends State<ReportScreen> {
                           margin: 20,
                           getTitles: (double value) {
                             // Display product names as x-axis labels
-                            if (value.toInt() >= 0 &&
-                                value.toInt() < product.length + 1) {
-                              return value.truncate().toString();
+                            int index = value.toInt() - 1;
+                            if (index >= 0 && index < product.length) {
+                              return '${index + 1}' ?? '';
                             }
                             return '';
                           },
@@ -106,30 +109,60 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                       barGroups: List.generate(
                         product.length,
-                        (index) => BarChartGroupData(
-                          x: index + 1,
-                          barRods: [
-                            BarChartRodData(
-                              y: double.parse(product[index]['SoLuongTon']),
-                              colors: [Colors.blue],
-                            ),
-                          ],
-                        ),
+                        (index) {
+                          // Handle null values safely
+                          double yValue = double.tryParse(
+                                  product[index]['SoLuongTon']?.toString() ??
+                                      '0') ??
+                              0;
+                          return BarChartGroupData(
+                            x: index + 1,
+                            barRods: [
+                              BarChartRodData(
+                                y: yValue,
+                                colors: [Colors.blue],
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ),
                   ),
                 ),
-                Container(
-                  height: Get.height * 0.6,
-                  child: ListView.builder(itemBuilder: (context, index) {
-                    return Column(
-                      children: [],
-                    );
-                  }),
-                )
               ],
             ),
           ),
+          Container(
+            height: Get.height * 0.3,
+            child: ListView.builder(
+                itemCount: product.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 60),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${index + 1}: ${product[index]['TenSanPham'] ?? 'Unknown Product'}',
+                              style: AppStyle.medium(fontSize: 13),
+                            ),
+                            Text(
+                              '${product[index]['SoLuongTon'] ?? 'Unknown Product'}',
+                              style: AppStyle.medium(fontSize: 13),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 8,
+                        )
+                      ],
+                    ),
+                  );
+                }),
+          )
         ],
       ),
     );

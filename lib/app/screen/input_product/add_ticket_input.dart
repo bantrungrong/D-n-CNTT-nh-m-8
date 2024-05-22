@@ -93,7 +93,7 @@ class _AddInputState extends State<AddInput> {
         double soLuong = double.parse(SoLuongNhap.text);
         double donGia = double.parse(selectedDonGia.value);
         double tongTien = soLuong * donGia;
-        print(tongTien);
+        // print(tongTien);
         String uri = "http://192.168.1.2/practice_api/add_phieu_nhap.php";
         var res = await http.post(Uri.parse(uri), body: {
           "MaPhieuNhap": MaPhieuNhap.text,
@@ -168,9 +168,6 @@ class _AddInputState extends State<AddInput> {
   }
 
   Widget _buildBodyContext() {
-    double soLuong = double.parse(SoLuongNhap.text);
-    double donGia = double.parse(selectedDonGia.value);
-    double tongTien = soLuong * donGia;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ListView(
@@ -192,10 +189,10 @@ class _AddInputState extends State<AddInput> {
           SizedBox(
             height: 10,
           ),
-          Text(
-            'Tổng tiền: $tongTien',
-            style: AppStyle.medium(),
-          ),
+          // Text(
+          //   'Tổng tiền: $tongTien',
+          //   style: AppStyle.medium(),
+          // ),
           SizedBox(
             height: 12,
           ),

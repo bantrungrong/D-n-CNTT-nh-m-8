@@ -49,8 +49,7 @@ class _ProductAddState extends State<ProductAdd> {
 
     if (NameProduct.text.isEmpty ||
         TypeProduct.text.isEmpty ||
-        PiceProduct.text.isEmpty ||
-        CountProduct.text.isEmpty) {
+        PiceProduct.text.isEmpty) {
       Fluttertoast.showToast(msg: 'Vui lòng nhập đầy đủ thông tin');
       return;
     }
@@ -59,8 +58,8 @@ class _ProductAddState extends State<ProductAdd> {
       var res = await http.post(Uri.parse(uri), body: {
         "TenSanPham": NameProduct.text,
         "LoaiSanPham": TypeProduct.text,
-        "SoLuongTon": CountProduct.text,
         "DonGia": PiceProduct.text,
+        "SoLuongTon": CountProduct.text,
         "MaSanPham": users[value]['MaSanPham'],
       });
       var response = jsonDecode(res.body);
@@ -152,8 +151,7 @@ class _ProductAddState extends State<ProductAdd> {
                   onTap: () {
                     if (NameProduct.text.isEmpty ||
                         TypeProduct.text.isEmpty ||
-                        PiceProduct.text.isEmpty ||
-                        CountProduct.text.isEmpty) {
+                        PiceProduct.text.isEmpty) {
                       Fluttertoast.showToast(
                           msg: 'Vui lòng nhập đầy đủ thông tin');
                       return;

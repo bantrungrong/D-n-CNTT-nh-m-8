@@ -162,22 +162,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 _buildTextFieldPassword(),
                 Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                   TextButton(
-                    onPressed: () {},
-                    child: RichText(
-                      text: const TextSpan(
-                        text: 'Quên mật khẩu',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: AppColors.primary,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  )
-                ]),
-                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  TextButton(
                     onPressed: () {
                       toggleContainerVisibility();
                     },
