@@ -35,10 +35,19 @@ class _AddInputState extends State<AddInput> {
   var selectedSoHieuXuong = ''.obs;
   var selectedTenSanPham = ''.obs;
   var selectedDonGia = ''.obs;
-  void updateSelectedCompany(
-      String MaSanPham, String SoHieuXuong, String TenSanPham, String DonGia) {
-    selectedMaSanPham.value = MaSanPham;
+
+  var selectedTenPhanXuong = ''.obs;
+  var selectedDiaChi = ''.obs;
+  void updateSelectedFactory(
+      String SoHieuXuong, String TenPhanXuong, String DiaCHi) {
     selectedSoHieuXuong.value = SoHieuXuong;
+    selectedTenPhanXuong.value = TenPhanXuong;
+    selectedDiaChi.value = DiaCHi;
+  }
+
+  void updateSelectedProduct(
+      String MaSanPham, String TenSanPham, String DonGia) {
+    selectedMaSanPham.value = MaSanPham;
     selectedTenSanPham.value = TenSanPham;
     selectedDonGia.value = DonGia;
   }
@@ -179,13 +188,21 @@ class _AddInputState extends State<AddInput> {
           _buildTextField('Nhập chữ ký nhận:', ChuKyNhan),
           _buildTextField('Chữ ký trưởng đơn vị:', ChuKyTruongDonVi),
           Text(
-            'Chọn sản phẩm và xưởng sản xuất',
+            'Chọn thông tin xưởng sản xuất',
             style: AppStyle.medium(),
           ),
           SizedBox(
             height: 10,
           ),
-          _buildSelectedShop(),
+          _buildSelectedFactory(),
+          Text(
+            'Chọn thông tin sản phẩm',
+            style: AppStyle.medium(),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          _buildSelectedProduct(),
           SizedBox(
             height: 10,
           ),
@@ -247,7 +264,7 @@ class _AddInputState extends State<AddInput> {
     );
   }
 
-  Widget _buildSelectedShop() {
+  Widget _buildSelectedFactory() {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -257,7 +274,113 @@ class _AddInputState extends State<AddInput> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                title: Text('Chọn công ty'),
+                title: Text('Chọn xưởng sản xuất'),
+                // insetPadding: const EdgeInsets.all(25),
+                content: Container(
+                  height: Get.height * 0.8,
+                  width: Get.width * 0.9,
+                  child: ListView.builder(
+                    itemCount: factory.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          updateSelectedFactory(
+                            factory[index]['MaPhanXuong'],
+                            factory[index]['TenPhanXuong'],
+                            factory[index]['DiaChi'],
+                          );
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      width: 1, color: Colors.black))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Mã phân xưởng: ${factory[index]['MaPhanXuong']}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Tên phân xưởng:${factory[index]['TenPhanXuong']}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Địa chỉ: ${factory[index]['DiaChi']}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Mã Sản phẩm: ${factory[index]['MaSanPham']}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ));
+          },
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(5)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Obx(() => Container(
+                  width: Get.width * 0.7,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        selectedSoHieuXuong.isEmpty
+                            ? ''
+                            : 'Mã phân xưởng: ${selectedSoHieuXuong.value}',
+                        style: TextStyle(fontSize: 15),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        selectedTenPhanXuong.isEmpty
+                            ? ''
+                            : 'Tên phân xưởng: ${selectedTenPhanXuong.value}',
+                        style: TextStyle(fontSize: 15),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        selectedDiaChi.isEmpty
+                            ? ''
+                            : 'Địa chỉ: ${selectedDiaChi.value}',
+                        style: TextStyle(fontSize: 15),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                )),
+            Icon(Icons.keyboard_arrow_down)
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSelectedProduct() {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                title: Text('Chọn Sản phẩm'),
                 // insetPadding: const EdgeInsets.all(25),
                 content: Container(
                   height: Get.height * 0.8,
@@ -267,9 +390,8 @@ class _AddInputState extends State<AddInput> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          updateSelectedCompany(
+                          updateSelectedProduct(
                             product[index]['MaSanPham'],
-                            factory[index]['MaPhanXuong'],
                             product[index]['TenSanPham'],
                             product[index]['DonGia'],
                           );
@@ -285,10 +407,6 @@ class _AddInputState extends State<AddInput> {
                             children: [
                               Text(
                                 'Mã sản phẩm: ${product[index]['MaSanPham']}',
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                'Số hiệu xưởng:${factory[index]['MaPhanXuong']}',
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
@@ -326,28 +444,21 @@ class _AddInputState extends State<AddInput> {
                       Text(
                         selectedMaSanPham.isEmpty
                             ? ''
-                            : 'Mã Đại Lý: ${selectedMaSanPham.value}',
-                        style: TextStyle(fontSize: 15),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        selectedSoHieuXuong.isEmpty
-                            ? ''
-                            : 'Tên đại lý: ${selectedSoHieuXuong.value}',
+                            : 'Mã sản phẩm: ${selectedMaSanPham.value}',
                         style: TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         selectedTenSanPham.isEmpty
                             ? ''
-                            : 'Địa chỉ: ${selectedTenSanPham.value}',
+                            : 'Tên sản phẩm: ${selectedTenSanPham.value}',
                         style: TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         selectedDonGia.isEmpty
                             ? ''
-                            : 'Số điện thoại: ${selectedDonGia.value}',
+                            : 'Đơn giá: ${selectedDonGia.value}',
                         style: TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),

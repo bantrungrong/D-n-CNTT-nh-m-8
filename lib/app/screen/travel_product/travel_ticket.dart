@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:drink_app_getx/app/screen/travel_product/SelectedProductScreen.dart';
 import 'package:drink_app_getx/app/screen/travel_product/detail_ticket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -212,6 +213,31 @@ class _TicketTravelState extends State<TicketTravel> {
                                     height: 8,
                                   ),
                                 ],
+                              ),
+                              trailing: IconButton(
+                                onPressed: () {
+                                  Get.to(SelectedProductScreen(
+                                    dateExport:
+                                        ticket[index]['NgayXuat'].toString(),
+                                    idShop: ticket[index]['MaDaiLy'].toString(),
+                                    idTicket:
+                                        ticket[index]['MaPhieu'].toString(),
+                                    nameTake: ticket[index]['TenNguoiNhan']
+                                        .toString(),
+                                    dateImport: ticket[index]['NgayCapMinistry']
+                                        .toString(),
+                                    numberNote: ticket[index]['SoGiayChungNhan']
+                                        .toString(),
+                                    writeTake:
+                                        ticket[index]['ChuKyNhan'].toString(),
+                                    write:
+                                        ticket[index]['ChuKyViet'].toString(),
+                                    writeManager: ticket[index]
+                                            ['ChuKyTruongDonVi']
+                                        .toString(),
+                                  ));
+                                },
+                                icon: Icon(Icons.add),
                               ),
                             ),
                           ),

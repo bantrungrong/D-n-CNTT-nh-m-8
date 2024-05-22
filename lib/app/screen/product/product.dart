@@ -248,9 +248,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       child: Column(
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              Get.to(ProductAdd(), arguments: index);
-                            },
+                            onTap: () {},
                             child: ListTile(
                               title: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -309,6 +307,15 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ],
                                   ),
                                 ],
+                              ),
+                              trailing: IconButton(
+                                onPressed: () {
+                                  Get.to(ProductAdd(), arguments: index);
+                                },
+                                icon: Icon(
+                                  Icons.build_circle_outlined,
+                                  size: 32,
+                                ),
                               ),
                             ),
                           ),

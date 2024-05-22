@@ -241,17 +241,19 @@ class _AddTicketState extends State<AddTicket> {
                   writeManager.text != '' &&
                   '${selectedDate.toLocal()}'.split(' ')[0] != '' &&
                   number.text != '') {
-                Get.to(DetailTicket(
-                  idTicketInfor: idTicket.text,
-                  idShopInfor: '${selectedMaDaiLy.value}',
-                  nameInfor: nameUser.text,
-                  dateInfor: '${selectedDateExport.toLocal()}'.split(' ')[0],
-                  writeInfor: write.text,
-                  wireTakeInfor: writeTake.text,
-                  writeManagerInfor: writeManager.text,
-                  dateImportInfor: '${selectedDate.toLocal()}'.split(' ')[0],
-                  numberInfor: number.text,
-                ));
+                insertRecord();
+                Get.back();
+                // Get.to(DetailTicket(
+                //   idTicketInfor: idTicket.text,
+                //   idShopInfor: '${selectedMaDaiLy.value}',
+                //   nameInfor: nameUser.text,
+                //   dateInfor: '${selectedDateExport.toLocal()}'.split(' ')[0],
+                //   writeInfor: write.text,
+                //   wireTakeInfor: writeTake.text,
+                //   writeManagerInfor: writeManager.text,
+                //   dateImportInfor: '${selectedDate.toLocal()}'.split(' ')[0],
+                //   numberInfor: number.text,
+                // ));
               } else
                 Fluttertoast.showToast(msg: 'Nhập đủ thông tin mới thêm');
             },
