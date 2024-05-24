@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
         password.text != "" &&
         company.text != "") {
       try {
-        String uri = "http://192.168.1.2/practice_api/insert_record.php";
+        String uri = "http://192.168.203.241/practice_api/insert_record.php";
         var res = await http.post(Uri.parse(uri), body: {
           "TenDangNhap": name.text,
           "MatKhau": password.text,
@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> login() async {
     final response = await http.post(
-      Uri.parse('http://192.168.1.2/practice_api/login_data.php'),
+      Uri.parse('http://192.168.203.241/practice_api/login_data.php'),
       body: {
         'TenDangNhap': name.text,
         'MatKhau': password.text,

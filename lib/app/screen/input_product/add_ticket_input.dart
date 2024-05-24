@@ -62,7 +62,7 @@ class _AddInputState extends State<AddInput> {
   Future<void> getRecordProduct() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.2/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.203.241/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           product = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -78,7 +78,7 @@ class _AddInputState extends State<AddInput> {
   Future<void> getRecordFactory() async {
     try {
       final responseF = await http
-          .get(Uri.parse('http://192.168.1.2/practice_api/TT_xuong_sx.php'));
+          .get(Uri.parse('http://192.168.203.241/practice_api/TT_xuong_sx.php'));
       if (responseF.statusCode == 200) {
         setState(() {
           factory = List<Map<String, dynamic>>.from(jsonDecode(responseF.body));
@@ -103,7 +103,7 @@ class _AddInputState extends State<AddInput> {
         double donGia = double.parse(selectedDonGia.value);
         double tongTien = soLuong * donGia;
         // print(tongTien);
-        String uri = "http://192.168.1.2/practice_api/add_phieu_nhap.php";
+        String uri = "http://192.168.203.241/practice_api/add_phieu_nhap.php";
         var res = await http.post(Uri.parse(uri), body: {
           "MaPhieuNhap": MaPhieuNhap.text,
           "MaSanPham": selectedMaSanPham.value,

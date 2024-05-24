@@ -30,7 +30,7 @@ class _ProductAddState extends State<ProductAdd> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.2/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.203.241/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -54,7 +54,7 @@ class _ProductAddState extends State<ProductAdd> {
       return;
     }
     try {
-      String uri = "http://192.168.1.2/practice_api/update_product.php";
+      String uri = "http://192.168.203.241/practice_api/update_product.php";
       var res = await http.post(Uri.parse(uri), body: {
         "TenSanPham": NameProduct.text,
         "LoaiSanPham": TypeProduct.text,
@@ -79,7 +79,7 @@ class _ProductAddState extends State<ProductAdd> {
     if (value == null || value >= users.length) return;
 
     try {
-      String uri = "http://192.168.1.2/practice_api/delete_product.php";
+      String uri = "http://192.168.203.241/practice_api/delete_product.php";
       var resDel = await http.post(Uri.parse(uri), body: {
         "MaSanPham": users[value]['MaSanPham'],
       });
