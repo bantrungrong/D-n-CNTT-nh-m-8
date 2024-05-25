@@ -1,16 +1,12 @@
 import 'dart:convert';
 
-import 'package:drink_app_getx/app/screen/travel_product/detail_ticket.dart';
 import 'package:drink_app_getx/app/widget/button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import '../../core/values/colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import '../../core/values/strings.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class AddInput extends StatefulWidget {
   const AddInput({
@@ -77,8 +73,8 @@ class _AddInputState extends State<AddInput> {
 
   Future<void> getRecordFactory() async {
     try {
-      final responseF = await http
-          .get(Uri.parse('http://192.168.203.241/practice_api/TT_xuong_sx.php'));
+      final responseF = await http.get(
+          Uri.parse('http://192.168.203.241/practice_api/TT_xuong_sx.php'));
       if (responseF.statusCode == 200) {
         setState(() {
           factory = List<Map<String, dynamic>>.from(jsonDecode(responseF.body));
@@ -152,7 +148,7 @@ class _AddInputState extends State<AddInput> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                     color: Colors.white),
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back_ios,
                   size: 20,
                   color: AppColors.primary,
@@ -165,7 +161,7 @@ class _AddInputState extends State<AddInput> {
             ),
             IconButton(
                 onPressed: () {},
-                icon: Icon(
+                icon: const Icon(
                   Icons.apps,
                   color: Colors.white,
                 ))
@@ -191,7 +187,7 @@ class _AddInputState extends State<AddInput> {
             'Chọn thông tin xưởng sản xuất',
             style: AppStyle.medium(),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           _buildSelectedFactory(),
@@ -199,18 +195,18 @@ class _AddInputState extends State<AddInput> {
             'Chọn thông tin sản phẩm',
             style: AppStyle.medium(),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           _buildSelectedProduct(),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           // Text(
           //   'Tổng tiền: $tongTien',
           //   style: AppStyle.medium(),
           // ),
-          SizedBox(
+          const SizedBox(
             height: 12,
           ),
           GestureDetector(
@@ -224,7 +220,7 @@ class _AddInputState extends State<AddInput> {
                 color: Colors.red,
                 colorTitle: Colors.white),
           ),
-          SizedBox(
+          const SizedBox(
             height: 34,
           )
         ],
@@ -242,10 +238,10 @@ class _AddInputState extends State<AddInput> {
             fontSize: 16,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 8,
         ),
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.height,
           child: TextField(
             controller: name,
@@ -257,7 +253,7 @@ class _AddInputState extends State<AddInput> {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 12,
         )
       ],
@@ -274,9 +270,9 @@ class _AddInputState extends State<AddInput> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                title: Text('Chọn xưởng sản xuất'),
+                title: const Text('Chọn xưởng sản xuất'),
                 // insetPadding: const EdgeInsets.all(25),
-                content: Container(
+                content: SizedBox(
                   height: Get.height * 0.8,
                   width: Get.width * 0.9,
                   child: ListView.builder(
@@ -292,7 +288,7 @@ class _AddInputState extends State<AddInput> {
                           Navigator.pop(context);
                         },
                         child: Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               border: Border(
                                   bottom: BorderSide(
                                       width: 1, color: Colors.black))),
@@ -327,14 +323,14 @@ class _AddInputState extends State<AddInput> {
       },
       child: Container(
         width: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(5)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Obx(() => Container(
+            Obx(() => SizedBox(
                   width: Get.width * 0.7,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,27 +339,27 @@ class _AddInputState extends State<AddInput> {
                         selectedSoHieuXuong.isEmpty
                             ? ''
                             : 'Mã phân xưởng: ${selectedSoHieuXuong.value}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         selectedTenPhanXuong.isEmpty
                             ? ''
                             : 'Tên phân xưởng: ${selectedTenPhanXuong.value}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         selectedDiaChi.isEmpty
                             ? ''
                             : 'Địa chỉ: ${selectedDiaChi.value}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 )),
-            Icon(Icons.keyboard_arrow_down)
+            const Icon(Icons.keyboard_arrow_down)
           ],
         ),
       ),
@@ -380,9 +376,9 @@ class _AddInputState extends State<AddInput> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                title: Text('Chọn Sản phẩm'),
+                title: const Text('Chọn Sản phẩm'),
                 // insetPadding: const EdgeInsets.all(25),
-                content: Container(
+                content: SizedBox(
                   height: Get.height * 0.8,
                   width: Get.width * 0.9,
                   child: ListView.builder(
@@ -398,7 +394,7 @@ class _AddInputState extends State<AddInput> {
                           Navigator.pop(context);
                         },
                         child: Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               border: Border(
                                   bottom: BorderSide(
                                       width: 1, color: Colors.black))),
@@ -429,14 +425,14 @@ class _AddInputState extends State<AddInput> {
       },
       child: Container(
         width: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(5)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Obx(() => Container(
+            Obx(() => SizedBox(
                   width: Get.width * 0.7,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -445,27 +441,27 @@ class _AddInputState extends State<AddInput> {
                         selectedMaSanPham.isEmpty
                             ? ''
                             : 'Mã sản phẩm: ${selectedMaSanPham.value}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         selectedTenSanPham.isEmpty
                             ? ''
                             : 'Tên sản phẩm: ${selectedTenSanPham.value}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         selectedDonGia.isEmpty
                             ? ''
                             : 'Đơn giá: ${selectedDonGia.value}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 )),
-            Icon(Icons.keyboard_arrow_down)
+            const Icon(Icons.keyboard_arrow_down)
           ],
         ),
       ),

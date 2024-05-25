@@ -1,6 +1,3 @@
-
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../core/values/colors.dart';
@@ -14,6 +11,7 @@ import '../../screen/noti_screen/noti_screeen.dart';
 import '../../widget/button.dart';
 import 'home_controller.dart';
 import 'package:get/get.dart';
+
 class HomePage extends GetView<HomeController> {
   const HomePage({Key? key}) : super(key: key);
 

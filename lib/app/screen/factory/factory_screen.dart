@@ -1,11 +1,9 @@
 import 'dart:convert';
 
 import 'package:drink_app_getx/app/screen/factory/factory_update.dart';
-import 'package:drink_app_getx/app/screen/product/product_update.dart';
+// import 'package:drink_app_getx/app/screen/product/product_update.dart';
 import 'package:drink_app_getx/app/widget/button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../core/values/colors.dart';
 import '../../core/values/strings.dart';
@@ -132,23 +130,23 @@ class _FactoryScreenState extends State<FactoryScreen> {
                     ],
                   ),
                   insetPadding: const EdgeInsets.all(12),
-                  content: Container(
+                  content: SizedBox(
                     height: Get.height * 0.55,
                     width: Get.width * 1,
                     // margin: EdgeInsets.symmetric(horizontal: 33),
                     child: ListView(
                       children: [
                         _buildTextField('Mã phân xưởng', MaPhanXuong),
-                        Gap(8),
+                        const Gap(8),
                         _buildTextField('Tên phân xưởng', TenPhanXuong),
-                        Gap(8),
+                        const Gap(8),
                         _buildTextField('địa chỉ', DiaChi),
-                        Gap(8),
+                        const Gap(8),
                         _buildTextField('Mã sản phẩm', MaSanPham),
 
                         // Gap(8),
                         // _buildTextField('Nhập link sản pẩm',image_item),
-                        Gap(30),
+                        const Gap(30),
                         InkWell(
                           onTap: () {
                             insertRecord();
@@ -226,7 +224,7 @@ class _FactoryScreenState extends State<FactoryScreen> {
               return Column(
                 children: [
                   Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       margin: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
@@ -246,7 +244,7 @@ class _FactoryScreenState extends State<FactoryScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Get.to(FactoryAdd(), arguments: index);
+                              Get.to(const FactoryAdd(), arguments: index);
                             },
                             child: ListTile(
                               title: Column(
@@ -302,7 +300,7 @@ class _FactoryScreenState extends State<FactoryScreen> {
             width: 36,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100), color: Colors.white),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back_ios,
               size: 20,
               color: AppColors.primary,

@@ -1,15 +1,15 @@
 import 'dart:convert';
+// ignore: unused_import
 import 'package:drink_app_getx/app/screen/travel_product/detail_ticket.dart';
 import 'package:drink_app_getx/app/widget/button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:gap/gap.dart';
 import 'package:http/http.dart' as http;
 import '../../core/values/colors.dart';
 import '../../core/values/strings.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+// ignore: duplicate_import
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -43,7 +43,7 @@ class SelectedProductScreen extends StatefulWidget {
 
 class _SelectedProductScreenState extends State<SelectedProductScreen> {
   TextEditingController count = TextEditingController();
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   @override
   void initState() {
@@ -95,8 +95,9 @@ class _SelectedProductScreenState extends State<SelectedProductScreen> {
       } catch (e) {
         print(e);
       }
-    } else
+    } else {
       Fluttertoast.showToast(msg: 'Nhập đầy đủ thông tin mới thêm');
+    }
   }
 
   Future<void> _handleRefresh() async {
@@ -140,7 +141,7 @@ class _SelectedProductScreenState extends State<SelectedProductScreen> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                     color: Colors.white),
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back_ios,
                   size: 20,
                   color: AppColors.primary,
@@ -163,7 +164,7 @@ class _SelectedProductScreenState extends State<SelectedProductScreen> {
             itemBuilder: (context, index) {
               return users[index]['SoLuongTon'] != '0'
                   ? Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       margin: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
@@ -248,7 +249,7 @@ class _SelectedProductScreenState extends State<SelectedProductScreen> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        content: Container(
+                                        content: SizedBox(
                                           height: Get.height * 0.5,
                                           child: Column(
                                             mainAxisAlignment:
@@ -259,92 +260,89 @@ class _SelectedProductScreenState extends State<SelectedProductScreen> {
                                                 style: AppStyle.bold(
                                                     color: Colors.red),
                                               ),
-                                              Gap(12),
-                                              Container(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Mã phiếu xuất: ${widget.idTicket}',
-                                                      style: AppStyle.medium(),
-                                                    ),
-                                                    Gap(8),
-                                                    Text(
-                                                      'Mã đại lý: ${widget.idShop}',
-                                                      style: AppStyle.medium(),
-                                                    ),
-                                                    Gap(8),
-                                                    Text(
-                                                      'Mã sản phẩm: ${users[index]['MaSanPham']}',
-                                                      style: AppStyle.medium(),
-                                                    ),
-                                                    Gap(8),
-                                                    Text(
-                                                      'Đơn giá: ${users[index]['DonGia']}',
-                                                      style: AppStyle.medium(),
-                                                    ),
-                                                    Text(
-                                                      'Số lượng còn: ${users[index]['SoLuongTon']}',
-                                                      style: AppStyle.medium(),
-                                                    ),
-                                                    Gap(8),
-                                                    _buildTextField(
-                                                        'Nhập số lượng xuất: ${count.text}',
-                                                        count),
-                                                    Gap(12),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        if (widget.idTicket !=
-                                                                '' &&
-                                                            widget.idTicket !=
-                                                                '') {
-                                                          setState(() {
-                                                            insertRecord(
-                                                                users[index][
-                                                                    'MaSanPham'],
-                                                                users[index]
-                                                                    ['DonGia']);
-                                                          });
-                                                        } else
-                                                          Fluttertoast.showToast(
-                                                              msg:
-                                                                  'Nhập mã đại lý và mã phiếu xuất mới thêm');
-                                                        // Get.to(DetailTicket(
-                                                        //     dateInfor: widget
-                                                        //         .dateExport,
-                                                        //     idShopInfor:
-                                                        //         widget.idShop,
-                                                        //     idTicketInfor:
-                                                        //         widget.idTicket,
-                                                        //     nameInfor:
-                                                        //         widget.nameTake,
-                                                        //     dateImportInfor:
-                                                        //         widget
-                                                        //             .dateImport,
-                                                        //     numberInfor: widget
-                                                        //         .numberNote,
-                                                        //     wireTakeInfor:
-                                                        //         widget
-                                                        //             .writeTake,
-                                                        //     writeInfor:
-                                                        //         widget.write,
-                                                        //     writeManagerInfor:
-                                                        //         widget
-                                                        //             .writeManager));
-                                                      },
-                                                      child: ButtonApp(
-                                                          height: 55,
-                                                          width:
-                                                              Get.width * 0.8,
-                                                          title:
-                                                              'Thêm chi tiết',
-                                                          color: Colors.red,
-                                                          colorTitle:
-                                                              Colors.white),
-                                                    )
-                                                  ],
-                                                ),
+                                              const Gap(12),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Mã phiếu xuất: ${widget.idTicket}',
+                                                    style: AppStyle.medium(),
+                                                  ),
+                                                  const Gap(8),
+                                                  Text(
+                                                    'Mã đại lý: ${widget.idShop}',
+                                                    style: AppStyle.medium(),
+                                                  ),
+                                                  const Gap(8),
+                                                  Text(
+                                                    'Mã sản phẩm: ${users[index]['MaSanPham']}',
+                                                    style: AppStyle.medium(),
+                                                  ),
+                                                  const Gap(8),
+                                                  Text(
+                                                    'Đơn giá: ${users[index]['DonGia']}',
+                                                    style: AppStyle.medium(),
+                                                  ),
+                                                  Text(
+                                                    'Số lượng còn: ${users[index]['SoLuongTon']}',
+                                                    style: AppStyle.medium(),
+                                                  ),
+                                                  const Gap(8),
+                                                  _buildTextField(
+                                                      'Nhập số lượng xuất: ${count.text}',
+                                                      count),
+                                                  const Gap(12),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      if (widget.idTicket !=
+                                                              '' &&
+                                                          widget.idTicket !=
+                                                              '') {
+                                                        setState(() {
+                                                          insertRecord(
+                                                              users[index]
+                                                                  ['MaSanPham'],
+                                                              users[index]
+                                                                  ['DonGia']);
+                                                        });
+                                                      } else {
+                                                        Fluttertoast.showToast(
+                                                            msg:
+                                                                'Nhập mã đại lý và mã phiếu xuất mới thêm');
+                                                      }
+                                                      // Get.to(DetailTicket(
+                                                      //     dateInfor: widget
+                                                      //         .dateExport,
+                                                      //     idShopInfor:
+                                                      //         widget.idShop,
+                                                      //     idTicketInfor:
+                                                      //         widget.idTicket,
+                                                      //     nameInfor:
+                                                      //         widget.nameTake,
+                                                      //     dateImportInfor:
+                                                      //         widget
+                                                      //             .dateImport,
+                                                      //     numberInfor: widget
+                                                      //         .numberNote,
+                                                      //     wireTakeInfor:
+                                                      //         widget
+                                                      //             .writeTake,
+                                                      //     writeInfor:
+                                                      //         widget.write,
+                                                      //     writeManagerInfor:
+                                                      //         widget
+                                                      //             .writeManager));
+                                                    },
+                                                    child: ButtonApp(
+                                                        height: 55,
+                                                        width: Get.width * 0.8,
+                                                        title: 'Thêm chi tiết',
+                                                        color: Colors.red,
+                                                        colorTitle:
+                                                            Colors.white),
+                                                  )
+                                                ],
                                               ),
                                             ],
                                           ),
@@ -353,7 +351,7 @@ class _SelectedProductScreenState extends State<SelectedProductScreen> {
                                     },
                                   );
                                 },
-                                icon: Icon(Icons.add),
+                                icon: const Icon(Icons.add),
                               ),
                             ),
                           ),
@@ -376,7 +374,6 @@ class _SelectedProductScreenState extends State<SelectedProductScreen> {
   }
 
   Widget _buildTextField(String title, TextEditingController name) {
-    String _displayText = "Nhập số vào đây";
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -387,7 +384,7 @@ class _SelectedProductScreenState extends State<SelectedProductScreen> {
           ),
         ),
         const Gap(8),
-        Container(
+        SizedBox(
           height: 55,
           width: Get.width * 0.8,
           child: TextField(
@@ -400,10 +397,7 @@ class _SelectedProductScreenState extends State<SelectedProductScreen> {
               border: OutlineInputBorder(),
             ),
             onChanged: (text) {
-              setState(() {
-                _displayText =
-                    text.isEmpty ? "Nhập số vào đây" : "Bạn đã nhập: $text";
-              });
+              setState(() {});
             },
           ),
         )

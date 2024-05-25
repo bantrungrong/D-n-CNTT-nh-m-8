@@ -3,14 +3,10 @@ import 'dart:convert';
 
 import 'package:drink_app_getx/app/core/values/icons.dart';
 import 'package:drink_app_getx/app/screen/input_product/input_product.dart';
-import 'package:drink_app_getx/app/screen/product/product_service.dart';
 import 'package:drink_app_getx/app/screen/report/report_screen.dart';
 import 'package:drink_app_getx/app/screen/shop/shop.dart';
-import 'package:drink_app_getx/app/screen/travel_product/add_ticket.dart';
 import 'package:drink_app_getx/app/widget/widget_detail_user.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:gap/gap.dart';
 import '../../core/values/strings.dart';
@@ -93,7 +89,7 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(100),
-                      image: DecorationImage(
+                      image: const DecorationImage(
                         image: AssetImage(MyIcon.xeno),
                         // fit: BoxFit.fill
                       )),
@@ -206,22 +202,22 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                   child: _buildCell('Quản lý thông tin đại lý', MyIcon.shop)),
               GestureDetector(
                   onTap: () {
-                    Get.to(TicketTravel());
+                    Get.to(const TicketTravel());
                   },
                   child: _buildCell('Quản lý xuất hàng', MyIcon.travel)),
               GestureDetector(
                   onTap: () {
-                    Get.to(TicketInput());
+                    Get.to(const TicketInput());
                   },
                   child: _buildCell('Quản lý nhập hàng', MyIcon.take)),
               GestureDetector(
                   onTap: () {
-                    Get.to(ReportScreen());
+                    Get.to(const ReportScreen());
                   },
                   child: _buildCell('Thống kê báo cáo', MyIcon.detail)),
               GestureDetector(
                   onTap: () {
-                    Get.to(FactoryScreen());
+                    Get.to(const FactoryScreen());
                   },
                   child: _buildCell('Xưởng sản xuất', MyIcon.factory)),
             ],

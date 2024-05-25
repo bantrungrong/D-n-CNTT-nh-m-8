@@ -1,17 +1,13 @@
 import 'dart:convert';
 
-import 'package:drink_app_getx/app/screen/travel_product/detail_ticket.dart';
 import 'package:drink_app_getx/app/widget/button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import '../../core/values/colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import '../../core/values/strings.dart';
 import 'SelectedProductScreen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class AddTicket extends StatefulWidget {
   const AddTicket({
@@ -97,7 +93,7 @@ class _AddTicketState extends State<AddTicket> {
 
   Future<void> insertRecord() async {
     print(idTicket.text);
-    print('${selectedMaDaiLy.value}');
+    print(selectedMaDaiLy.value);
     print(nameUser.text);
     print('${selectedDateExport.toLocal()}'.split(' ')[0].toString());
     print(write.text);
@@ -113,7 +109,7 @@ class _AddTicketState extends State<AddTicket> {
         String uri = "http://192.168.203.241/practice_api/add_phieu_xuat.php";
         var res = await http.post(Uri.parse(uri), body: {
           "MaPhieu": idTicket.text,
-          "MaDaiLy": '${selectedMaDaiLy.value}',
+          "MaDaiLy": selectedMaDaiLy.value,
           "TenNguoiNhan": nameUser.text,
           "NgayXuat": '${selectedDateExport.toLocal()}'.split(' ')[0],
           "ChuKyViet": write.text,
@@ -156,7 +152,7 @@ class _AddTicketState extends State<AddTicket> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                     color: Colors.white),
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back_ios,
                   size: 20,
                   color: AppColors.primary,
@@ -169,7 +165,7 @@ class _AddTicketState extends State<AddTicket> {
             ),
             IconButton(
                 onPressed: () {},
-                icon: Icon(
+                icon: const Icon(
                   Icons.apps,
                   color: Colors.white,
                 ))
@@ -190,7 +186,7 @@ class _AddTicketState extends State<AddTicket> {
             'Chọn đại lý',
             style: AppStyle.medium(),
           ),
-          SizedBox(
+          const SizedBox(
             height: 12,
           ),
           _buildSelectedShop(),
@@ -227,13 +223,13 @@ class _AddTicketState extends State<AddTicket> {
                 ));
               },
               child: _buildSelectedDate('Chọn sản phẩm xuất', '')),
-          SizedBox(
+          const SizedBox(
             height: 12,
           ),
           GestureDetector(
             onTap: () {
               if (idTicket.text != '' &&
-                  '${selectedMaDaiLy.value}' != '' &&
+                  selectedMaDaiLy.value != '' &&
                   nameUser.text != '' &&
                   '${selectedDateExport.toLocal()}'.split(' ')[0] != '' &&
                   write.text != '' &&
@@ -264,7 +260,7 @@ class _AddTicketState extends State<AddTicket> {
                 color: Colors.red,
                 colorTitle: Colors.white),
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
         ],
@@ -282,10 +278,10 @@ class _AddTicketState extends State<AddTicket> {
             fontSize: 16,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 8,
         ),
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.height,
           child: TextField(
             controller: name,
@@ -297,7 +293,7 @@ class _AddTicketState extends State<AddTicket> {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 12,
         )
       ],
@@ -308,19 +304,19 @@ class _AddTicketState extends State<AddTicket> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
+        const SizedBox(
           height: 12,
         ),
         Text(
           title,
           style: AppStyle.medium(),
         ),
-        SizedBox(
+        const SizedBox(
           height: 12,
         ),
         Container(
           width: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(5)),
@@ -331,11 +327,11 @@ class _AddTicketState extends State<AddTicket> {
                 time.split(' ')[0],
                 style: AppStyle.regular(),
               ),
-              Icon(Icons.keyboard_arrow_down)
+              const Icon(Icons.keyboard_arrow_down)
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 12,
         ),
       ],
@@ -352,9 +348,9 @@ class _AddTicketState extends State<AddTicket> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                title: Text('Chọn công ty'),
+                title: const Text('Chọn công ty'),
                 // insetPadding: const EdgeInsets.all(25),
-                content: Container(
+                content: SizedBox(
                   height: Get.height * 0.8,
                   width: Get.width * 0.9,
                   child: ListView.builder(
@@ -372,7 +368,7 @@ class _AddTicketState extends State<AddTicket> {
                           Navigator.pop(context);
                         },
                         child: Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               border: Border(
                                   bottom: BorderSide(
                                       width: 1, color: Colors.black))),
@@ -411,14 +407,14 @@ class _AddTicketState extends State<AddTicket> {
       },
       child: Container(
         width: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(5)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Obx(() => Container(
+            Obx(() => SizedBox(
                   width: Get.width * 0.7,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -427,41 +423,41 @@ class _AddTicketState extends State<AddTicket> {
                         selectedMaDaiLy.isEmpty
                             ? ''
                             : 'Mã Đại Lý: ${selectedMaDaiLy.value}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         selectedTendaiLy.isEmpty
                             ? ''
                             : 'Tên đại lý: ${selectedTendaiLy.value}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         selectedDiaChi.isEmpty
                             ? ''
                             : 'Địa chỉ: ${selectedDiaChi.value}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         selectedSDT.isEmpty
                             ? ''
                             : 'Số điện thoại: ${selectedSDT.value}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         selectedSDT.isEmpty
                             ? ''
                             : 'Số tiền nợ: ${selectedPice.value}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 )),
-            Icon(Icons.keyboard_arrow_down)
+            const Icon(Icons.keyboard_arrow_down)
           ],
         ),
       ),

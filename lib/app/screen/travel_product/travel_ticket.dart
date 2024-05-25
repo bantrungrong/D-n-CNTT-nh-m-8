@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:drink_app_getx/app/screen/travel_product/SelectedProductScreen.dart';
 import 'package:drink_app_getx/app/screen/travel_product/detail_ticket.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
@@ -10,6 +9,7 @@ import '../../core/values/colors.dart';
 import '../../core/values/strings.dart';
 import '../../widget/button.dart';
 import 'add_ticket.dart';
+// ignore: unused_import
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -87,7 +87,7 @@ class _TicketTravelState extends State<TicketTravel> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                     color: Colors.white),
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back_ios,
                   size: 20,
                   color: AppColors.primary,
@@ -100,7 +100,7 @@ class _TicketTravelState extends State<TicketTravel> {
             ),
             IconButton(
                 onPressed: () {},
-                icon: Icon(
+                icon: const Icon(
                   Icons.apps,
                   color: Colors.white,
                 ))
@@ -110,7 +110,7 @@ class _TicketTravelState extends State<TicketTravel> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: GestureDetector(
         onTap: () {
-          Get.to(AddTicket());
+          Get.to(const AddTicket());
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -131,7 +131,7 @@ class _TicketTravelState extends State<TicketTravel> {
               return Column(
                 children: [
                   Container(
-                      padding: EdgeInsets.symmetric(vertical: 24),
+                      padding: const EdgeInsets.symmetric(vertical: 24),
                       margin: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 16),
                       decoration: BoxDecoration(
@@ -182,7 +182,7 @@ class _TicketTravelState extends State<TicketTravel> {
                                         .copyWith(fontWeight: FontWeight.w500),
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 8,
                                   ),
                                   Text(
@@ -191,7 +191,7 @@ class _TicketTravelState extends State<TicketTravel> {
                                         .copyWith(fontWeight: FontWeight.w500),
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 8,
                                   ),
                                   Text(
@@ -200,7 +200,7 @@ class _TicketTravelState extends State<TicketTravel> {
                                         .copyWith(fontWeight: FontWeight.w500),
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 8,
                                   ),
                                   Text(
@@ -209,7 +209,7 @@ class _TicketTravelState extends State<TicketTravel> {
                                         .copyWith(fontWeight: FontWeight.w500),
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 8,
                                   ),
                                 ],
@@ -237,7 +237,7 @@ class _TicketTravelState extends State<TicketTravel> {
                                         .toString(),
                                   ));
                                 },
-                                icon: Icon(Icons.add),
+                                icon: const Icon(Icons.add),
                               ),
                             ),
                           ),

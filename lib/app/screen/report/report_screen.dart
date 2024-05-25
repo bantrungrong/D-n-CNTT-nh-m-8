@@ -67,7 +67,7 @@ class _ReportScreenState extends State<ReportScreen> {
       body: ListView(
         children: [
           Container(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             height: MediaQuery.of(context).size.height * 0.6,
             child: Column(
               children: [
@@ -90,7 +90,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             // Display product names as x-axis labels
                             int index = value.toInt() - 1;
                             if (index >= 0 && index < product.length) {
-                              return '${index + 1}' ?? '';
+                              return '${index + 1}';
                             }
                             return '';
                           },
@@ -132,7 +132,7 @@ class _ReportScreenState extends State<ReportScreen> {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             height: Get.height * 0.3,
             child: ListView.builder(
                 itemCount: product.length,
@@ -155,7 +155,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 8,
                         )
                       ],

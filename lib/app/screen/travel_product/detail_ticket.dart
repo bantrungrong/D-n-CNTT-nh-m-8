@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:drink_app_getx/app/core/values/colors.dart';
 import 'package:drink_app_getx/app/core/values/strings.dart';
 import 'package:drink_app_getx/app/screen/travel_product/SelectedProductScreen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:get/get.dart';
@@ -38,7 +37,7 @@ class DetailTicket extends StatefulWidget {
 }
 
 class _DetailTicketState extends State<DetailTicket> {
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   @override
   void initState() {
@@ -85,13 +84,6 @@ class _DetailTicketState extends State<DetailTicket> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.idShopInfor == null) {
-      return Center(
-        child: CircularProgressIndicator(
-          color: Colors.red,
-        ),
-      );
-    }
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -111,7 +103,7 @@ class _DetailTicketState extends State<DetailTicket> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                     color: Colors.white),
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back_ios,
                   size: 20,
                   color: AppColors.primary,
@@ -134,8 +126,8 @@ class _DetailTicketState extends State<DetailTicket> {
     return Center(
       child: Container(
         width: Get.width * 0.9,
-        margin: EdgeInsets.symmetric(vertical: 10),
-        padding: EdgeInsets.symmetric(vertical: 18),
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 18),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.red)),
@@ -180,14 +172,14 @@ class _DetailTicketState extends State<DetailTicket> {
                           write: widget.writeInfor,
                         ));
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.add,
                         color: Colors.red,
                       ))
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               height: Get.height * 0.6,
               width: Get.width * 0.9,
               child: SmartRefresher(
@@ -198,8 +190,8 @@ class _DetailTicketState extends State<DetailTicket> {
                     itemBuilder: (context, index) {
                       return ticket[index]['MaDaiLy'] == widget.idShopInfor
                           ? Container(
-                              margin: EdgeInsets.all(6),
-                              padding: EdgeInsets.only(top: 12),
+                              margin: const EdgeInsets.all(6),
+                              padding: const EdgeInsets.only(top: 12),
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.grey),
                                   borderRadius: BorderRadius.circular(12)),
@@ -213,7 +205,7 @@ class _DetailTicketState extends State<DetailTicket> {
                                       'Đơn giá', '${ticket[index]['DonGia']}'),
                                   _buildCell('Thành tiền',
                                       '${ticket[index]['TongTien']}'),
-                                  Gap(12),
+                                  const Gap(12),
                                 ],
                               ),
                             )
@@ -230,7 +222,7 @@ class _DetailTicketState extends State<DetailTicket> {
   Widget _buildCell(String leftText, String rightText) {
     return Container(
       width: Get.width * 0.95,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         horizontal: 12,
       ),
       child: Column(
@@ -251,7 +243,7 @@ class _DetailTicketState extends State<DetailTicket> {
           ),
           Container(
             height: 0.5,
-            margin: EdgeInsets.symmetric(vertical: 12),
+            margin: const EdgeInsets.symmetric(vertical: 12),
             color: Colors.red,
           )
         ],

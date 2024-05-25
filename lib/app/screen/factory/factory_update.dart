@@ -101,7 +101,7 @@ class _FactoryAddState extends State<FactoryAdd> {
   Widget build(BuildContext context) {
     final value = Get.arguments as int?;
     if (value == null || value >= users.length) {
-      return Center(
+      return const Center(
           child: CircularProgressIndicator(
         color: Colors.red,
       ));
@@ -117,7 +117,7 @@ class _FactoryAddState extends State<FactoryAdd> {
       body: ListView(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -125,13 +125,13 @@ class _FactoryAddState extends State<FactoryAdd> {
                   'Mã phân xưởng: ${users[value]['MaPhanXuong']}',
                   style: AppStyle.medium(),
                 ),
-                Gap(12),
+                const Gap(12),
                 _buildTextField(
                     'Tên phân xưởng: ${users[value]['TenPhanXuong']}',
                     TenPhanXuong),
-                Gap(10),
+                const Gap(10),
                 _buildTextField('Địa chỉ: ${users[value]['DiaChi']}', DiaChi),
-                Gap(23),
+                const Gap(23),
                 GestureDetector(
                   onTap: () {
                     if (TenPhanXuong.text.isEmpty || DiaChi.text.isEmpty) {
@@ -141,10 +141,10 @@ class _FactoryAddState extends State<FactoryAdd> {
                     }
                     updateProduct();
                   },
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ButtonApp(
+                      const ButtonApp(
                         height: 55,
                         width: 200,
                         title: 'Xác nhận lưu',
@@ -176,7 +176,7 @@ class _FactoryAddState extends State<FactoryAdd> {
             width: 36,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100), color: Colors.white),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back_ios,
               size: 20,
               color: AppColors.primary,
@@ -217,7 +217,7 @@ class _FactoryAddState extends State<FactoryAdd> {
           style: AppStyle.medium(fontSize: 16),
         ),
         const Gap(8),
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width,
           child: TextField(
             controller: name,

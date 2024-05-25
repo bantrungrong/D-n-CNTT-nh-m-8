@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 
 import 'package:drink_app_getx/app/core/values/colors.dart';
@@ -117,11 +119,9 @@ class _DetailInputState extends State<DetailInput> {
             border: Border.all(color: Colors.red)),
         child: Column(
           children: [
-            Container(
-              child: Text(
-                'Thông tin phiếu nhập',
-                style: AppStyle.bold(color: Colors.red),
-              ),
+            Text(
+              'Thông tin phiếu nhập',
+              style: AppStyle.bold(color: Colors.red),
             ),
             Gap(8),
             _buildCell('Mã phiếu nhập', widget.MaPhieuNhap),
@@ -158,14 +158,14 @@ class _DetailInputState extends State<DetailInput> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
+              SizedBox(
                 width: Get.width * 0.4,
                 child: Text(
                   leftText,
                   style: AppStyle.medium(),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: Get.width * 0.4,
                 child: Text(
                   rightText,
