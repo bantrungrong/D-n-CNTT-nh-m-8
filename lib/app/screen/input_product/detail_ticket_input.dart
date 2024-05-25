@@ -52,8 +52,8 @@ class _DetailInputState extends State<DetailInput> {
   List<Map<String, dynamic>> ticket = [];
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://192.168.203.241/practice_api/TT_chitietPhieuXuat.php'));
+      final response = await http.get(
+          Uri.parse('http://192.168.1.2/practice_api/TT_chitietPhieuXuat.php'));
       if (response.statusCode == 200) {
         setState(() {
           ticket = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -109,41 +109,45 @@ class _DetailInputState extends State<DetailInput> {
   }
 
   Widget _buildContext() {
-    return Center(
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.red)),
-        child: Column(
-          children: [
-            Container(
-              child: Text(
-                'Thông tin phiếu nhập',
-                style: AppStyle.bold(color: Colors.red),
-              ),
+    return ListView(
+      children: [
+        Center(
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.red)),
+            child: Column(
+              children: [
+                Container(
+                  child: Text(
+                    'Thông tin phiếu nhập',
+                    style: AppStyle.bold(color: Colors.red),
+                  ),
+                ),
+                Gap(8),
+                _buildCell('Mã phiếu nhập', widget.MaPhieuNhap),
+                _buildCell('Số hiệu xưởng', widget.SoHieuXuong),
+                _buildCell('Tên người giao hàng', widget.TenNguoiGiaoHang),
+                _buildCell('Chữ ký viết', widget.ChuKyViet),
+                _buildCell('Chữ ký nhận', widget.ChuKyNhan),
+                _buildCell('Chữ ký trưởng đơn vị', widget.ChuKyTruongDonVi),
+                Text(
+                  'Sản phẩm',
+                  style: AppStyle.bold(color: Colors.red),
+                ),
+                Gap(8),
+                _buildCell('Mã sản phẩm', widget.MaSanPham),
+                _buildCell('Tên sản phẩm', widget.TenSanPham),
+                _buildCell('Đơn giá', widget.DonGia),
+                _buildCell('Số lượng nhập', widget.SoLuongNhap),
+                _buildCell('Thành tiền', widget.ThanhTien),
+                _buildCell('Tổng tiền', widget.TongTien),
+              ],
             ),
-            Gap(8),
-            _buildCell('Mã phiếu nhập', widget.MaPhieuNhap),
-            _buildCell('Số hiệu xưởng', widget.SoHieuXuong),
-            _buildCell('Tên người giao hàng', widget.TenNguoiGiaoHang),
-            _buildCell('Chữ ký viết', widget.ChuKyViet),
-            _buildCell('Chữ ký nhận', widget.ChuKyNhan),
-            _buildCell('Chữ ký trưởng đơn vị', widget.ChuKyTruongDonVi),
-            Text(
-              'Sản phẩm',
-              style: AppStyle.bold(color: Colors.red),
-            ),
-            Gap(8),
-            _buildCell('Mã sản phẩm', widget.MaSanPham),
-            _buildCell('Tên sản phẩm', widget.TenSanPham),
-            _buildCell('Đơn giá', widget.DonGia),
-            _buildCell('Số lượng nhập', widget.SoLuongNhap),
-            _buildCell('Thành tiền', widget.ThanhTien),
-            _buildCell('Tổng tiền', widget.TongTien),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 

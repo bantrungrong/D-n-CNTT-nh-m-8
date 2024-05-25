@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:drink_app_getx/app/core/values/icons.dart';
 import 'package:drink_app_getx/app/screen/input_product/input_product.dart';
-import 'package:drink_app_getx/app/screen/product/product_service.dart';
+import 'package:drink_app_getx/app/screen/product/product_detail.dart';
 import 'package:drink_app_getx/app/screen/report/report_screen.dart';
 import 'package:drink_app_getx/app/screen/shop/shop.dart';
 import 'package:drink_app_getx/app/screen/travel_product/add_ticket.dart';

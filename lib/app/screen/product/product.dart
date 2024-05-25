@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:drink_app_getx/app/screen/product/product_detail.dart';
 import 'package:drink_app_getx/app/screen/product/product_update.dart';
 import 'package:drink_app_getx/app/widget/button.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,7 +33,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.203.241/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.1.2/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -52,7 +53,7 @@ class _ProductScreenState extends State<ProductScreen> {
         pice.text != "" &&
         count_item.text != "") {
       try {
-        String uri = "http://192.168.203.241/practice_api/add_product.php";
+        String uri = "http://192.168.1.2/practice_api/add_product.php";
         var res = await http.post(Uri.parse(uri), body: {
           "MaSanPham": id.text,
           "TenSanPham": namepro.text,
@@ -75,7 +76,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   Future<void> delProduct(String id) async {
     try {
-      String uri = "http://192.168.203.241/practice_api/delete_product.php";
+      String uri = "http://192.168.1.2/practice_api/delete_product.php";
       var res = await http.post(Uri.parse(uri), body: {"MaSanPham": id});
       var response = jsonDecode(res.body);
       if (response['success'] == 'true') {
@@ -101,6 +102,8 @@ class _ProductScreenState extends State<ProductScreen> {
     super.initState();
   }
 
+  List<String> selectedIndex = ['Tất cả', 'Hết hàng', 'Còn hàng'];
+  int selected = 0;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -109,7 +112,46 @@ class _ProductScreenState extends State<ProductScreen> {
         backgroundColor: AppColors.primary,
         title: _buildAppBar(),
       ),
-      body: _buildBodyContext(),
+      body: ListView(
+        children: [
+          Container(
+            height: 33,
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.grey.shade100),
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 3,
+                itemBuilder: (context, index) {
+                  return Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selected = index;
+                        });
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: selected == index
+                                  ? Colors.red
+                                  : Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(12)),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 22,
+                          ),
+                          child: Text(selectedIndex[index])),
+                    ),
+                  );
+                }),
+          ),
+          Container(
+              height: Get.height * 0.8,
+              width: Get.width * 0.9,
+              child: _buildBodyContext()),
+        ],
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: GestureDetector(
         onTap: () {
@@ -223,107 +265,112 @@ class _ProductScreenState extends State<ProductScreen> {
     return SmartRefresher(
         controller: _refreshController,
         onRefresh: _handleRefresh,
-        child: ListView.builder(
-            itemCount: users.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                            offset: const Offset(
-                                0, 2), // changes the direction of shadow
-                          ),
-                        ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: List.generate(
+              users.length,
+              (index) => Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: const Offset(
+                            0, 2), // changes the direction of shadow
                       ),
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {},
-                            child: ListTile(
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(ProductDetail(
+                              DonGia: users[index]['DonGia'],
+                              LoaiSanPham: users[index]['LoaiSanPham'],
+                              MaSanPham: users[index]['MaSanPham'],
+                              SoLuong: users[index]['SoLuongTon'],
+                              TenSanPham: users[index]['TenSanPham']));
+                        },
+                        child: ListTile(
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Mã SP: ${users[index]['MaSanPham']}',
+                                style: AppStyle.medium(fontSize: 14)
+                                    .copyWith(fontWeight: FontWeight.w500),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Tên SP: ${users[index]['TenSanPham']}',
+                                style: AppStyle.medium(fontSize: 14)
+                                    .copyWith(fontWeight: FontWeight.w500),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Loại SP: ${users[index]['LoaiSanPham']}',
+                                style: AppStyle.medium(fontSize: 14)
+                                    .copyWith(fontWeight: FontWeight.w500),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Đơn giá: ${users[index]['DonGia']}',
+                                style: AppStyle.medium(fontSize: 14)
+                                    .copyWith(fontWeight: FontWeight.w500),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Số lượng: ${users[index]['SoLuongTon']}',
+                                style: AppStyle.medium(fontSize: 14)
+                                    .copyWith(fontWeight: FontWeight.w500),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Row(
                                 children: [
                                   Text(
-                                    'Mã SP: ${users[index]['MaSanPham']}',
-                                    style: AppStyle.medium(fontSize: 14)
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                    overflow: TextOverflow.ellipsis,
+                                    'Trạng thái:',
+                                    style: AppStyle.regular(fontSize: 13),
                                   ),
-                                  Text(
-                                    'Tên SP: ${users[index]['TenSanPham']}',
-                                    style: AppStyle.medium(fontSize: 14)
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    'Loại SP: ${users[index]['LoaiSanPham']}',
-                                    style: AppStyle.medium(fontSize: 14)
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    'Đơn giá: ${users[index]['DonGia']}',
-                                    style: AppStyle.medium(fontSize: 14)
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    'Số lượng: ${users[index]['SoLuongTon']}',
-                                    style: AppStyle.medium(fontSize: 14)
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Trạng thái:',
-                                        style: AppStyle.regular(fontSize: 13),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {},
-                                        child: Text(
-                                          users[index]['SoLuongTon'] == '0'
-                                              ? 'Hết hàng'
-                                              : 'Còn hàng',
-                                          style: AppStyle.regular(
-                                              fontSize: 13,
-                                              color: users[index]
-                                                          ['SoLuongTon'] ==
-                                                      '0'
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      users[index]['SoLuongTon'] == '0'
+                                          ? 'Hết hàng'
+                                          : 'Còn hàng',
+                                      style: AppStyle.bold(
+                                          fontSize: 13,
+                                          color:
+                                              users[index]['SoLuongTon'] == '0'
                                                   ? Colors.red
                                                   : Colors.green),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 ],
                               ),
-                              trailing: IconButton(
-                                onPressed: () {
-                                  Get.to(ProductAdd(), arguments: index);
-                                },
-                                icon: Icon(
-                                  Icons.build_circle_outlined,
-                                  size: 32,
-                                ),
-                              ),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            onPressed: () {
+                              Get.to(ProductUpdate(), arguments: index);
+                            },
+                            icon: Icon(
+                              Icons.build_circle_outlined,
+                              size: 32,
                             ),
                           ),
-                        ],
-                      )),
-                ],
-              );
-            }));
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
+          ),
+        ));
   }
 
   Widget _buildAppBar() {
@@ -377,7 +424,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Future<void> _handleRefresh() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.203.241/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.1.2/practice_api/view_data.php'));
 
       if (response.statusCode == 200) {
         setState(() {

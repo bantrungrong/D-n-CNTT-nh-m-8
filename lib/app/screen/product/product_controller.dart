@@ -20,10 +20,11 @@ class SearchController extends GetxController {
             .toLowerCase()
             .contains(searchText.toLowerCase());
       }).toList());
-   }
-   
-   void setProducts(List<Map<String, dynamic>> products) {
-     allProducts.assignAll(products);
-     filterProducts();
-   }
- }
+    }
+
+    void setProducts(List<Map<String, dynamic>> products) {
+      allProducts.assignAll(products);
+      filterProducts();
+    }
+  }
+}
