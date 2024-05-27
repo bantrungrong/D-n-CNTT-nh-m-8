@@ -200,84 +200,83 @@ class _ProductScreenState extends State<ProductScreen> {
                 }),
           ),
           Container(
-              height: Get.height * 0.8,
+              height: Get.height * 0.75,
               width: Get.width * 0.9,
               child: _buildBodyContext()),
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: GestureDetector(
-        onTap: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  backgroundColor: Colors.grey.shade50,
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Thêm sản phẩm',
-                        style: AppStyle.bold(fontSize: 18),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(Icons.close),
-                      )
-                    ],
-                  ),
-                  insetPadding: const EdgeInsets.all(12),
-                  content: Container(
-                    height: Get.height * 0.75,
-                    width: Get.width * 1,
-                    child: ListView(
-                      children: [
-                        _buildTextField('Mã sản phẩm', id),
-                        Gap(8),
-                        _buildTextField('Tên sản phẩm', namepro),
-                        Gap(8),
-                        _buildTextField('Loại sản phẩm', type),
-                        Gap(8),
-                        _buildTextField('Đơn giá', pice),
-                        Gap(8),
-                        _buildTextField('Số lượng', count_item),
-                        Gap(30),
-                        InkWell(
-                          onTap: () {
-                            insertRecord();
-                            Navigator.of(context).pop();
-                          },
-                          child: Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black),
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                            ),
-                            child: Center(
-                                child: Text(
-                              'Xác nhận thêm',
-                              style: AppStyle.bold(),
-                            )),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      backgroundColor: Colors.grey.shade50,
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Thêm sản phẩm',
+                            style: AppStyle.bold(fontSize: 18),
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              });
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ButtonApp(
-              height: 40,
-              width: Get.width * 0.5,
-              title: '+ Thêm sản phẩm',
-              color: Colors.white,
-              colorTitle: Colors.red),
-        ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(Icons.close),
+                          )
+                        ],
+                      ),
+                      insetPadding: const EdgeInsets.all(12),
+                      content: Container(
+                        height: Get.height * 0.75,
+                        width: Get.width * 1,
+                        child: ListView(
+                          children: [
+                            _buildTextField('Mã sản phẩm', id),
+                            Gap(8),
+                            _buildTextField('Tên sản phẩm', namepro),
+                            Gap(8),
+                            _buildTextField('Loại sản phẩm', type),
+                            Gap(8),
+                            _buildTextField('Đơn giá', pice),
+                            Gap(8),
+                            _buildTextField('Số lượng', count_item),
+                            Gap(30),
+                            InkWell(
+                              onTap: () {
+                                insertRecord();
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  'Xác nhận thêm',
+                                  style: AppStyle.bold(),
+                                )),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+            },
+            child: Container(
+              margin: EdgeInsets.only(bottom: 33, left: 16, right: 16),
+              child: ButtonApp(
+                  height: 55,
+                  width: Get.width * 0.2,
+                  title: '+ Thêm sản phẩm',
+                  color: Colors.white,
+                  colorTitle: Colors.red),
+            ),
+          ),
+        ],
       ),
     );
   }

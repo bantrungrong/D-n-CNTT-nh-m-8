@@ -107,145 +107,161 @@ class _TicketTravelState extends State<TicketTravel> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: GestureDetector(
-        onTap: () {
-          Get.to(AddTicket());
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: ButtonApp(
-              height: 55,
-              width: Get.width * 0.7,
-              title: '+ Thêm phiếu xuất',
-              color: Colors.white,
-              colorTitle: Colors.red),
-        ),
-      ),
-      body: SmartRefresher(
-        controller: _refreshController,
-        onRefresh: _handleRefresh,
-        child: ListView.builder(
-            itemCount: ticket.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Container(
-                      padding: EdgeInsets.symmetric(vertical: 24),
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                            offset: const Offset(
-                                0, 2), // changes the direction of shadow
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Get.to(DetailTicket(
-                                dateInfor: ticket[index]['NgayXuat'].toString(),
-                                idShopInfor:
-                                    ticket[index]['MaDaiLy'].toString(),
-                                idTicketInfor:
-                                    ticket[index]['MaPhieu'].toString(),
-                                nameInfor:
-                                    ticket[index]['TenNguoiNhan'].toString(),
-                                dateImportInfor:
-                                    ticket[index]['NgayCapMinistry'].toString(),
-                                numberInfor:
-                                    ticket[index]['SoGiayChungNhan'].toString(),
-                                wireTakeInfor:
-                                    ticket[index]['ChuKyNhan'].toString(),
-                                writeInfor:
-                                    ticket[index]['ChuKyViet'].toString(),
-                                writeManagerInfor: ticket[index]
-                                        ['ChuKyTruongDonVi']
-                                    .toString(),
-                              ));
-                            },
-                            child: ListTile(
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Mã phiếu xuất: ${ticket[index]['MaPhieu']}',
-                                    style: AppStyle.medium(fontSize: 14)
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    'Mã đại lý: ${ticket[index]['MaDaiLy']}',
-                                    style: AppStyle.medium(fontSize: 14)
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    'Tên người nhận: ${ticket[index]['TenNguoiNhan']}',
-                                    style: AppStyle.medium(fontSize: 14)
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    'Ngày xuất: ${ticket[index]['NgayXuat']}',
-                                    style: AppStyle.medium(fontSize: 14)
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                ],
-                              ),
-                              trailing: IconButton(
-                                onPressed: () {
-                                  Get.to(SelectedProductScreen(
-                                    dateExport:
-                                        ticket[index]['NgayXuat'].toString(),
-                                    idShop: ticket[index]['MaDaiLy'].toString(),
-                                    idTicket:
-                                        ticket[index]['MaPhieu'].toString(),
-                                    nameTake: ticket[index]['TenNguoiNhan']
-                                        .toString(),
-                                    dateImport: ticket[index]['NgayCapMinistry']
-                                        .toString(),
-                                    numberNote: ticket[index]['SoGiayChungNhan']
-                                        .toString(),
-                                    writeTake:
-                                        ticket[index]['ChuKyNhan'].toString(),
-                                    write:
-                                        ticket[index]['ChuKyViet'].toString(),
-                                    writeManager: ticket[index]
-                                            ['ChuKyTruongDonVi']
-                                        .toString(),
-                                  ));
-                                },
-                                icon: Icon(Icons.add),
+      body: Column(
+        children: [
+          Container(
+            height: Get.height * 0.78,
+            width: Get.width * 1,
+            child: SmartRefresher(
+              controller: _refreshController,
+              onRefresh: _handleRefresh,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: List.generate(
+                    ticket.length,
+                    (index) => Container(
+                        padding: EdgeInsets.symmetric(vertical: 24),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                              offset: const Offset(
+                                  0, 2), // changes the direction of shadow
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(DetailTicket(
+                                  dateInfor:
+                                      ticket[index]['NgayXuat'].toString(),
+                                  idShopInfor:
+                                      ticket[index]['MaDaiLy'].toString(),
+                                  idTicketInfor:
+                                      ticket[index]['MaPhieu'].toString(),
+                                  nameInfor:
+                                      ticket[index]['TenNguoiNhan'].toString(),
+                                  dateImportInfor: ticket[index]
+                                          ['NgayCapMinistry']
+                                      .toString(),
+                                  numberInfor: ticket[index]['SoGiayChungNhan']
+                                      .toString(),
+                                  wireTakeInfor:
+                                      ticket[index]['ChuKyNhan'].toString(),
+                                  writeInfor:
+                                      ticket[index]['ChuKyViet'].toString(),
+                                  writeManagerInfor: ticket[index]
+                                          ['ChuKyTruongDonVi']
+                                      .toString(),
+                                ));
+                              },
+                              child: ListTile(
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Mã phiếu xuất: ${ticket[index]['MaPhieu']}',
+                                      style: AppStyle.medium(fontSize: 14)
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      'Mã đại lý: ${ticket[index]['MaDaiLy']}',
+                                      style: AppStyle.medium(fontSize: 14)
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      'Tên người nhận: ${ticket[index]['TenNguoiNhan']}',
+                                      style: AppStyle.medium(fontSize: 14)
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      'Ngày xuất: ${ticket[index]['NgayXuat']}',
+                                      style: AppStyle.medium(fontSize: 14)
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                  ],
+                                ),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    Get.to(SelectedProductScreen(
+                                      dateExport:
+                                          ticket[index]['NgayXuat'].toString(),
+                                      idShop:
+                                          ticket[index]['MaDaiLy'].toString(),
+                                      idTicket:
+                                          ticket[index]['MaPhieu'].toString(),
+                                      nameTake: ticket[index]['TenNguoiNhan']
+                                          .toString(),
+                                      dateImport: ticket[index]
+                                              ['NgayCapMinistry']
+                                          .toString(),
+                                      numberNote: ticket[index]
+                                              ['SoGiayChungNhan']
+                                          .toString(),
+                                      writeTake:
+                                          ticket[index]['ChuKyNhan'].toString(),
+                                      write:
+                                          ticket[index]['ChuKyViet'].toString(),
+                                      writeManager: ticket[index]
+                                              ['ChuKyTruongDonVi']
+                                          .toString(),
+                                    ));
+                                  },
+                                  icon: Icon(Icons.add),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      )),
-                ],
-              );
-            }),
+                          ],
+                        )),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Get.to(AddTicket());
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: ButtonApp(
+                  height: 55,
+                  width: Get.width * 0.7,
+                  title: '+ Thêm phiếu xuất',
+                  color: Colors.white,
+                  colorTitle: Colors.red),
+            ),
+          ),
+        ],
       ),
     );
   }
