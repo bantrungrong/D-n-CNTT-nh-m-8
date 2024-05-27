@@ -29,8 +29,8 @@ class _ProductUpdateState extends State<ProductUpdate> {
 
   Future<void> getRecord() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://192.168.1.2/practice_api/view_data.php'));
+      final response = await http.get(Uri.parse(
+          'http://192.168.1.5/practice_api/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -54,7 +54,8 @@ class _ProductUpdateState extends State<ProductUpdate> {
       return;
     }
     try {
-      String uri = "http://192.168.1.2/practice_api/update_product.php";
+      String uri =
+          "http://192.168.1.5/practice_api/practice_api/update_product.php";
       var res = await http.post(Uri.parse(uri), body: {
         "TenSanPham": NameProduct.text,
         "LoaiSanPham": TypeProduct.text,
@@ -79,7 +80,8 @@ class _ProductUpdateState extends State<ProductUpdate> {
     if (value == null || value >= users.length) return;
 
     try {
-      String uri = "http://192.168.1.2/practice_api/delete_product.php";
+      String uri =
+          "http://192.168.1.5/practice_api/practice_api/delete_product.php";
       var resDel = await http.post(Uri.parse(uri), body: {
         "MaSanPham": users[value]['MaSanPham'],
       });
@@ -105,7 +107,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
   Widget build(BuildContext context) {
     final value = Get.arguments as int?;
     if (value == null || value >= users.length) {
-      return Center(
+      return const Center(
           child: CircularProgressIndicator(
         color: Colors.red,
       ));
@@ -121,7 +123,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
       body: ListView(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -134,19 +136,19 @@ class _ProductUpdateState extends State<ProductUpdate> {
                     )
                   ],
                 ),
-                Gap(12),
+                const Gap(12),
                 _buildTextField(
                     'Tên Sản phẩm: ${users[value]['TenSanPham']}', NameProduct),
-                Gap(10),
+                const Gap(10),
                 _buildTextField('Loại sản phẩm: ${users[value]['LoaiSanPham']}',
                     TypeProduct),
-                Gap(10),
+                const Gap(10),
                 _buildTextField(
                     'Đơn giá: ${users[value]['DonGia']}', PiceProduct),
-                Gap(10),
+                const Gap(10),
                 _buildTextField(
                     'Số lượng: ${users[value]['SoLuongTon']}', CountProduct),
-                Gap(23),
+                const Gap(23),
                 GestureDetector(
                   onTap: () {
                     if (NameProduct.text.isEmpty ||
@@ -159,7 +161,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
                     updateProduct();
                     Get.back();
                   },
-                  child: ButtonApp(
+                  child: const ButtonApp(
                     height: 55,
                     width: 200,
                     title: 'Xác nhận lưu',
@@ -189,7 +191,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
             width: 36,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100), color: Colors.white),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back_ios,
               size: 20,
               color: AppColors.primary,
@@ -200,23 +202,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
           'Sửa thông tin sản phẩm',
           style: AppStyle.bold(color: Colors.white, fontSize: 16),
         ),
-        GestureDetector(
-          onTap: () {
-            delProduct();
-            Get.back();
-          },
-          child: Container(
-            height: 36,
-            width: 36,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100), color: Colors.white),
-            child: const Icon(
-              Icons.delete,
-              color: AppColors.primary,
-              size: 22,
-            ),
-          ),
-        ),
+        Container()
       ],
     );
   }
@@ -230,7 +216,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
           style: AppStyle.medium(fontSize: 16),
         ),
         const Gap(8),
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width,
           child: TextField(
             controller: name,

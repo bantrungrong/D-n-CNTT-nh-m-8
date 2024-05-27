@@ -52,8 +52,8 @@ class _DetailInputState extends State<DetailInput> {
   List<Map<String, dynamic>> ticket = [];
   Future<void> getRecord() async {
     try {
-      final response = await http.get(
-          Uri.parse('http://192.168.1.2/practice_api/TT_chitietPhieuXuat.php'));
+      final response = await http.get(Uri.parse(
+          'http://192.168.1.5/practice_api/practice_api/TT_chitietPhieuXuat.php'));
       if (response.statusCode == 200) {
         setState(() {
           ticket = List<Map<String, dynamic>>.from(jsonDecode(response.body));

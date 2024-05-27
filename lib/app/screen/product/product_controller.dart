@@ -1,30 +1,49 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
-class SearchController extends GetxController {
-  var searchText = ''.obs;
-  var filteredProducts = <Map<String, dynamic>>[].obs;
-  var allProducts = <Map<String, dynamic>>[].obs;
+class ProductController extends GetxController {
+  var selected = 0.obs;
+  var users = <Map<String, dynamic>>[].obs;
+  var filteredUsers = <Map<String, dynamic>>[].obs;
 
-  void updateSearchText(String text) {
-    searchText.value = text;
-    filterProducts();
+  @override
+  void onInit() {
+    super.onInit();
+    getRecord();
+    ever(selected, (_) => filterUsers());
   }
 
-  void filterProducts() {
-    if (searchText.isEmpty) {
-      filteredProducts.assignAll(allProducts);
-    } else {
-      filteredProducts.assignAll(allProducts.where((product) {
-        return product['TenSanPham']
-            .toString()
-            .toLowerCase()
-            .contains(searchText.toLowerCase());
-      }).toList());
+  void getRecord() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://192.168.1.5/practice_api/practice_api/view_data.php'));
+      if (response.statusCode == 200) {
+        users.value =
+            List<Map<String, dynamic>>.from(jsonDecode(response.body));
+        filterUsers();
+      } else {
+        print('Failed to load users: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
+  }
 
-    void setProducts(List<Map<String, dynamic>> products) {
-      allProducts.assignAll(products);
-      filterProducts();
+  void filterUsers() {
+    if (selected.value == 0) {
+      filteredUsers.value = users;
+    } else if (selected.value == 1) {
+      filteredUsers.value =
+          users.where((user) => user['SoLuongTon'] == '0').toList();
+    } else if (selected.value == 2) {
+      filteredUsers.value =
+          users.where((user) => user['SoLuongTon'] != '0').toList();
     }
+  }
+
+  void setSelected(int index) {
+    selected.value = index;
   }
 }

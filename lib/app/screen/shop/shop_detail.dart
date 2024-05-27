@@ -31,8 +31,8 @@ class _ShopdetailState extends State<Shopdetail> {
 
   Future<void> getRecord() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://192.168.1.2/practice_api/TT_daily.php'));
+      final response = await http.get(Uri.parse(
+          'http://192.168.1.5/practice_api/practice_api/TT_daily.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -47,8 +47,8 @@ class _ShopdetailState extends State<Shopdetail> {
 
   Future<void> getRecordSanPham() async {
     try {
-      final responseSP = await http
-          .get(Uri.parse('http://192.168.1.2/practice_api/view_data.php'));
+      final responseSP = await http.get(Uri.parse(
+          'http://192.168.1.5/practice_api/practice_api/view_data.php'));
       if (responseSP.statusCode == 200) {
         setState(() {
           product =
@@ -64,8 +64,8 @@ class _ShopdetailState extends State<Shopdetail> {
 
   Future<void> getRecordChiTietPhieuXuat() async {
     try {
-      final responseTT = await http.get(
-          Uri.parse('http://192.168.1.2/practice_api/TT_chitietPhieuXuat.php'));
+      final responseTT = await http.get(Uri.parse(
+          'http://192.168.1.5/practice_api/practice_api/TT_chitietPhieuXuat.php'));
       if (responseTT.statusCode == 200) {
         setState(() {
           ticket = List<Map<String, dynamic>>.from(jsonDecode(responseTT.body));

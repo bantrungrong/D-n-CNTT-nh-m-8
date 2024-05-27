@@ -3,14 +3,12 @@ import 'dart:convert';
 
 import 'package:drink_app_getx/app/core/values/icons.dart';
 import 'package:drink_app_getx/app/screen/input_product/input_product.dart';
-import 'package:drink_app_getx/app/screen/product/product_detail.dart';
+// import 'package:drink_app_getx/app/screen/product/product_detail.dart';
 import 'package:drink_app_getx/app/screen/report/report_screen.dart';
 import 'package:drink_app_getx/app/screen/shop/shop.dart';
-import 'package:drink_app_getx/app/screen/travel_product/add_ticket.dart';
+import 'package:drink_app_getx/app/screen/user/user_screen.dart';
 import 'package:drink_app_getx/app/widget/widget_detail_user.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:gap/gap.dart';
 import '../../core/values/strings.dart';
@@ -32,6 +30,9 @@ class HomePageScreenLogined extends StatefulWidget {
 class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
   late String arg1;
   late String arg2;
+  late String arg3;
+  late String arg4;
+  late String arg5;
   final selectedIndex = RxInt(0);
   final List<IconData> selectedIcons = [
     Icons.home,
@@ -72,6 +73,9 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
     if (arguments != null) {
       arg1 = arguments['arg1'] ?? '';
       arg2 = arguments['arg2'] ?? '';
+      arg3 = arguments['arg3'] ?? '';
+      arg4 = arguments['arg4'] ?? '';
+      arg5 = arguments['arg5'] ?? '';
     }
   }
 
@@ -84,7 +88,15 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
         backgroundColor: Colors.red,
         title: Row(children: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Get.to(UserScreen(
+                nameCom: arg2,
+                idUser: arg1,
+                tier: arg3,
+                PasWord: arg4,
+                email: arg5,
+              ));
+            },
             child: Row(
               children: [
                 Container(
@@ -195,7 +207,7 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
               GestureDetector(
                   onTap: () {
                     // Navigator.pushNamed(context, ProductScreen() );
-                    Get.to(const ProductScreen());
+                    Get.to(ProductScreen());
                   },
                   child:
                       _buildCell('Quản lý danh mục sản phẩm', MyIcon.product)),

@@ -15,6 +15,9 @@ class ProductDetail extends StatefulWidget {
   final String LoaiSanPham;
   final String DonGia;
   final String SoLuong;
+  final String MaPhanXuong;
+  final String TenPhanXuong;
+  final String DiaChi;
 
   const ProductDetail(
       {super.key,
@@ -22,7 +25,10 @@ class ProductDetail extends StatefulWidget {
       required this.LoaiSanPham,
       required this.MaSanPham,
       required this.SoLuong,
-      required this.TenSanPham});
+      required this.TenSanPham,
+      required this.DiaChi,
+      required this.MaPhanXuong,
+      required this.TenPhanXuong});
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
@@ -40,8 +46,8 @@ class _ProductDetailState extends State<ProductDetail> {
 
   Future<void> getRecord() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://192.168.1.2/practice_api/TT_xuong_sx.php'));
+      final response = await http.get(Uri.parse(
+          'http://192.168.1.5/practice_api/practice_api/TT_xuong_sx.php'));
       if (response.statusCode == 200) {
         setState(() {
           factory = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -56,8 +62,8 @@ class _ProductDetailState extends State<ProductDetail> {
 
   Future<void> getInputRecord() async {
     try {
-      final responseTT = await http
-          .get(Uri.parse('http://192.168.1.2/practice_api/TT_phieu_nhap.php'));
+      final responseTT = await http.get(Uri.parse(
+          'http://192.168.1.5/practice_api/practice_api/TT_phieu_nhap.php'));
       if (responseTT.statusCode == 200) {
         setState(() {
           inputTicket =
@@ -206,40 +212,36 @@ class _ProductDetailState extends State<ProductDetail> {
 
   Widget _buildTitle() {
     return Column(
-        children: List.generate(
-            factory.length,
-            (index) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Phân xưởng sản xuất',
-                      style: AppStyle.bold(fontSize: 16)
-                          .copyWith(color: Colors.red),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Gap(8),
-                    Text(
-                      'Mã phân xưởng: ${factory[index]['MaPhanXuong']}',
-                      style: AppStyle.medium(fontSize: 14)
-                          .copyWith(fontWeight: FontWeight.w500),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Gap(8),
-                    Text(
-                      'Tên phân xưởng: ${factory[index]['TenPhanXuong']}',
-                      style: AppStyle.medium(fontSize: 14)
-                          .copyWith(fontWeight: FontWeight.w500),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Gap(8),
-                    Text(
-                      'Địa chỉ phân xưởng: ${factory[index]['DiaChi']}',
-                      style: AppStyle.medium(fontSize: 14)
-                          .copyWith(fontWeight: FontWeight.w500),
-                      // overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                )));
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Phân xưởng sản xuất',
+          style: AppStyle.bold(fontSize: 16).copyWith(color: Colors.red),
+          overflow: TextOverflow.ellipsis,
+        ),
+        Gap(8),
+        Text(
+          'Mã phân xưởng: ${widget.MaPhanXuong}',
+          style: AppStyle.medium(fontSize: 14)
+              .copyWith(fontWeight: FontWeight.w500),
+          overflow: TextOverflow.ellipsis,
+        ),
+        Gap(8),
+        Text(
+          'Tên phân xưởng: ${widget.TenPhanXuong}',
+          style: AppStyle.medium(fontSize: 14)
+              .copyWith(fontWeight: FontWeight.w500),
+          overflow: TextOverflow.ellipsis,
+        ),
+        Gap(8),
+        Text(
+          'Địa chỉ phân xưởng: ${widget.DiaChi}',
+          style: AppStyle.medium(fontSize: 14)
+              .copyWith(fontWeight: FontWeight.w500),
+          // overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
   }
 
   Widget _buildInputTicket() {
@@ -299,10 +301,10 @@ class _ProductDetailState extends State<ProductDetail> {
               ),
               Gap(8),
               Text(
-                'Địa chỉ phân xưởng: ${ticket['DiaChi']}',
+                'Tên người giao: ${ticket['TenNguoiGiaoHang']}',
                 style: AppStyle.medium(fontSize: 14)
                     .copyWith(fontWeight: FontWeight.w500),
-                // overflow: TextOverflow.ellipsis,
+                overflow: TextOverflow.ellipsis,
               ),
               Gap(8),
               Text(
@@ -311,7 +313,14 @@ class _ProductDetailState extends State<ProductDetail> {
                     .copyWith(fontWeight: FontWeight.w500),
                 // overflow: TextOverflow.ellipsis,
               ),
-              Gap(7),
+              Gap(8),
+              Text(
+                'Tổng tiền: ${ticket['TongTien']}',
+                style: AppStyle.medium(fontSize: 14)
+                    .copyWith(fontWeight: FontWeight.w500),
+                // overflow: TextOverflow.ellipsis,
+              ),
+              Gap(8),
               Container(
                 height: 1,
                 color: Colors.red,
