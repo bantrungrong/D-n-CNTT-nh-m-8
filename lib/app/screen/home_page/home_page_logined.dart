@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:drink_app_getx/app/core/values/icons.dart';
 import 'package:drink_app_getx/app/screen/input_product/input_product.dart';
+import 'package:drink_app_getx/app/screen/report/home_report.dart';
 // import 'package:drink_app_getx/app/screen/product/product_detail.dart';
 import 'package:drink_app_getx/app/screen/report/report_screen.dart';
 import 'package:drink_app_getx/app/screen/shop/shop.dart';
@@ -33,6 +34,8 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
   late String arg3;
   late String arg4;
   late String arg5;
+  late String arg6;
+  late String arg7;
   final selectedIndex = RxInt(0);
   final List<IconData> selectedIcons = [
     Icons.home,
@@ -76,6 +79,8 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
       arg3 = arguments['arg3'] ?? '';
       arg4 = arguments['arg4'] ?? '';
       arg5 = arguments['arg5'] ?? '';
+      arg6 = arguments['arg6'] ?? '';
+      arg7 = arguments['arg7'] ?? '';
     }
   }
 
@@ -95,20 +100,19 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                 tier: arg3,
                 PasWord: arg4,
                 email: arg5,
+                avatar: arg6,
+                country: arg7,
               ));
             },
             child: Row(
               children: [
                 Container(
-                  height: 55,
-                  width: 55,
+                  height: 66,
+                  width: 66,
                   decoration: BoxDecoration(
-                      color: Colors.white,
                       borderRadius: BorderRadius.circular(100),
-                      image: DecorationImage(
-                        image: AssetImage(MyIcon.xeno),
-                        // fit: BoxFit.fill
-                      )),
+                      color: Colors.white),
+                  child: Image.network('${arg6}'),
                 ),
                 const Gap(10),
                 Column(
@@ -147,9 +151,21 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                 label: 'Thông báo',
               ),
               BottomNavigationBarItem(
-                icon: Icon(selectedIndex.value == 2
-                    ? selectedIcons[2]
-                    : unselectedIcons[2]),
+                icon: GestureDetector(
+                  onTap: () {
+                    Get.to(UserScreen(
+                        idUser: arg1,
+                        nameCom: arg2,
+                        tier: arg3,
+                        PasWord: arg4,
+                        email: arg5,
+                        avatar: arg6,
+                        country: arg7));
+                  },
+                  child: Icon(selectedIndex.value == 2
+                      ? selectedIcons[2]
+                      : unselectedIcons[2]),
+                ),
                 label: 'Cá nhân',
               ),
             ],
@@ -228,7 +244,7 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                   child: _buildCell('Quản lý nhập hàng', MyIcon.take)),
               GestureDetector(
                   onTap: () {
-                    Get.to(ReportScreen());
+                    Get.to(HomeReport());
                   },
                   child: _buildCell('Thống kê báo cáo', MyIcon.detail)),
               GestureDetector(

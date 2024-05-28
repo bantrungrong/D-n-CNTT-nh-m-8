@@ -17,8 +17,8 @@ class ProductController extends GetxController {
 
   void getRecord() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://192.168.1.5/practice_api/practice_api/view_data.php'));
+      final response = await http
+          .get(Uri.parse('http://192.168.1.12/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         users.value =
             List<Map<String, dynamic>>.from(jsonDecode(response.body));

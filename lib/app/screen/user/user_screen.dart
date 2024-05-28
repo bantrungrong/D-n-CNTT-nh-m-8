@@ -25,13 +25,17 @@ class UserScreen extends StatefulWidget {
   final String tier;
   final String PasWord;
   final String email;
+  final String avatar;
+  final String country;
   const UserScreen(
       {super.key,
       required this.idUser,
       required this.nameCom,
       required this.tier,
       required this.PasWord,
-      required this.email});
+      required this.email,
+      required this.avatar,
+      required this.country});
 
   @override
   State<UserScreen> createState() => _UserScreenState();
@@ -56,8 +60,8 @@ class _UserScreenState extends State<UserScreen> {
   List<Map<String, dynamic>> user = [];
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://192.168.1.5/practice_api/practice_api/login_data.php'));
+      final response = await http
+          .get(Uri.parse('http://192.168.1.12/practice_api/login_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           user = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -78,8 +82,7 @@ class _UserScreenState extends State<UserScreen> {
       Fluttertoast.showToast(msg: 'Mật khẩu nhập lại không đúng');
     }
     try {
-      String uri =
-          "http://192.168.1.5/practice_api/practice_api/update_user.php";
+      String uri = "http://192.168.1.12/practice_api/update_user.php";
       var res = await http.post(Uri.parse(uri), body: {
         "MatKhau": rePass.text,
         "TenDangNhap": widget.idUser,
@@ -138,12 +141,12 @@ class _UserScreenState extends State<UserScreen> {
                   Row(
                     children: [
                       Container(
-                        height: 55,
-                        width: 55,
+                        height: 88,
+                        width: 88,
                         decoration: BoxDecoration(
-                          color: Colors.blue,
                           borderRadius: BorderRadius.circular(100),
                         ),
+                        child: Image.network('${widget.avatar}'),
                       ),
                       Gap(12),
                       Column(
@@ -153,9 +156,16 @@ class _UserScreenState extends State<UserScreen> {
                             'Tên Tài khoản: ${widget.idUser}',
                             style: AppStyle.bold(),
                           ),
-                          Text(
-                            'Tên công ty: ${widget.nameCom}',
-                            style: AppStyle.medium(color: Colors.grey),
+                          Container(
+                            width: Get.width * 0.4,
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Tên công ty: ${widget.nameCom}',
+                                  style: AppStyle.medium(color: Colors.grey),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       )
@@ -216,12 +226,15 @@ class _UserScreenState extends State<UserScreen> {
                             title: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(),
+                                Container(
+                                  width: 55,
+                                ),
                                 Text(
                                   'Thông tin tài khoản',
                                   style: AppStyle.bold(
                                       fontSize: 18, color: Colors.red),
                                 ),
+                                Gap(22),
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.pop(context);
@@ -242,14 +255,16 @@ class _UserScreenState extends State<UserScreen> {
                                       height: 66,
                                       width: 66,
                                       decoration: BoxDecoration(
-                                          color: Colors.red,
                                           borderRadius:
                                               BorderRadius.circular(100)),
+                                      child: Image.network('${widget.avatar}'),
                                     ),
+                                    Gap(12),
                                     _buildCell('Tên tài khoản', widget.idUser),
                                     _buildCell('Tên công ty', widget.nameCom),
                                     _buildCell('Chức vụ công ty', widget.tier),
                                     _buildCell('Email cá nhân', widget.email),
+                                    _buildCell('Địa chỉ', widget.country),
                                   ],
                                 ),
                               ),
@@ -301,10 +316,10 @@ class _UserScreenState extends State<UserScreen> {
                                 )
                               ],
                             ),
-                            insetPadding: const EdgeInsets.all(12),
+                            insetPadding: const EdgeInsets.all(6),
                             content: Container(
                               width: Get.width * 1,
-                              height: Get.height * 0.4,
+                              height: Get.height * 0.42,
                               child: ListView(
                                 children: [
                                   _buildTextField('Mật khẩu cũ', oldPass),
@@ -432,19 +447,23 @@ class _UserScreenState extends State<UserScreen> {
             children: [
               Text(
                 title,
-                style: AppStyle.regular(),
+                style: AppStyle.regular(fontSize: 13),
               ),
-              Column(
-                children: [
-                  Text(
-                    infor,
-                    style: AppStyle.bold(),
-                  ),
-                ],
+              Container(
+                width: Get.width * 0.4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      infor,
+                      style: AppStyle.medium(),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-          Gap(8),
+          Gap(12),
           Container(
             height: 1,
             color: Colors.black,

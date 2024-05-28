@@ -12,11 +12,7 @@ if(isset($_POST["LoaiSanPham"]))
     $LoaiSanPham=$_POST["LoaiSanPham"];
 }
 else return;
-if(isset($_POST["SoLuongTon"]))
-{
-    $SoLuongTon=$_POST["SoLuongTon"];
-}
-else return;
+
 if(isset($_POST["DonGia"]))
 {
     $DonGia=$_POST["DonGia"];
@@ -28,7 +24,7 @@ if(isset($_POST["MaSanPham"]))
 }
 else return;
     
-$query="UPDATE `sanpham` SET `TenSanPham`='$TenSanPham',`LoaiSanPham`='$LoaiSanPham',`SoLuongTon`='$SoLuongTon',`DonGia`='$DonGia' WHERE `MaSanPham`='$MaSanPham'"; 
+$query="UPDATE `sanpham` SET `TenSanPham`='$TenSanPham',`LoaiSanPham`='$LoaiSanPham',`DonGia`='$DonGia' WHERE `MaSanPham`='$MaSanPham'"; 
 $exe=mysqli_query($con,$query);
 $arr=[];
 if($exe)
