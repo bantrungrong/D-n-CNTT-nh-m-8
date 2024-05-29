@@ -81,8 +81,8 @@ class _AddTicketState extends State<AddTicket> {
 
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://192.168.1.5/practice_api/practice_api/TT_daily.php'));
+      final response = await http
+          .get(Uri.parse('http://192.168.1.12/practice_api/TT_daily.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -110,8 +110,7 @@ class _AddTicketState extends State<AddTicket> {
         write.text != "" &&
         writeManager.text != "") {
       try {
-        String uri =
-            "http://192.168.1.5/practice_api/practice_api/add_phieu_xuat.php";
+        String uri = "http://192.168.1.12/practice_api/add_phieu_xuat.php";
         var res = await http.post(Uri.parse(uri), body: {
           "MaPhieu": idTicket.text,
           "MaDaiLy": '${selectedMaDaiLy.value}',

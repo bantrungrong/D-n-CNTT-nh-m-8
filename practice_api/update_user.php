@@ -12,6 +12,10 @@ if(isset($_POST["TenDangNhap"]))
     $TenDangNhap=$_POST["TenDangNhap"];
 }
 else return;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 937bad2e76a84ae544b47232a93e7e6aa0eb8cfe
     
 $query="UPDATE `nguoidung` SET `MatKhau`='$MatKhau' WHERE `TenDangNhap`='$TenDangNhap'"; 
 $exe=mysqli_query($con,$query);

@@ -34,8 +34,8 @@ class _UserListScreenState extends State<UserListScreen> {
 
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://192.168.1.5/practice_api/practice_api/TT_daily.php'));
+      final response = await http
+          .get(Uri.parse('http://192.168.1.12/practice_api/TT_daily.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));

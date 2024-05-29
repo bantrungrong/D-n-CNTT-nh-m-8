@@ -32,8 +32,8 @@ class _TicketInputState extends State<TicketInput> {
 
   Future<void> getRecordTTPhieuXuat() async {
     try {
-      final responseTT = await http.get(Uri.parse(
-          'http://192.168.1.5/practice_api/practice_api/TT_phieu_nhap.php'));
+      final responseTT = await http
+          .get(Uri.parse('http://192.168.1.12/practice_api/TT_phieu_nhap.php'));
       if (responseTT.statusCode == 200) {
         setState(() {
           ticket = List<Map<String, dynamic>>.from(jsonDecode(responseTT.body));
@@ -48,8 +48,8 @@ class _TicketInputState extends State<TicketInput> {
 
   Future<void> _handleRefresh() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://192.168.1.5/practice_api/practice_api/TT_phieu_nhap.php'));
+      final response = await http
+          .get(Uri.parse('http://192.168.1.12/practice_api/TT_phieu_nhap.php'));
 
       if (response.statusCode == 200) {
         setState(() {

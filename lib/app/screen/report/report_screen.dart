@@ -25,8 +25,8 @@ class _ReportScreenState extends State<ReportScreen> {
 
   Future<void> getRecord() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://192.168.1.5/practice_api/practice_api/TT_thong_ke.php'));
+      final response = await http
+          .get(Uri.parse('http://192.168.1.12/practice_api/TT_thong_ke.php'));
       if (response.statusCode == 200) {
         setState(() {
           report = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -41,8 +41,8 @@ class _ReportScreenState extends State<ReportScreen> {
 
   Future<void> getRecordProduct() async {
     try {
-      final responseProduct = await http.get(Uri.parse(
-          'http://192.168.1.5/practice_api/practice_api/view_data.php'));
+      final responseProduct = await http
+          .get(Uri.parse('http://192.168.1.12/practice_api/view_data.php'));
       if (responseProduct.statusCode == 200) {
         setState(() {
           product =
@@ -62,7 +62,25 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Báo cáo thống kê'),
+        automaticallyImplyLeading: false,
+        toolbarHeight: Get.height * 0.1,
+        backgroundColor: Colors.red,
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              )),
+          Text(
+            'Thống kê số lượng tồn',
+            style: AppStyle.bold(color: Colors.white),
+          ),
+          Container()
+        ]),
       ),
       body: ListView(
         children: [
