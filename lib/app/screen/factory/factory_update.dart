@@ -13,7 +13,8 @@ import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
 class FactoryAdd extends StatefulWidget {
-  const FactoryAdd({super.key});
+  final int selectedFacory;
+  const FactoryAdd({super.key, required this.selectedFacory});
 
   @override
   State<FactoryAdd> createState() => _FactoryAddState();
@@ -43,8 +44,8 @@ class _FactoryAddState extends State<FactoryAdd> {
   }
 
   Future<void> updateProduct() async {
-    final value = Get.arguments as int?;
-    if (value == null || value >= users.length) return;
+    if (widget.selectedFacory == null || widget.selectedFacory >= users.length)
+      return;
 
     if (TenPhanXuong.text.isEmpty || DiaChi.text.isEmpty) {
       Fluttertoast.showToast(msg: 'Vui lòng nhập đầy đủ thông tin');
@@ -56,7 +57,7 @@ class _FactoryAddState extends State<FactoryAdd> {
       var res = await http.post(Uri.parse(uri), body: {
         "TenPhanXuong": TenPhanXuong.text,
         "DiaChi": DiaChi.text,
-        "MaPhanXuong": users[value]['MaPhanXuong'],
+        "MaPhanXuong": users[widget.selectedFacory]['MaPhanXuong'],
       });
       var response = jsonDecode(res.body);
       if (response["success"] == "true") {
@@ -70,18 +71,15 @@ class _FactoryAddState extends State<FactoryAdd> {
     }
   }
 
-  Future<void> delProduct() async {
-    final value = Get.arguments as int?;
-    if (value == null || value >= users.length) return;
-
+  Future<void> delFactory(String MaPhanXuong) async {
     try {
       String uri =
-          "http://192.168.1.5/practice_api/practice_api/delete_product.php";
-      var resDel = await http.post(Uri.parse(uri), body: {
-        "MaSanPham": users[value]['MaSanPham'],
+          "http://192.168.1.5/practice_api/practice_api/delete_factory.php";
+      var res = await http.post(Uri.parse(uri), body: {
+        "MaPhanXuong": MaPhanXuong,
       });
-      var responseDel = jsonDecode(resDel.body);
-      if (responseDel['success'] == 'true') {
+      var reponse = jsonDecode(res.body);
+      if (reponse['success'] == 'true') {
         print('record delete complete');
         getRecord(); // Refresh the data
       } else {
@@ -100,8 +98,8 @@ class _FactoryAddState extends State<FactoryAdd> {
 
   @override
   Widget build(BuildContext context) {
-    final value = Get.arguments as int?;
-    if (value == null || value >= users.length) {
+    if (widget.selectedFacory == null ||
+        widget.selectedFacory >= users.length) {
       return Center(
           child: CircularProgressIndicator(
         color: Colors.red,
@@ -123,15 +121,17 @@ class _FactoryAddState extends State<FactoryAdd> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Mã phân xưởng: ${users[value]['MaPhanXuong']}',
+                  'Mã phân xưởng: ${users[widget.selectedFacory]['MaPhanXuong']}',
                   style: AppStyle.medium(),
                 ),
                 Gap(12),
                 _buildTextField(
-                    'Tên phân xưởng: ${users[value]['TenPhanXuong']}',
+                    'Tên phân xưởng: ${users[widget.selectedFacory]['TenPhanXuong']}',
                     TenPhanXuong),
                 Gap(10),
-                _buildTextField('Địa chỉ: ${users[value]['DiaChi']}', DiaChi),
+                _buildTextField(
+                    'Địa chỉ: ${users[widget.selectedFacory]['DiaChi']}',
+                    DiaChi),
                 Gap(23),
                 GestureDetector(
                   onTap: () {
@@ -190,7 +190,7 @@ class _FactoryAddState extends State<FactoryAdd> {
         ),
         GestureDetector(
           onTap: () {
-            delProduct();
+            delFactory(users[widget.selectedFacory]['MaPhanXuong']);
             Get.back();
           },
           child: Container(

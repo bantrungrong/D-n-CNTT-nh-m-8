@@ -213,7 +213,9 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                       _buildCell('Quản lý danh mục sản phẩm', MyIcon.product)),
               GestureDetector(
                   onTap: () {
-                    Get.to(UserListScreen());
+                    Get.to(UserListScreen(
+                      admin: arg3,
+                    ));
                   },
                   child: _buildCell('Quản lý thông tin đại lý', MyIcon.shop)),
               GestureDetector(

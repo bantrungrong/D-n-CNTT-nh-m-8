@@ -248,7 +248,9 @@ class _FactoryScreenState extends State<FactoryScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Get.to(FactoryAdd(), arguments: index);
+                              Get.to(FactoryAdd(
+                                selectedFacory: index,
+                              ));
                             },
                             child: ListTile(
                               title: Column(

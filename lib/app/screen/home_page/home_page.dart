@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/values/icons.dart';
 import '../../core/values/strings.dart';
+import 'package:get/get.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -36,12 +37,12 @@ class _HomePageScreenState extends State<HomePageScreen> {
             spacing: 10,
             runSpacing: 10,
             children: [
-               _buildCell('Quản lý danh mục sản phẩm',MyIcon.product),
-               _buildCell('Quản lý thông tin đại lý',MyIcon.shop),
-              _buildCell('Quản lý xuất hàng',MyIcon.travel),
-              _buildCell('Quản lý nhập hàng',MyIcon.take),
-              _buildCell('Thống kê báo cáo',MyIcon.detail),
-              _buildCell('Xưởng sản xuất',MyIcon.factory),
+              _buildCell('Quản lý danh mục sản phẩm', MyIcon.product),
+              _buildCell('Quản lý thông tin đại lý', MyIcon.shop),
+              _buildCell('Quản lý xuất hàng', MyIcon.travel),
+              _buildCell('Quản lý nhập hàng', MyIcon.take),
+              _buildCell('Thống kê báo cáo', MyIcon.detail),
+              _buildCell('Xưởng sản xuất', MyIcon.factory),
             ],
           ),
         )
@@ -49,10 +50,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
     );
   }
 
-  Widget _buildCell(String data,String icon) {
+  Widget _buildCell(String data, String icon) {
     return Container(
-      height: 100,
-      width: 100,
+      height: Get.width / 3 - 20,
+      width: Get.width / 3 - 20,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -72,10 +73,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
           width: 23,
           decoration: BoxDecoration(
               color: Colors.red,
-              image: DecorationImage(
-                  image: AssetImage(icon)
-              )
-          ),
+              image: DecorationImage(image: AssetImage(icon))),
         ),
         Text(
           data,
