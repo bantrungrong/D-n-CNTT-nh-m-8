@@ -61,7 +61,7 @@ class _UserScreenState extends State<UserScreen> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.12/practice_api/login_data.php'));
+          .get(Uri.parse('http://192.168.1.5/practice_api/login_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           user = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -82,7 +82,7 @@ class _UserScreenState extends State<UserScreen> {
       Fluttertoast.showToast(msg: 'Mật khẩu nhập lại không đúng');
     }
     try {
-      String uri = "http://192.168.1.12/practice_api/update_user.php";
+      String uri = "http://192.168.1.5/practice_api/update_user.php";
       var res = await http.post(Uri.parse(uri), body: {
         "MatKhau": rePass.text,
         "TenDangNhap": widget.idUser,

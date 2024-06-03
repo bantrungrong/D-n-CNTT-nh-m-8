@@ -5,6 +5,8 @@ import '../../core/values/colors.dart';
 import '../../core/values/strings.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:gap/gap.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Shopdetail extends StatefulWidget {
   final int idShop;
@@ -20,6 +22,10 @@ class _ShopdetailState extends State<Shopdetail> {
   List<Map<String, dynamic>> ticket = [];
   List<Map<String, dynamic>> product = [];
 
+  final TextEditingController TenDaiLy = TextEditingController();
+  final TextEditingController DiaChi = TextEditingController();
+  final TextEditingController SoDienThoai = TextEditingController();
+  final TextEditingController SoTienNo = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -32,7 +38,7 @@ class _ShopdetailState extends State<Shopdetail> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.12/practice_api/TT_daily.php'));
+          .get(Uri.parse('http://192.168.1.5/practice_api/TT_daily.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -48,7 +54,7 @@ class _ShopdetailState extends State<Shopdetail> {
   Future<void> getRecordSanPham() async {
     try {
       final responseSP = await http
-          .get(Uri.parse('http://192.168.1.12/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.1.5/practice_api/view_data.php'));
       if (responseSP.statusCode == 200) {
         setState(() {
           product =
@@ -64,8 +70,8 @@ class _ShopdetailState extends State<Shopdetail> {
 
   Future<void> getRecordChiTietPhieuXuat() async {
     try {
-      final responseTT = await http.get(Uri.parse(
-          'http://192.168.1.12/practice_api/TT_chitietPhieuXuat.php'));
+      final responseTT = await http.get(
+          Uri.parse('http://192.168.1.5/practice_api/TT_chitietPhieuXuat.php'));
       if (responseTT.statusCode == 200) {
         setState(() {
           ticket = List<Map<String, dynamic>>.from(jsonDecode(responseTT.body));
@@ -91,6 +97,49 @@ class _ShopdetailState extends State<Shopdetail> {
       }
     } catch (e) {
       print('Error: $e');
+    }
+  }
+
+  Future<void> updateShop() async {
+    try {
+      String uri = "http://192.168.1.5/practice_api/update_daily.php";
+      var res = await http.post(Uri.parse(uri), body: {
+        "MaDaiLy": users[widget.idShop]['MaDaiLy'],
+        "TenDaiLy": TenDaiLy.text,
+        "DiaChi": DiaChi.text,
+        "DienThoai": SoDienThoai.text,
+        "SoTienNo": SoTienNo.text,
+      });
+      var response = jsonDecode(res.body);
+      if (response["success"] == "true") {
+        Fluttertoast.showToast(msg: 'Sửa thành công');
+        getRecord(); // Refresh the data
+      } else {
+        print("some issue");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> delShop() async {
+    final value = Get.arguments as int?;
+    if (value == null || value >= users.length) return;
+
+    try {
+      String uri = "http://192.168.1.5/practice_api/delete_product.php";
+      var resDel = await http.post(Uri.parse(uri), body: {
+        "MaSanPham": users[value]['MaSanPham'],
+      });
+      var responseDel = jsonDecode(resDel.body);
+      if (responseDel['success'] == 'true') {
+        print('record delete complete');
+        getRecord(); // Refresh the data
+      } else {
+        print('some issue');
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -127,9 +176,89 @@ class _ShopdetailState extends State<Shopdetail> {
               style: AppStyle.bold(color: Colors.white),
             ),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          backgroundColor: Colors.grey.shade50,
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Sửa thông tin đại lý',
+                                style: AppStyle.bold(fontSize: 18),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Icon(Icons.close),
+                              )
+                            ],
+                          ),
+                          insetPadding: const EdgeInsets.all(12),
+                          content: Container(
+                            height: Get.height * 0.75,
+                            width: Get.width * 1,
+                            child: ListView(
+                              children: [
+                                Text(
+                                    'Mã đại lý: ${users[widget.idShop]['MaDaiLy']}'),
+                                Gap(8),
+                                _buildTextField(
+                                    'Tên đại lý: ${users[widget.idShop]['TenDaiLy']}',
+                                    TenDaiLy),
+                                Gap(8),
+                                _buildTextField(
+                                    'Số điện thoại: ${users[widget.idShop]['DienThoai']}',
+                                    SoDienThoai),
+                                Gap(8),
+                                _buildTextField(
+                                    'Địa chỉ: ${users[widget.idShop]['DiaChi']}',
+                                    DiaChi),
+                                Gap(8),
+                                _buildTextField(
+                                    'Tiền nợ: ${users[widget.idShop]['SoTienNo']}',
+                                    SoTienNo),
+                                Gap(8),
+                                Gap(30),
+                                InkWell(
+                                  onTap: () {
+                                    if (TenDaiLy.text == '' &&
+                                        DiaChi.text == '' &&
+                                        SoDienThoai.text == '' &&
+                                        SoTienNo.text == '') {
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              'Vui lòng nhập đầy đủ thông tin');
+                                      return;
+                                    }
+                                    Navigator.of(context).pop();
+                                    updateShop();
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black),
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white,
+                                    ),
+                                    child: Center(
+                                        child: Text(
+                                      'Xác nhận thêm',
+                                      style: AppStyle.bold(),
+                                    )),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                },
                 icon: Icon(
-                  Icons.filter_alt_outlined,
+                  Icons.settings,
                   color: Colors.white,
                 ))
           ],
@@ -223,6 +352,34 @@ class _ShopdetailState extends State<Shopdetail> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _buildTextField(String title, TextEditingController name) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: AppStyle.medium(
+            fontSize: 14,
+          ),
+        ),
+        const Gap(8),
+        SizedBox(
+          width: MediaQuery.of(context).size.height,
+          child: TextFormField(
+            controller: name,
+            readOnly: false,
+            maxLines: 1,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: const InputDecoration(
+              errorStyle: TextStyle(height: 0),
+              contentPadding: EdgeInsets.all(10),
+            ),
+          ),
+        )
+      ],
     );
   }
 }

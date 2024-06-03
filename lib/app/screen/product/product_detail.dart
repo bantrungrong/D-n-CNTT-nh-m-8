@@ -47,7 +47,7 @@ class _ProductDetailState extends State<ProductDetail> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.12/practice_api/TT_xuong_sx.php'));
+          .get(Uri.parse('http://192.168.1.5/practice_api/TT_xuong_sx.php'));
       if (response.statusCode == 200) {
         setState(() {
           factory = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -63,7 +63,7 @@ class _ProductDetailState extends State<ProductDetail> {
   Future<void> getInputRecord() async {
     try {
       final responseTT = await http
-          .get(Uri.parse('http://192.168.1.12/practice_api/TT_phieu_nhap.php'));
+          .get(Uri.parse('http://192.168.1.5/practice_api/TT_phieu_nhap.php'));
       if (responseTT.statusCode == 200) {
         setState(() {
           inputTicket =

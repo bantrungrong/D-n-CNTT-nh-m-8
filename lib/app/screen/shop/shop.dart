@@ -35,7 +35,7 @@ class _UserListScreenState extends State<UserListScreen> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.12/practice_api/TT_daily.php'));
+          .get(Uri.parse('http://192.168.1.5/practice_api/TT_daily.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -50,8 +50,8 @@ class _UserListScreenState extends State<UserListScreen> {
 
   Future<void> getRecordAdmin() async {
     try {
-      final responseAd = await http.get(Uri.parse(
-          'http://192.168.1.5/practice_api/practice_api/login_data.php'));
+      final responseAd = await http
+          .get(Uri.parse('http://192.168.1.5/practice_api/login_data.php'));
       if (responseAd.statusCode == 200) {
         setState(() {
           admin = List<Map<String, dynamic>>.from(jsonDecode(responseAd.body));
@@ -70,8 +70,7 @@ class _UserListScreenState extends State<UserListScreen> {
         TenDaiLy.text.isNotEmpty &&
         SoTienNo.text.isNotEmpty) {
       try {
-        String uri =
-            "http://192.168.1.5/practice_api/practice_api/add_TT_daily.php";
+        String uri = "http://192.168.1.5/practice_api/add_TT_daily.php";
         var res = await http.post(Uri.parse(uri), body: {
           "MaDaiLy": MaDaiLy.text,
           "TenDaiLy": TenDaiLy.text,
@@ -91,6 +90,21 @@ class _UserListScreenState extends State<UserListScreen> {
       }
     } else {
       Fluttertoast.showToast(msg: 'Nhập đầy đủ thông tin mới thêm');
+    }
+  }
+
+  Future<void> delProduct(String id) async {
+    try {
+      String uri = "http://192.168.1.5/practice_api/delete_daily.php";
+      var res = await http.post(Uri.parse(uri), body: {"MaDaiLy": id});
+      var response = jsonDecode(res.body);
+      if (response['success'] == 'true') {
+        print('record delete complete');
+      } else {
+        print('some issue');
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -138,84 +152,77 @@ class _UserListScreenState extends State<UserListScreen> {
       body: Column(
         children: [
           _buildListView(),
-          widget.admin == 'admin'
-              ? GestureDetector(
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            backgroundColor: Colors.grey.shade50,
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Thêm sản phẩm',
-                                  style: AppStyle.bold(fontSize: 18),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      backgroundColor: Colors.grey.shade50,
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Thêm sản phẩm',
+                            style: AppStyle.bold(fontSize: 18),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(Icons.close),
+                          )
+                        ],
+                      ),
+                      insetPadding: const EdgeInsets.all(12),
+                      content: Container(
+                        height: Get.height * 0.75,
+                        width: Get.width * 1,
+                        child: ListView(
+                          children: [
+                            _buildTextField('Mã đại lý', MaDaiLy),
+                            Gap(8),
+                            _buildTextField('Tên đại lý', TenDaiLy),
+                            Gap(8),
+                            _buildTextField('Số điện thoại', SoDienThoai),
+                            Gap(8),
+                            _buildTextField('Địa chỉ', DiaChi),
+                            Gap(8),
+                            _buildTextField('Tiền nợ', SoTienNo),
+                            Gap(8),
+                            Gap(30),
+                            InkWell(
+                              onTap: () {
+                                insertRecord();
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Icon(Icons.close),
-                                )
-                              ],
-                            ),
-                            insetPadding: const EdgeInsets.all(12),
-                            content: Container(
-                              height: Get.height * 0.75,
-                              width: Get.width * 1,
-                              child: ListView(
-                                children: [
-                                  _buildTextField('Mã đại lý', MaDaiLy),
-                                  Gap(8),
-                                  _buildTextField('Tên đại lý', TenDaiLy),
-                                  Gap(8),
-                                  _buildTextField('Số điện thoại', SoDienThoai),
-                                  Gap(8),
-                                  _buildTextField('Địa chỉ', DiaChi),
-                                  Gap(8),
-                                  _buildTextField('Tiền nợ', SoTienNo),
-                                  Gap(8),
-                                  Gap(30),
-                                  InkWell(
-                                    onTap: () {
-                                      insertRecord();
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.white,
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        'Xác nhận thêm',
-                                        style: AppStyle.bold(),
-                                      )),
-                                    ),
-                                  )
-                                ],
+                                child: Center(
+                                    child: Text(
+                                  'Xác nhận thêm',
+                                  style: AppStyle.bold(),
+                                )),
                               ),
-                            ),
-                          );
-                        });
-                  },
-                  child: ButtonApp(
-                      height: 55,
-                      width: Get.width * 0.7,
-                      title: '+ Thêm thông tin đại lý',
-                      color: Colors.white,
-                      colorTitle: Colors.red),
-                )
-              : ButtonApp(
-                  height: 55,
-                  width: Get.width * 0.7,
-                  title: 'Admin mới được quyền thêm',
-                  color: Colors.white,
-                  colorTitle: Colors.red),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+            },
+            child: ButtonApp(
+                height: 55,
+                width: Get.width * 0.7,
+                title: '+ Thêm thông tin đại lý',
+                color: Colors.white,
+                colorTitle: Colors.red),
+          ),
         ],
       ),
     );
@@ -292,7 +299,7 @@ class _UserListScreenState extends State<UserListScreen> {
                           width: 10,
                         ),
                         Container(
-                            width: Get.width * 0.7,
+                            width: Get.width * 0.6,
                             child: Text(
                               'Địa chỉ: ${users[index]['DiaChi']}',
                               overflow: TextOverflow.ellipsis,
@@ -333,7 +340,12 @@ class _UserListScreenState extends State<UserListScreen> {
                     ),
                   ],
                 ),
-                subtitle: Text(''),
+                trailing: IconButton(
+                  onPressed: () {
+                    delProduct('Mã đại lý ${users[index]['MaDaiLy']}');
+                  },
+                  icon: Icon(Icons.delete),
+                ),
               ),
             ),
           );

@@ -13,8 +13,16 @@ import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
 class FactoryAdd extends StatefulWidget {
-  final int selectedFacory;
-  const FactoryAdd({super.key, required this.selectedFacory});
+  final String MaPhanXuong;
+  final String TenPhanXuong;
+  final String DiaChi;
+  final String MaSanPham;
+  const FactoryAdd(
+      {super.key,
+      required this.DiaChi,
+      required this.MaPhanXuong,
+      required this.TenPhanXuong,
+      required this.MaSanPham});
 
   @override
   State<FactoryAdd> createState() => _FactoryAddState();
@@ -30,7 +38,7 @@ class _FactoryAddState extends State<FactoryAdd> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.12/practice_api/TT_xuong_sx.php'));
+          .get(Uri.parse('http://192.168.1.5/practice_api/TT_xuong_sx.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -43,20 +51,17 @@ class _FactoryAddState extends State<FactoryAdd> {
     }
   }
 
-  Future<void> updateProduct() async {
-    if (widget.selectedFacory == null || widget.selectedFacory >= users.length)
-      return;
-
+  Future<void> updateFactory() async {
     if (TenPhanXuong.text.isEmpty || DiaChi.text.isEmpty) {
       Fluttertoast.showToast(msg: 'Vui lòng nhập đầy đủ thông tin');
       return;
     }
     try {
-      String uri = "http://192.168.1.12/practice_api/update_xuong_san_xuat.php";
+      String uri = "http://192.168.1.5/practice_api/update_xuong_san_xuat.php";
       var res = await http.post(Uri.parse(uri), body: {
         "TenPhanXuong": TenPhanXuong.text,
         "DiaChi": DiaChi.text,
-        "MaPhanXuong": users[widget.selectedFacory]['MaPhanXuong'],
+        "MaPhanXuong": widget.MaPhanXuong,
       });
       var response = jsonDecode(res.body);
       if (response["success"] == "true") {
@@ -72,19 +77,12 @@ class _FactoryAddState extends State<FactoryAdd> {
 
   Future<void> delFactory(String MaPhanXuong) async {
     try {
-<<<<<<< HEAD
-      String uri =
-          "http://192.168.1.5/practice_api/practice_api/delete_factory.php";
+      String uri = "http://192.168.1.5/practice_api/delete_factory.php";
       var res = await http.post(Uri.parse(uri), body: {
         "MaPhanXuong": MaPhanXuong,
-=======
-      String uri = "http://192.168.1.12/practice_api/delete_product.php";
-      var resDel = await http.post(Uri.parse(uri), body: {
-        "MaSanPham": users[value]['MaSanPham'],
->>>>>>> 937bad2e76a84ae544b47232a93e7e6aa0eb8cfe
       });
-      var reponse = jsonDecode(res.body);
-      if (reponse['success'] == 'true') {
+      var responseDel = jsonDecode(res.body);
+      if (responseDel['success'] == 'true') {
         print('record delete complete');
         getRecord(); // Refresh the data
       } else {
@@ -103,9 +101,8 @@ class _FactoryAddState extends State<FactoryAdd> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.selectedFacory == null ||
-        widget.selectedFacory >= users.length) {
-      return Center(
+    if (widget.MaPhanXuong == null) {
+      return const Center(
           child: CircularProgressIndicator(
         color: Colors.red,
       ));
@@ -121,23 +118,20 @@ class _FactoryAddState extends State<FactoryAdd> {
       body: ListView(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Mã phân xưởng: ${users[widget.selectedFacory]['MaPhanXuong']}',
+                  'Mã phân xưởng: ${widget.MaPhanXuong}',
                   style: AppStyle.medium(),
                 ),
-                Gap(12),
+                const Gap(12),
                 _buildTextField(
-                    'Tên phân xưởng: ${users[widget.selectedFacory]['TenPhanXuong']}',
-                    TenPhanXuong),
-                Gap(10),
-                _buildTextField(
-                    'Địa chỉ: ${users[widget.selectedFacory]['DiaChi']}',
-                    DiaChi),
-                Gap(23),
+                    'Tên phân xưởng: ${widget.TenPhanXuong}', TenPhanXuong),
+                const Gap(10),
+                _buildTextField('Địa chỉ: ${widget.DiaChi}', DiaChi),
+                const Gap(23),
                 GestureDetector(
                   onTap: () {
                     if (TenPhanXuong.text.isEmpty || DiaChi.text.isEmpty) {
@@ -145,12 +139,12 @@ class _FactoryAddState extends State<FactoryAdd> {
                           msg: 'Vui lòng nhập đầy đủ thông tin');
                       return;
                     }
-                    updateProduct();
+                    updateFactory();
                   },
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ButtonApp(
+                      const ButtonApp(
                         height: 55,
                         width: 200,
                         title: 'Xác nhận lưu',
@@ -182,7 +176,7 @@ class _FactoryAddState extends State<FactoryAdd> {
             width: 36,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100), color: Colors.white),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back_ios,
               size: 20,
               color: AppColors.primary,
@@ -195,7 +189,7 @@ class _FactoryAddState extends State<FactoryAdd> {
         ),
         GestureDetector(
           onTap: () {
-            delFactory(users[widget.selectedFacory]['MaPhanXuong']);
+            delFactory(widget.MaPhanXuong);
             Get.back();
           },
           child: Container(
@@ -223,7 +217,7 @@ class _FactoryAddState extends State<FactoryAdd> {
           style: AppStyle.medium(fontSize: 16),
         ),
         const Gap(8),
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width,
           child: TextField(
             controller: name,

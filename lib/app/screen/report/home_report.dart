@@ -1,7 +1,10 @@
+// import 'dart:convert';
+// import 'dart:html';
+
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:drink_app_getx/app/core/values/strings.dart';
+import 'package:drink_app_getx/app/screen/report/report_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -30,7 +33,7 @@ class _HomeReportState extends State<HomeReport> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.12/practice_api/TT_bao_cao.php'));
+          .get(Uri.parse('http://192.168.1.5/practice_api/TT_bao_cao.php'));
       if (response.statusCode == 200) {
         setState(() {
           report = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -46,7 +49,7 @@ class _HomeReportState extends State<HomeReport> {
   Future<void> getRecordP() async {
     try {
       final responseP = await http
-          .get(Uri.parse('http://192.168.1.12/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.1.5/practice_api/view_data.php'));
       if (responseP.statusCode == 200) {
         setState(() {
           product = List<Map<String, dynamic>>.from(jsonDecode(responseP.body));
@@ -102,71 +105,39 @@ class _HomeReportState extends State<HomeReport> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Text(
-            'Thống kê sản phẩm',
+            'Thống kê sản phẩm tồn kho',
             style: AppStyle.bold(),
           ),
         ),
-        _buildTravel(),
+        _buildProductItem(),
       ],
     );
   }
 
-  Widget _buildTravel() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(
-          product.length,
-          (index) => Container(
-            margin: EdgeInsets.all(12),
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  spreadRadius: 1,
-                  blurRadius: 1,
-                  offset: const Offset(0, 2), // changes the direction of shadow
-                ),
-              ],
+  Widget _buildProductItem() {
+    return GestureDetector(
+      onTap: () {
+        Get.to(ReportScreen());
+      },
+      child: Container(
+        margin: EdgeInsets.all(33),
+        padding: EdgeInsets.all(33),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 2), // changes the direction of shadow
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: Get.width * 0.3,
-                  height: Get.width * 0.2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${product[index]['TenSanPham']}',
-                        style: AppStyle.bold(color: Colors.red, fontSize: 13),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 12,
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'Số lượng',
-                      style: AppStyle.bold(color: Colors.blue),
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    Text(
-                      '${product[index]['SoLuongTon']}',
-                      style: AppStyle.bold(color: Colors.blue),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            'Xem biểu đồ thống kê',
+            style: AppStyle.bold(color: Colors.red),
           ),
         ),
       ),
@@ -186,7 +157,7 @@ class _HomeReportState extends State<HomeReport> {
                     ),
                     Icon(
                       Icons.circle,
-                      color: Colors.amber,
+                      color: Colors.red,
                     ),
                     Expanded(
                       child: Container(
@@ -218,6 +189,10 @@ class _HomeReportState extends State<HomeReport> {
                             ),
                             Text(
                               '${report[index]['SoLuongXuat']}',
+                              style: AppStyle.bold(color: Colors.blue),
+                            ),
+                            Text(
+                              '${report[index]['DoanhThu']}',
                               style: AppStyle.bold(color: Colors.blue),
                             ),
                           ],
