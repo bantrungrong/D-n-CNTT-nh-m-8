@@ -52,7 +52,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.30.249/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.195.206/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -68,8 +68,8 @@ class _ProductScreenState extends State<ProductScreen> {
 
   Future<void> getRecordF() async {
     try {
-      final responseF = await http
-          .get(Uri.parse('http://192.168.30.249/practice_api/TT_xuong_sx.php'));
+      final responseF = await http.get(
+          Uri.parse('http://192.168.195.206/practice_api/TT_xuong_sx.php'));
       if (responseF.statusCode == 200) {
         setState(() {
           factory = List<Map<String, dynamic>>.from(jsonDecode(responseF.body));
@@ -89,7 +89,7 @@ class _ProductScreenState extends State<ProductScreen> {
         pice.text.isNotEmpty &&
         count_item.text.isNotEmpty) {
       try {
-        String uri = "http://192.168.30.249/practice_api/add_product.php";
+        String uri = "http://192.168.195.206/practice_api/add_product.php";
         var res = await http.post(Uri.parse(uri), body: {
           "MaSanPham": id.text,
           "TenSanPham": namepro.text,
@@ -115,7 +115,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   Future<void> delProduct(String id) async {
     try {
-      String uri = "http://192.168.30.249/practice_api/delete_product.php";
+      String uri = "http://192.168.195.206/practice_api/delete_product.php";
       var res = await http.post(Uri.parse(uri), body: {"MaSanPham": id});
       var response = jsonDecode(res.body);
       if (response['success'] == 'true') {
@@ -497,7 +497,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Future<void> _handleRefresh() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.30.249/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.195.206/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));

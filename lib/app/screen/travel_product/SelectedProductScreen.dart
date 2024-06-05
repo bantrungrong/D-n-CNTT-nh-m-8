@@ -56,7 +56,7 @@ class _SelectedProductScreenState extends State<SelectedProductScreen> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.30.249/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.195.206/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -77,7 +77,7 @@ class _SelectedProductScreenState extends State<SelectedProductScreen> {
         double tongTien = soLuong * donGia;
         print(tongTien);
         String uri =
-            "http://192.168.30.249/practice_api/add_chi_tiet_phieuxuat.php";
+            "http://192.168.195.206/practice_api/add_chi_tiet_phieuxuat.php";
         var res = await http.post(Uri.parse(uri), body: {
           "MaPhieu": widget.idTicket,
           "MaDaiLy": widget.idShop,
@@ -102,7 +102,7 @@ class _SelectedProductScreenState extends State<SelectedProductScreen> {
   Future<void> _handleRefresh() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.30.249/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.195.206/practice_api/view_data.php'));
 
       if (response.statusCode == 200) {
         setState(() {

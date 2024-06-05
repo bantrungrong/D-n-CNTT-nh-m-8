@@ -112,7 +112,7 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
                       color: Colors.white),
-                  child: Image.network('${arg6}'),
+                  child: arg6 == '' ? Container() : Image.network('${arg6}'),
                 ),
                 const Gap(10),
                 Column(

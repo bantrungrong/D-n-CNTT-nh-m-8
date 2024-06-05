@@ -34,7 +34,7 @@ class _HomeReportState extends State<HomeReport> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.30.249/practice_api/TT_bao_cao.php'));
+          .get(Uri.parse('http://192.168.195.206/practice_api/TT_bao_cao.php'));
       if (response.statusCode == 200) {
         setState(() {
           report = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -50,7 +50,7 @@ class _HomeReportState extends State<HomeReport> {
   Future<void> getRecordP() async {
     try {
       final responseP = await http
-          .get(Uri.parse('http://192.168.30.249/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.195.206/practice_api/view_data.php'));
       if (responseP.statusCode == 200) {
         setState(() {
           product = List<Map<String, dynamic>>.from(jsonDecode(responseP.body));

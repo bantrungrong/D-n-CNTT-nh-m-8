@@ -27,9 +27,13 @@ if(isset($_POST["DonGia"]))
     $DonGia=$_POST["DonGia"];
 }
 else return;
+if(isset($_POST["HinhAnh"]))
+{
+    $HinhAnh=$_POST["HinhAnh"];
+}
+else return;
 
-
-$query="INSERT INTO `sanpham`(`MaSanPham`, `TenSanPham`, `LoaiSanPham`, `SoLuongTon`, `DonGia`) VALUES ('$MaSanPham','$TenSanPham','$LoaiSanPham','$SoLuongTon','$DonGia')";
+$query="INSERT INTO `sanpham`(`MaSanPham`, `TenSanPham`, `LoaiSanPham`, `SoLuongTon`, `DonGia`,`HinhAnh`) VALUES ('$MaSanPham','$TenSanPham','$LoaiSanPham','$SoLuongTon','$DonGia','$HinhAnh')";
 $exe=mysqli_query($con,$query);
 $arr=[];
 if($exe)

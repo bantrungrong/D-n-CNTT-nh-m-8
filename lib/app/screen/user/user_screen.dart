@@ -5,6 +5,7 @@ import 'package:drink_app_getx/app/modules/home/home_view.dart';
 import 'package:drink_app_getx/app/widget/button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:gap/gap.dart';
 import 'package:get_storage/get_storage.dart';
@@ -61,7 +62,7 @@ class _UserScreenState extends State<UserScreen> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.30.249/practice_api/login_data.php'));
+          .get(Uri.parse('http://192.168.195.206/practice_api/login_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           user = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -82,7 +83,7 @@ class _UserScreenState extends State<UserScreen> {
       Fluttertoast.showToast(msg: 'Mật khẩu nhập lại không đúng');
     }
     try {
-      String uri = "http://192.168.30.249/practice_api/update_user.php";
+      String uri = "http://192.168.195.206/practice_api/update_user.php";
       var res = await http.post(Uri.parse(uri), body: {
         "MatKhau": rePass.text,
         "TenDangNhap": widget.idUser,
@@ -98,6 +99,20 @@ class _UserScreenState extends State<UserScreen> {
     } catch (e) {
       print(e);
     }
+  }
+
+  // Danh sách các chuỗi
+  List<String> _strings = [
+    'item 1',
+    'item 2 ',
+    'item 3',
+    'item 4',
+    'item 5',
+    'item 6',
+  ];
+  var selectedAvatar = ''.obs;
+  void updateSelectedAvatar(String avatar) {
+    selectedAvatar.value = avatar;
   }
 
   @override
@@ -140,13 +155,89 @@ class _UserScreenState extends State<UserScreen> {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        height: 88,
-                        width: 88,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: Image.network('${widget.avatar}'),
+                      Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: widget.avatar == ''
+                                ? Container()
+                                : Image.network(
+                                    '${widget.avatar}',
+                                    width: 88,
+                                    height: 88,
+                                    fit: BoxFit.cover,
+                                  ),
+                          ),
+                          GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                          backgroundColor: Colors.grey.shade50,
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                selectedAvatar.isEmpty
+                                                    ? ''
+                                                    : '${selectedAvatar.value}',
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Icon(Icons.close),
+                                              )
+                                            ],
+                                          ),
+                                          insetPadding:
+                                              const EdgeInsets.all(12),
+                                          content: Container(
+                                            height: Get.height * 0.3,
+                                            width: Get.width * 0.8,
+                                            child: GridView.builder(
+                                              gridDelegate:
+                                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 3, // Số cột
+                                                crossAxisSpacing:
+                                                    10.0, // Khoảng cách giữa các cột
+                                                mainAxisSpacing:
+                                                    10.0, // Khoảng cách giữa các hàng
+                                              ),
+                                              itemCount: _strings
+                                                  .length, // Tổng số phần tử (3 hàng * 3 cột)
+                                              itemBuilder: (context, index) {
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    updateSelectedAvatar(
+                                                        _strings[index]);
+                                                    print('${_strings[index]}');
+                                                  },
+                                                  child: Container(
+                                                    alignment: Alignment.center,
+                                                    color: Colors.blueAccent,
+                                                    child: Text(
+                                                      '${_strings[index]}',
+                                                      style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 20),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ));
+                                    });
+                              },
+                              child: Icon(
+                                Icons.camera_alt_outlined,
+                                color: Colors.red,
+                              )),
+                        ],
                       ),
                       Gap(12),
                       Column(
@@ -255,9 +346,12 @@ class _UserScreenState extends State<UserScreen> {
                                       height: 66,
                                       width: 66,
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100)),
-                                      child: Image.network('${widget.avatar}'),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: widget.avatar == ''
+                                          ? Container()
+                                          : Image.network('${widget.avatar}'),
                                     ),
                                     Gap(12),
                                     _buildCell('Tên tài khoản', widget.idUser),

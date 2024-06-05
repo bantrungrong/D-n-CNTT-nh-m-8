@@ -25,8 +25,8 @@ class _ReportScreenState extends State<ReportScreen> {
 
   Future<void> getRecord() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://192.168.30.249/practice_api/TT_thong_ke.php'));
+      final response = await http.get(
+          Uri.parse('http://192.168.195.206/practice_api/TT_thong_ke.php'));
       if (response.statusCode == 200) {
         setState(() {
           report = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -42,7 +42,7 @@ class _ReportScreenState extends State<ReportScreen> {
   Future<void> getRecordProduct() async {
     try {
       final responseProduct = await http
-          .get(Uri.parse('http://192.168.30.249/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.195.206/practice_api/view_data.php'));
       if (responseProduct.statusCode == 200) {
         setState(() {
           product =

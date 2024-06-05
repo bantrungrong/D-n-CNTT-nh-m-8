@@ -51,7 +51,7 @@ class _DetailTicketState extends State<DetailTicket> {
   Future<void> getRecord() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://192.168.30.249/practice_api/TT_chitietPhieuXuat.php'));
+          'http://192.168.195.206/practice_api/TT_chitietPhieuXuat.php'));
       if (response.statusCode == 200) {
         setState(() {
           ticket = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -67,7 +67,7 @@ class _DetailTicketState extends State<DetailTicket> {
   Future<void> _handleRefresh() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://192.168.30.249/practice_api/TT_chitietPhieuXuat.php'));
+          'http://192.168.195.206/practice_api/TT_chitietPhieuXuat.php'));
 
       if (response.statusCode == 200) {
         setState(() {
@@ -87,7 +87,7 @@ class _DetailTicketState extends State<DetailTicket> {
   Future<void> delIdProduct(String MaSanPham) async {
     print('$MaSanPham');
     try {
-      String uri = "http://192.168.30.249/practice_api/delete_phieuxuat.php";
+      String uri = "http://192.168.195.206/practice_api/delete_phieuxuat.php";
       var res = await http.post(Uri.parse(uri), body: {
         "MaSanPham": '$MaSanPham',
       });

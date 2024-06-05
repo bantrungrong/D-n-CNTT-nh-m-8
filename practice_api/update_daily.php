@@ -27,10 +27,8 @@ if(isset($_POST["SoTienNo"]))
     $SoTienNo=$_POST["SoTienNo"];
 }
 else return;
-
-
-
-$query="INSERT INTO `daily`(`MaDaiLy`, `TenDaiLy`, `DiaChi`, `DienThoai`, `SoTienNo`) VALUES ('$MaDaiLy','$TenDaiLy','$DiaChi','$DienThoai','$SoTienNo')";
+    
+$query="UPDATE `daily` SET `TenDaiLy`='$TenDaiLy',`DiaChi`='$DiaChi',`DienThoai`='$DienThoai',`SoTienNo`='$SoTienNo' WHERE `MaDaiLy`='$MaDaiLy'"; 
 $exe=mysqli_query($con,$query);
 $arr=[];
 if($exe)
@@ -42,4 +40,4 @@ else
     $arr["success"]="false";
 }
 print(json_encode($arr));
-?>  
+?>
