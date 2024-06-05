@@ -24,13 +24,14 @@ class _ProductUpdateState extends State<ProductUpdate> {
   final TextEditingController TypeProduct = TextEditingController();
   final TextEditingController PiceProduct = TextEditingController();
   final TextEditingController CountProduct = TextEditingController();
+  final TextEditingController ImageProduct = TextEditingController();
 
   List<Map<String, dynamic>> users = [];
 
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.30.249/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -54,12 +55,13 @@ class _ProductUpdateState extends State<ProductUpdate> {
       return;
     }
     try {
-      String uri = "http://192.168.1.5/practice_api/update_product.php";
+      String uri = "http://192.168.30.249/practice_api/update_product.php";
       var res = await http.post(Uri.parse(uri), body: {
         "TenSanPham": NameProduct.text,
         "LoaiSanPham": TypeProduct.text,
         "DonGia": PiceProduct.text,
         "SoLuongTon": CountProduct.text,
+        // "HinhAnh": ImageProduct.text,
         "MaSanPham": users[value]['MaSanPham'],
       });
       var response = jsonDecode(res.body);
@@ -74,19 +76,16 @@ class _ProductUpdateState extends State<ProductUpdate> {
     }
   }
 
-  Future<void> delProduct() async {
-    final value = Get.arguments as int?;
-    if (value == null || value >= users.length) return;
-
+  Future<void> delIdProduct(String MaSanPham) async {
+    print('$MaSanPham');
     try {
-      String uri = "http://192.168.1.5/practice_api/delete_product.php";
-      var resDel = await http.post(Uri.parse(uri), body: {
-        "MaSanPham": users[value]['MaSanPham'],
+      String uri = "http://192.168.30.249/practice_api/delete_product.php";
+      var res = await http.post(Uri.parse(uri), body: {
+        "MaSanPham": '$MaSanPham',
       });
-      var responseDel = jsonDecode(resDel.body);
+      var responseDel = jsonDecode(res.body);
       if (responseDel['success'] == 'true') {
         print('record delete complete');
-        getRecord(); // Refresh the data
       } else {
         print('some issue');
       }
@@ -116,7 +115,41 @@ class _ProductUpdateState extends State<ProductUpdate> {
         automaticallyImplyLeading: false,
         toolbarHeight: 100 - 44,
         backgroundColor: AppColors.primary,
-        title: _buildAppBar(),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: Container(
+                padding: const EdgeInsets.only(left: 7),
+                height: 36,
+                width: 36,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: Colors.white),
+                child: const Icon(
+                  Icons.arrow_back_ios,
+                  size: 20,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+            Text(
+              'Sửa thông tin sản phẩm',
+              style: AppStyle.bold(color: Colors.white, fontSize: 16),
+            ),
+            IconButton(
+                onPressed: () {
+                  delIdProduct(users[value]['MaSanPham']);
+                },
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ))
+          ],
+        ),
       ),
       body: ListView(
         children: [
@@ -146,6 +179,8 @@ class _ProductUpdateState extends State<ProductUpdate> {
                 const Gap(10),
                 _buildTextField(
                     'Số lượng: ${users[value]['SoLuongTon']}', CountProduct),
+                // const Gap(10),
+                // _buildTextField('Hình ảnh sản phẩm', ImageProduct),
                 const Gap(23),
                 GestureDetector(
                   onTap: () {
@@ -172,36 +207,6 @@ class _ProductUpdateState extends State<ProductUpdate> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildAppBar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        GestureDetector(
-          onTap: () {
-            Get.back();
-          },
-          child: Container(
-            padding: const EdgeInsets.only(left: 7),
-            height: 36,
-            width: 36,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100), color: Colors.white),
-            child: const Icon(
-              Icons.arrow_back_ios,
-              size: 20,
-              color: AppColors.primary,
-            ),
-          ),
-        ),
-        Text(
-          'Sửa thông tin sản phẩm',
-          style: AppStyle.bold(color: Colors.white, fontSize: 16),
-        ),
-        Container()
-      ],
     );
   }
 

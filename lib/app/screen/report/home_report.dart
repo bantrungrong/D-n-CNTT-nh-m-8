@@ -4,6 +4,7 @@
 import 'dart:convert';
 
 import 'package:drink_app_getx/app/core/values/strings.dart';
+import 'package:drink_app_getx/app/screen/report/report_product_screen.dart';
 import 'package:drink_app_getx/app/screen/report/report_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class _HomeReportState extends State<HomeReport> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/TT_bao_cao.php'));
+          .get(Uri.parse('http://192.168.30.249/practice_api/TT_bao_cao.php'));
       if (response.statusCode == 200) {
         setState(() {
           report = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -49,7 +50,7 @@ class _HomeReportState extends State<HomeReport> {
   Future<void> getRecordP() async {
     try {
       final responseP = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.30.249/practice_api/view_data.php'));
       if (responseP.statusCode == 200) {
         setState(() {
           product = List<Map<String, dynamic>>.from(jsonDecode(responseP.body));
@@ -110,6 +111,14 @@ class _HomeReportState extends State<HomeReport> {
           ),
         ),
         _buildProductItem(),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        //   child: Text(
+        //     'Thống kê sản phẩm tồn kho',
+        //     style: AppStyle.bold(),
+        //   ),
+        // ),
+        // _buildProductSell(),
       ],
     );
   }
@@ -118,6 +127,36 @@ class _HomeReportState extends State<HomeReport> {
     return GestureDetector(
       onTap: () {
         Get.to(ReportScreen());
+      },
+      child: Container(
+        margin: EdgeInsets.all(33),
+        padding: EdgeInsets.all(33),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 2), // changes the direction of shadow
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            'Xem biểu đồ thống kê',
+            style: AppStyle.bold(color: Colors.red),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProductSell() {
+    return GestureDetector(
+      onTap: () {
+        Get.to(ReportScreenSell());
       },
       child: Container(
         margin: EdgeInsets.all(33),
@@ -176,7 +215,7 @@ class _HomeReportState extends State<HomeReport> {
                             ),
                           ],
                         ),
-                        child: Row(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
@@ -188,11 +227,11 @@ class _HomeReportState extends State<HomeReport> {
                               height: 22,
                             ),
                             Text(
-                              '${report[index]['SoLuongXuat']}',
+                              'Số lượng xuất:${report[index]['SoLuongXuat']}',
                               style: AppStyle.bold(color: Colors.blue),
                             ),
                             Text(
-                              '${report[index]['DoanhThu']}',
+                              'Doanh thu:${report[index]['DoanhThu']} VNĐ',
                               style: AppStyle.bold(color: Colors.blue),
                             ),
                           ],

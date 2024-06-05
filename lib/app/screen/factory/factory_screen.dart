@@ -32,7 +32,7 @@ class _FactoryScreenState extends State<FactoryScreen> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/TT_xuong_sx.php'));
+          .get(Uri.parse('http://192.168.30.249/practice_api/TT_xuong_sx.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -51,7 +51,7 @@ class _FactoryScreenState extends State<FactoryScreen> {
         DiaChi.text != "" &&
         MaSanPham.text != "") {
       try {
-        String uri = "http://192.168.1.5/practice_api/add_xuong_sx.php";
+        String uri = "http://192.168.30.249/practice_api/add_xuong_sx.php";
         var res = await http.post(Uri.parse(uri), body: {
           "MaPhanXuong": MaPhanXuong.text,
           "TenPhanXuong": TenPhanXuong.text,
@@ -73,7 +73,7 @@ class _FactoryScreenState extends State<FactoryScreen> {
 
   Future<void> delProduct(String id) async {
     try {
-      String uri = "http://192.168.1.5/practice_api/delete_product.php";
+      String uri = "http://192.168.30.249/practice_api/delete_product.php";
       var res = await http.post(Uri.parse(uri), body: {"MaSanPham": id});
       var response = jsonDecode(res.body);
       if (response['success'] == 'true') {
@@ -338,7 +338,7 @@ class _FactoryScreenState extends State<FactoryScreen> {
   Future<void> _handleRefresh() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/TT_xuong_sx.php'));
+          .get(Uri.parse('http://192.168.30.249/practice_api/TT_xuong_sx.php'));
 
       if (response.statusCode == 200) {
         setState(() {

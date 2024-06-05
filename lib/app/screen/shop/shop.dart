@@ -35,7 +35,7 @@ class _UserListScreenState extends State<UserListScreen> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/TT_daily.php'));
+          .get(Uri.parse('http://192.168.30.249/practice_api/TT_daily.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -51,7 +51,7 @@ class _UserListScreenState extends State<UserListScreen> {
   Future<void> getRecordAdmin() async {
     try {
       final responseAd = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/login_data.php'));
+          .get(Uri.parse('http://192.168.30.249/practice_api/login_data.php'));
       if (responseAd.statusCode == 200) {
         setState(() {
           admin = List<Map<String, dynamic>>.from(jsonDecode(responseAd.body));
@@ -70,7 +70,7 @@ class _UserListScreenState extends State<UserListScreen> {
         TenDaiLy.text.isNotEmpty &&
         SoTienNo.text.isNotEmpty) {
       try {
-        String uri = "http://192.168.1.5/practice_api/add_TT_daily.php";
+        String uri = "http://192.168.30.249/practice_api/add_TT_daily.php";
         var res = await http.post(Uri.parse(uri), body: {
           "MaDaiLy": MaDaiLy.text,
           "TenDaiLy": TenDaiLy.text,
@@ -95,7 +95,7 @@ class _UserListScreenState extends State<UserListScreen> {
 
   Future<void> delProduct(String id) async {
     try {
-      String uri = "http://192.168.1.5/practice_api/delete_daily.php";
+      String uri = "http://192.168.30.249/practice_api/delete_daily.php";
       var res = await http.post(Uri.parse(uri), body: {"MaDaiLy": id});
       var response = jsonDecode(res.body);
       if (response['success'] == 'true') {

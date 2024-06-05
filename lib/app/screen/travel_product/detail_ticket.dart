@@ -5,6 +5,7 @@ import 'package:drink_app_getx/app/core/values/strings.dart';
 import 'package:drink_app_getx/app/screen/travel_product/SelectedProductScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:get/get.dart';
 import 'package:gap/gap.dart';
@@ -49,8 +50,8 @@ class _DetailTicketState extends State<DetailTicket> {
   List<Map<String, dynamic>> ticket = [];
   Future<void> getRecord() async {
     try {
-      final response = await http.get(
-          Uri.parse('http://192.168.1.5/practice_api/TT_chitietPhieuXuat.php'));
+      final response = await http.get(Uri.parse(
+          'http://192.168.30.249/practice_api/TT_chitietPhieuXuat.php'));
       if (response.statusCode == 200) {
         setState(() {
           ticket = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -65,8 +66,8 @@ class _DetailTicketState extends State<DetailTicket> {
 
   Future<void> _handleRefresh() async {
     try {
-      final response = await http.get(
-          Uri.parse('http://192.168.1.5/practice_api/TT_chitietPhieuXuat.php'));
+      final response = await http.get(Uri.parse(
+          'http://192.168.30.249/practice_api/TT_chitietPhieuXuat.php'));
 
       if (response.statusCode == 200) {
         setState(() {
@@ -80,6 +81,25 @@ class _DetailTicketState extends State<DetailTicket> {
     } finally {
       // Complete the refresh indicator
       _refreshController.refreshCompleted();
+    }
+  }
+
+  Future<void> delIdProduct(String MaSanPham) async {
+    print('$MaSanPham');
+    try {
+      String uri = "http://192.168.30.249/practice_api/delete_phieuxuat.php";
+      var res = await http.post(Uri.parse(uri), body: {
+        "MaSanPham": '$MaSanPham',
+      });
+      var responseDel = jsonDecode(res.body);
+      if (responseDel['success'] == 'true') {
+        print('record delete complete');
+        getRecord(); // Refresh the data
+      } else {
+        print('some issue');
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -197,25 +217,37 @@ class _DetailTicketState extends State<DetailTicket> {
                     itemCount: ticket.length,
                     itemBuilder: (context, index) {
                       return ticket[index]['MaDaiLy'] == widget.idShopInfor
-                          ? Container(
-                              margin: EdgeInsets.all(6),
-                              padding: EdgeInsets.only(top: 12),
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: Column(
-                                children: [
-                                  _buildCell('Mã sản phẩm xuất',
-                                      '${ticket[index]['MaSanPham']}'),
-                                  _buildCell('Số lượng xuất',
-                                      '${ticket[index]['SoLuongXuat']}'),
-                                  _buildCell(
-                                      'Đơn giá', '${ticket[index]['DonGia']}'),
-                                  _buildCell('Thành tiền',
-                                      '${ticket[index]['TongTien']}'),
-                                  Gap(12),
-                                ],
-                              ),
+                          ? Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.all(6),
+                                    padding: EdgeInsets.only(top: 12),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Column(
+                                      children: [
+                                        _buildCell('Mã sản phẩm xuất',
+                                            '${ticket[index]['MaSanPham']}'),
+                                        _buildCell('Số lượng xuất',
+                                            '${ticket[index]['SoLuongXuat']}'),
+                                        _buildCell('Đơn giá',
+                                            '${ticket[index]['DonGia']}'),
+                                        _buildCell('Thành tiền',
+                                            '${ticket[index]['TongTien']}'),
+                                        Gap(12),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      delIdProduct(ticket[index]['MaSanPham']);
+                                    },
+                                    icon: Icon(Icons.delete))
+                              ],
                             )
                           : Container();
                     }),
@@ -229,9 +261,8 @@ class _DetailTicketState extends State<DetailTicket> {
 
   Widget _buildCell(String leftText, String rightText) {
     return Container(
-      width: Get.width * 0.95,
-      margin: EdgeInsets.symmetric(
-        horizontal: 12,
+      padding: EdgeInsets.symmetric(
+        horizontal: 24,
       ),
       child: Column(
         children: [

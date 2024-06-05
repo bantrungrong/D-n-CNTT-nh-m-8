@@ -18,7 +18,7 @@ class ProductDetail extends StatefulWidget {
   final String MaPhanXuong;
   final String TenPhanXuong;
   final String DiaChi;
-
+  final String HinhAnh;
   const ProductDetail(
       {super.key,
       required this.DonGia,
@@ -28,7 +28,8 @@ class ProductDetail extends StatefulWidget {
       required this.TenSanPham,
       required this.DiaChi,
       required this.MaPhanXuong,
-      required this.TenPhanXuong});
+      required this.TenPhanXuong,
+      required this.HinhAnh});
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
@@ -47,7 +48,7 @@ class _ProductDetailState extends State<ProductDetail> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/TT_xuong_sx.php'));
+          .get(Uri.parse('http://192.168.30.249/practice_api/TT_xuong_sx.php'));
       if (response.statusCode == 200) {
         setState(() {
           factory = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -62,8 +63,8 @@ class _ProductDetailState extends State<ProductDetail> {
 
   Future<void> getInputRecord() async {
     try {
-      final responseTT = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/TT_phieu_nhap.php'));
+      final responseTT = await http.get(
+          Uri.parse('http://192.168.30.249/practice_api/TT_phieu_nhap.php'));
       if (responseTT.statusCode == 200) {
         setState(() {
           inputTicket =
@@ -145,67 +146,77 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   Widget _buildProduct() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Text(
-          'Sản phẩm',
-          style: AppStyle.bold(fontSize: 16).copyWith(color: Colors.red),
-          overflow: TextOverflow.ellipsis,
-        ),
-        Gap(10),
-        Text(
-          'Mã SP: ${widget.MaSanPham}',
-          style: AppStyle.medium(fontSize: 14)
-              .copyWith(fontWeight: FontWeight.w500),
-          overflow: TextOverflow.ellipsis,
-        ),
-        Gap(8),
-        Text(
-          'Tên SP: ${widget.TenSanPham}',
-          style: AppStyle.medium(fontSize: 14)
-              .copyWith(fontWeight: FontWeight.w500),
-          overflow: TextOverflow.ellipsis,
-        ),
-        Gap(8),
-        Text(
-          'Loại SP: ${widget.LoaiSanPham}',
-          style: AppStyle.medium(fontSize: 14)
-              .copyWith(fontWeight: FontWeight.w500),
-          overflow: TextOverflow.ellipsis,
-        ),
-        Gap(8),
-        Text(
-          'Đơn giá: ${widget.DonGia}',
-          style: AppStyle.medium(fontSize: 14)
-              .copyWith(fontWeight: FontWeight.w500),
-          overflow: TextOverflow.ellipsis,
-        ),
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Trạng thái:',
-              style: AppStyle.regular(fontSize: 13),
+              'Sản phẩm',
+              style: AppStyle.bold(fontSize: 16).copyWith(color: Colors.red),
+              overflow: TextOverflow.ellipsis,
             ),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                widget.SoLuong == '0' ? 'Hết hàng' : 'Còn hàng',
-                style: AppStyle.bold(
-                    fontSize: 13,
-                    color: widget.SoLuong == '0' ? Colors.red : Colors.green),
-              ),
+            Gap(10),
+            Text(
+              'Mã SP: ${widget.MaSanPham}',
+              style: AppStyle.medium(fontSize: 14)
+                  .copyWith(fontWeight: FontWeight.w500),
+              overflow: TextOverflow.ellipsis,
             ),
-            widget.SoLuong != '0'
-                ? Text(
-                    'Số lượng: ${widget.SoLuong}',
-                    style: AppStyle.medium(fontSize: 14)
-                        .copyWith(fontWeight: FontWeight.w500),
-                    overflow: TextOverflow.ellipsis,
-                  )
-                : Text(''),
+            Gap(8),
+            Text(
+              'Tên SP: ${widget.TenSanPham}',
+              style: AppStyle.medium(fontSize: 14)
+                  .copyWith(fontWeight: FontWeight.w500),
+              overflow: TextOverflow.ellipsis,
+            ),
+            Gap(8),
+            Text(
+              'Loại SP: ${widget.LoaiSanPham}',
+              style: AppStyle.medium(fontSize: 14)
+                  .copyWith(fontWeight: FontWeight.w500),
+              overflow: TextOverflow.ellipsis,
+            ),
+            Gap(8),
+            Text(
+              'Đơn giá: ${widget.DonGia}',
+              style: AppStyle.medium(fontSize: 14)
+                  .copyWith(fontWeight: FontWeight.w500),
+              overflow: TextOverflow.ellipsis,
+            ),
+            Row(
+              children: [
+                Text(
+                  'Trạng thái:',
+                  style: AppStyle.regular(fontSize: 13),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    widget.SoLuong == '0' ? 'Hết hàng' : 'Còn hàng',
+                    style: AppStyle.bold(
+                        fontSize: 13,
+                        color:
+                            widget.SoLuong == '0' ? Colors.red : Colors.green),
+                  ),
+                ),
+                widget.SoLuong != '0'
+                    ? Text(
+                        'Số lượng: ${widget.SoLuong}',
+                        style: AppStyle.medium(fontSize: 14)
+                            .copyWith(fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    : Text(''),
+              ],
+            ),
           ],
         ),
+        // Container(
+        //   height: 88,
+        //   width: 88,
+        //   child: Image.network('${widget.HinhAnh}'),
+        // )
       ],
     );
   }

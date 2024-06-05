@@ -38,7 +38,7 @@ class _FactoryAddState extends State<FactoryAdd> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/TT_xuong_sx.php'));
+          .get(Uri.parse('http://192.168.30.249/practice_api/TT_xuong_sx.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -57,7 +57,8 @@ class _FactoryAddState extends State<FactoryAdd> {
       return;
     }
     try {
-      String uri = "http://192.168.1.5/practice_api/update_xuong_san_xuat.php";
+      String uri =
+          "http://192.168.30.249/practice_api/update_xuong_san_xuat.php";
       var res = await http.post(Uri.parse(uri), body: {
         "TenPhanXuong": TenPhanXuong.text,
         "DiaChi": DiaChi.text,
@@ -77,7 +78,7 @@ class _FactoryAddState extends State<FactoryAdd> {
 
   Future<void> delFactory(String MaPhanXuong) async {
     try {
-      String uri = "http://192.168.1.5/practice_api/delete_factory.php";
+      String uri = "http://192.168.30.249/practice_api/delete_factory.php";
       var res = await http.post(Uri.parse(uri), body: {
         "MaPhanXuong": MaPhanXuong,
       });

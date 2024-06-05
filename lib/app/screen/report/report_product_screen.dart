@@ -5,14 +5,14 @@ import 'package:http/http.dart' as http;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:get/get.dart';
 
-class ReportScreen extends StatefulWidget {
-  const ReportScreen({Key? key}) : super(key: key);
+class ReportScreenSell extends StatefulWidget {
+  const ReportScreenSell({Key? key}) : super(key: key);
 
   @override
-  State<ReportScreen> createState() => _ReportScreenState();
+  State<ReportScreenSell> createState() => _ReportScreenSellState();
 }
 
-class _ReportScreenState extends State<ReportScreen> {
+class _ReportScreenSellState extends State<ReportScreenSell> {
   List<Map<String, dynamic>> report = [];
   List<Map<String, dynamic>> product = [];
 

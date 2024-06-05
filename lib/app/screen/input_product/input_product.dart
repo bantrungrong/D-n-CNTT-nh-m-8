@@ -32,8 +32,8 @@ class _TicketInputState extends State<TicketInput> {
 
   Future<void> getRecordTTPhieuXuat() async {
     try {
-      final responseTT = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/TT_phieu_nhap.php'));
+      final responseTT = await http.get(
+          Uri.parse('http://192.168.30.249/practice_api/TT_phieu_nhap.php'));
       if (responseTT.statusCode == 200) {
         setState(() {
           ticket = List<Map<String, dynamic>>.from(jsonDecode(responseTT.body));
@@ -48,8 +48,8 @@ class _TicketInputState extends State<TicketInput> {
 
   Future<void> _handleRefresh() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/TT_phieu_nhap.php'));
+      final response = await http.get(
+          Uri.parse('http://192.168.30.249/practice_api/TT_phieu_nhap.php'));
 
       if (response.statusCode == 200) {
         setState(() {
@@ -63,6 +63,24 @@ class _TicketInputState extends State<TicketInput> {
     } finally {
       // Complete the refresh indicator
       _refreshController.refreshCompleted();
+    }
+  }
+
+  Future<void> delIdProduct(String MaSanPham) async {
+    print('$MaSanPham');
+    try {
+      String uri = "http://192.168.30.249/practice_api/delete_phieunhap.php";
+      var res = await http.post(Uri.parse(uri), body: {
+        "MaSanPham": '$MaSanPham',
+      });
+      var responseDel = jsonDecode(res.body);
+      if (responseDel['success'] == 'true') {
+        print('record delete complete');
+      } else {
+        print('some issue');
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -118,108 +136,106 @@ class _TicketInputState extends State<TicketInput> {
               child: ListView.builder(
                   itemCount: ticket.length,
                   itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Container(
-                            padding: EdgeInsets.symmetric(vertical: 24),
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.1),
-                                  spreadRadius: 1,
-                                  blurRadius: 1,
-                                  offset: const Offset(
-                                      0, 2), // changes the direction of shadow
-                                ),
-                              ],
+                    return Container(
+                        padding: EdgeInsets.symmetric(vertical: 24),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                              offset: const Offset(
+                                  0, 2), // changes the direction of shadow
                             ),
-                            child: Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.to(DetailInput(
-                                        ChuKyNhan: ticket[index]['ChuKyNhan'],
-                                        ChuKyTruongDonVi: ticket[index]
-                                            ['ChuKyTruongDonVi'],
-                                        ChuKyViet: ticket[index]['ChuKyViet'],
-                                        DonGia: ticket[index]['DonGia'],
-                                        MaPhieuNhap: ticket[index]
-                                            ['MaPhieuNhap'],
-                                        MaSanPham: ticket[index]['MaSanPham'],
-                                        SoHieuXuong: ticket[index]
-                                            ['SoHieuXuong'],
-                                        SoLuongNhap: ticket[index]
-                                            ['SoLuongNhap'],
-                                        TenNguoiGiaoHang: ticket[index]
-                                            ['TenNguoiGiaoHang'],
-                                        TenSanPham: ticket[index]['TenSanPham'],
-                                        ThanhTien: ticket[index]['ThanhTien'],
-                                        TongTien: ticket[index]['TongTien']));
-                                  },
-                                  child: ListTile(
-                                    title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Mã phiếu nhập: ${ticket[index]['MaPhieuNhap']}',
-                                          style: AppStyle.medium(fontSize: 14)
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w500),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          'Mã sản phẩm: ${ticket[index]['MaSanPham']}',
-                                          style: AppStyle.medium(fontSize: 14)
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w500),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          'Số hiệu xưởng nhập: ${ticket[index]['SoHieuXuong']}',
-                                          style: AppStyle.medium(fontSize: 14)
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w500),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          'Sản phẩm nhập: ${ticket[index]['TenSanPham']}',
-                                          style: AppStyle.medium(fontSize: 14)
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w500),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          'Số lượng nhập: ${ticket[index]['SoLuongNhap']}',
-                                          style: AppStyle.medium(fontSize: 14)
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w500),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(DetailInput(
+                                    ChuKyNhan: ticket[index]['ChuKyNhan'],
+                                    ChuKyTruongDonVi: ticket[index]
+                                        ['ChuKyTruongDonVi'],
+                                    ChuKyViet: ticket[index]['ChuKyViet'],
+                                    DonGia: ticket[index]['DonGia'],
+                                    MaPhieuNhap: ticket[index]['MaPhieuNhap'],
+                                    MaSanPham: ticket[index]['MaSanPham'],
+                                    SoHieuXuong: ticket[index]['SoHieuXuong'],
+                                    SoLuongNhap: ticket[index]['SoLuongNhap'],
+                                    TenNguoiGiaoHang: ticket[index]
+                                        ['TenNguoiGiaoHang'],
+                                    TenSanPham: ticket[index]['TenSanPham'],
+                                    ThanhTien: ticket[index]['ThanhTien'],
+                                    TongTien: ticket[index]['TongTien']));
+                              },
+                              child: ListTile(
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Mã phiếu nhập: ${ticket[index]['MaPhieuNhap']}',
+                                      style: AppStyle.medium(fontSize: 14)
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                  ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      'Mã sản phẩm: ${ticket[index]['MaSanPham']}',
+                                      style: AppStyle.medium(fontSize: 14)
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      'Số hiệu xưởng nhập: ${ticket[index]['SoHieuXuong']}',
+                                      style: AppStyle.medium(fontSize: 14)
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      'Sản phẩm nhập: ${ticket[index]['TenSanPham']}',
+                                      style: AppStyle.medium(fontSize: 14)
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      'Số lượng nhập: ${ticket[index]['SoLuongNhap']}',
+                                      style: AppStyle.medium(fontSize: 14)
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            )),
-                      ],
-                    );
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    delIdProduct(ticket[index]['MaSanPham']);
+                                  },
+                                  icon: Icon(Icons.delete),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ));
                   }),
             ),
           ),

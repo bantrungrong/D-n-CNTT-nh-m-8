@@ -29,6 +29,7 @@ class _ProductScreenState extends State<ProductScreen> {
   final TextEditingController type = TextEditingController();
   final TextEditingController pice = TextEditingController();
   final TextEditingController count_item = TextEditingController();
+  final TextEditingController anhSP = TextEditingController();
   List<Map<String, dynamic>> users = [];
   List<Map<String, dynamic>> filteredUsers = []; // For filtered list
   List<Map<String, dynamic>> factory = [];
@@ -51,7 +52,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Future<void> getRecord() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.30.249/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -68,7 +69,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Future<void> getRecordF() async {
     try {
       final responseF = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/TT_xuong_sx.php'));
+          .get(Uri.parse('http://192.168.30.249/practice_api/TT_xuong_sx.php'));
       if (responseF.statusCode == 200) {
         setState(() {
           factory = List<Map<String, dynamic>>.from(jsonDecode(responseF.body));
@@ -88,13 +89,14 @@ class _ProductScreenState extends State<ProductScreen> {
         pice.text.isNotEmpty &&
         count_item.text.isNotEmpty) {
       try {
-        String uri = "http://192.168.1.5/practice_api/add_product.php";
+        String uri = "http://192.168.30.249/practice_api/add_product.php";
         var res = await http.post(Uri.parse(uri), body: {
           "MaSanPham": id.text,
           "TenSanPham": namepro.text,
           "LoaiSanPham": type.text,
           "SoLuongTon": count_item.text,
           "DonGia": pice.text,
+          "HinhAnh": anhSP.text,
         });
         var reponse = jsonDecode(res.body);
         if (reponse["success"] == "true") {
@@ -113,7 +115,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   Future<void> delProduct(String id) async {
     try {
-      String uri = "http://192.168.1.5/practice_api/delete_product.php";
+      String uri = "http://192.168.30.249/practice_api/delete_product.php";
       var res = await http.post(Uri.parse(uri), body: {"MaSanPham": id});
       var response = jsonDecode(res.body);
       if (response['success'] == 'true') {
@@ -238,6 +240,8 @@ class _ProductScreenState extends State<ProductScreen> {
                             _buildTextField('Đơn giá', pice),
                             Gap(8),
                             _buildTextField('Số lượng', count_item),
+                            Gap(8),
+                            _buildTextField('Link hình ảnh', anhSP),
                             Gap(30),
                             InkWell(
                               onTap: () {
@@ -331,92 +335,93 @@ class _ProductScreenState extends State<ProductScreen> {
                   ),
                 ],
               ),
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(ProductDetail(
-                        DonGia: filteredUsers[index]['DonGia'],
-                        LoaiSanPham: filteredUsers[index]['LoaiSanPham'],
-                        MaSanPham: filteredUsers[index]['MaSanPham'],
-                        SoLuong: filteredUsers[index]['SoLuongTon'],
-                        TenSanPham: filteredUsers[index]['TenSanPham'],
-                        MaPhanXuong: factory[index]['MaPhanXuong'],
-                        TenPhanXuong: factory[index]['TenPhanXuong'],
-                        DiaChi: factory[index]['DiaChi'],
-                      ));
-                    },
-                    child: ListTile(
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              child: GestureDetector(
+                onTap: () {
+                  Get.to(ProductDetail(
+                    DonGia: filteredUsers[index]['DonGia'],
+                    LoaiSanPham: filteredUsers[index]['LoaiSanPham'],
+                    MaSanPham: filteredUsers[index]['MaSanPham'],
+                    SoLuong: filteredUsers[index]['SoLuongTon'],
+                    TenSanPham: filteredUsers[index]['TenSanPham'],
+                    MaPhanXuong: factory[index]['MaPhanXuong'],
+                    TenPhanXuong: factory[index]['TenPhanXuong'],
+                    DiaChi: factory[index]['DiaChi'],
+                    HinhAnh: filteredUsers[index]['HinhAnh'],
+                  ));
+                },
+                child: ListTile(
+                  // leading: Container(
+                  //     height: 80,
+                  //     width: 80,
+                  //     child:
+                  //         Image.network('${filteredUsers[index]['HinhAnh']}')),
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Mã SP: ${filteredUsers[index]['MaSanPham']}',
+                        style: AppStyle.medium(fontSize: 14)
+                            .copyWith(fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        'Tên SP: ${filteredUsers[index]['TenSanPham']}',
+                        style: AppStyle.medium(fontSize: 14)
+                            .copyWith(fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        'Loại SP: ${filteredUsers[index]['LoaiSanPham']}',
+                        style: AppStyle.medium(fontSize: 14)
+                            .copyWith(fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      // Text(
+                      //   'Đơn giá: ${filteredUsers[index]['DonGia']}',
+                      //   style: AppStyle.medium(fontSize: 14)
+                      //       .copyWith(fontWeight: FontWeight.w500),
+                      //   overflow: TextOverflow.ellipsis,
+                      // ),
+                      // Text(
+                      //   'Số lượng: ${filteredUsers[index]['SoLuongTon']}',
+                      //   style: AppStyle.medium(fontSize: 14)
+                      //       .copyWith(fontWeight: FontWeight.w500),
+                      //   overflow: TextOverflow.ellipsis,
+                      // ),
+                      Row(
                         children: [
                           Text(
-                            'Mã SP: ${filteredUsers[index]['MaSanPham']}',
-                            style: AppStyle.medium(fontSize: 14)
-                                .copyWith(fontWeight: FontWeight.w500),
-                            overflow: TextOverflow.ellipsis,
+                            'Trạng thái:',
+                            style: AppStyle.regular(fontSize: 13),
                           ),
-                          Text(
-                            'Tên SP: ${filteredUsers[index]['TenSanPham']}',
-                            style: AppStyle.medium(fontSize: 14)
-                                .copyWith(fontWeight: FontWeight.w500),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            'Loại SP: ${filteredUsers[index]['LoaiSanPham']}',
-                            style: AppStyle.medium(fontSize: 14)
-                                .copyWith(fontWeight: FontWeight.w500),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            'Đơn giá: ${filteredUsers[index]['DonGia']}',
-                            style: AppStyle.medium(fontSize: 14)
-                                .copyWith(fontWeight: FontWeight.w500),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            'Số lượng: ${filteredUsers[index]['SoLuongTon']}',
-                            style: AppStyle.medium(fontSize: 14)
-                                .copyWith(fontWeight: FontWeight.w500),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Trạng thái:',
-                                style: AppStyle.regular(fontSize: 13),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              filteredUsers[index]['SoLuongTon'] == '0'
+                                  ? 'Hết hàng'
+                                  : 'Còn hàng',
+                              style: AppStyle.bold(
+                                fontSize: 13,
+                                color: filteredUsers[index]['SoLuongTon'] == '0'
+                                    ? Colors.red
+                                    : Colors.green,
                               ),
-                              TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  filteredUsers[index]['SoLuongTon'] == '0'
-                                      ? 'Hết hàng'
-                                      : 'Còn hàng',
-                                  style: AppStyle.bold(
-                                    fontSize: 13,
-                                    color: filteredUsers[index]['SoLuongTon'] ==
-                                            '0'
-                                        ? Colors.red
-                                        : Colors.green,
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
-                      trailing: IconButton(
-                        onPressed: () {
-                          Get.to(ProductUpdate(), arguments: index);
-                        },
-                        icon: Icon(
-                          Icons.build_circle_outlined,
-                          size: 32,
-                        ),
-                      ),
+                    ],
+                  ),
+                  trailing: IconButton(
+                    onPressed: () {
+                      Get.to(ProductUpdate(), arguments: index);
+                    },
+                    icon: Icon(
+                      Icons.build_circle_outlined,
+                      size: 32,
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ),
@@ -492,7 +497,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Future<void> _handleRefresh() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.1.5/practice_api/view_data.php'));
+          .get(Uri.parse('http://192.168.30.249/practice_api/view_data.php'));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));

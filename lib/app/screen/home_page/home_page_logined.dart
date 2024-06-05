@@ -203,7 +203,7 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
           company: 'Công ty : $arg2',
           time: formattedDate,
           name: greeting,
-          location: 'Địa chỉ: 123 ABC Street, City A',
+          location: '$arg7',
           monday: dayOfWeek,
         ),
         Padding(
