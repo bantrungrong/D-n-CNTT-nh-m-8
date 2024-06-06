@@ -1,24 +1,23 @@
 import 'dart:convert';
-
+import 'dart:async';
 import 'package:drink_app_getx/app/core/values/strings.dart';
-import 'package:drink_app_getx/app/screen/message_screen/chat_box.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:http/http.dart' as http;
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 class MessageScreen extends StatefulWidget {
   final String name;
   final String avatar;
   final String tier;
-  const MessageScreen(
-      {super.key,
-      required this.name,
-      required this.avatar,
-      required this.tier});
+
+  const MessageScreen({
+    Key? key,
+    required this.name,
+    required this.avatar,
+    required this.tier,
+  }) : super(key: key);
 
   @override
   State<MessageScreen> createState() => _MessageScreenState();
@@ -27,45 +26,77 @@ class MessageScreen extends StatefulWidget {
 class _MessageScreenState extends State<MessageScreen> {
   final TextEditingController mess = TextEditingController();
   List<Map<String, dynamic>> users = [];
+  Timer? _timer;
+  final ScrollController _scrollController = ScrollController();
+
+  static const String getMessagesUrl =
+      'http://192.168.195.206/practice_api/TT_tinnhan.php';
+  static const String addMessageUrl =
+      'http://192.168.195.206/practice_api/add_tinnhan.php';
+
   @override
   void initState() {
     super.initState();
     getRecord();
+    // Refresh dữ liệu mỗi 5 giây
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      getRecord();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> getRecord() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://192.168.195.206/practice_api/TT_tinnhan.php'));
+      final response = await http.get(Uri.parse(getMessagesUrl));
       if (response.statusCode == 200) {
         setState(() {
           users = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+          // Cuộn xuống dưới cùng khi nhận được tin nhắn mới
+          _scrollToBottom();
         });
       } else {
-        print('Failed to load users: ${response.statusCode}');
+        debugPrint('Không tải được người dùng: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      debugPrint('Lỗi: $e');
     }
   }
 
   Future<void> insertRecord() async {
     try {
-      String uri = "http://192.168.195.206/practice_api/add_tinnhan.php";
-      var res = await http.post(Uri.parse(uri), body: {
+      var res = await http.post(Uri.parse(addMessageUrl), body: {
         "TenDangNhap": widget.name,
         "NoiDung": mess.text,
       });
-      var reponse = jsonDecode(res.body);
-      if (reponse["success"] == "true") {
+      var response = jsonDecode(res.body);
+      if (response["success"] == "true") {
         Fluttertoast.showToast(msg: 'Gửi tin nhắn thành công');
+        mess.clear();
         getRecord();
       } else {
-        print("some issue");
+        debugPrint("Có vấn đề xảy ra");
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   @override
@@ -73,86 +104,115 @@ class _MessageScreenState extends State<MessageScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Truyền thông nội bộ'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              getRecord();
+            },
+            icon: Icon(Icons.refresh),
+          ),
+        ],
       ),
-      body: ListView(
+      body: Column(
         children: [
-          Container(
-            height: Get.height * 0.8,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: List.generate(
-                    users.length,
-                    (index) => Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment:
-                                  widget.name == users[index]['TenDangNhap']
-                                      ? MainAxisAlignment.end
-                                      : MainAxisAlignment.start,
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: users.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment:
+                          widget.name == users[index]['TenDangNhap']
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                      children: [
+                        if (widget.name == users[index]['TenDangNhap'])
+                          Container(
+                            width: Get.width * 0.78,
+                            padding: EdgeInsets.only(left: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                widget.name == users[index]['TenDangNhap']
-                                    ? Text('${users[index]['NoiDung']}')
-                                    : Text(''),
-                                Gap(12),
-                                Container(
-                                  height: 55,
-                                  width: 55,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      border: Border.all(color: Colors.blue)),
-                                  child: Center(
-                                      child: Text(
-                                          '${users[index]['TenDangNhap']}')),
-                                ),
-                                Gap(12),
-                                widget.name == users[index]['TenDangNhap']
-                                    ? Text('')
-                                    : Text('${users[index]['NoiDung']}'),
+                                Text('${users[index]['NoiDung']}'),
                               ],
                             ),
-                            Gap(12),
-                          ],
-                        )),
-              ),
+                          ),
+                        Gap(12),
+                        Container(
+                          height: 55,
+                          width: 55,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(
+                                color:
+                                    widget.name == users[index]['TenDangNhap']
+                                        ? Colors.blue
+                                        : Colors.red),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${users[index]['TenDangNhap']}',
+                              overflow: TextOverflow.ellipsis,
+                              style: AppStyle.bold(
+                                  color:
+                                      widget.name == users[index]['TenDangNhap']
+                                          ? Colors.blue
+                                          : Colors.red,
+                                  fontSize: 12),
+                            ),
+                          ),
+                        ),
+                        Gap(12),
+                        if (widget.name != users[index]['TenDangNhap'])
+                          Container(
+                            width: Get.width * 0.7,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('${users[index]['NoiDung']}'),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                    Gap(12),
+                  ],
+                );
+              },
             ),
           ),
           Container(
             height: 55,
-            child: _buildTextField('title', mess),
+            child: _buildTextField(mess),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTextField(String title, TextEditingController name) {
-    return ListView(
+  Widget _buildTextField(TextEditingController controller) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(Icons.abc),
-            Expanded(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: TextField(
-                  controller: name,
-                  maxLines: 1,
-                  decoration: const InputDecoration(
-                    errorStyle: TextStyle(height: 0),
-                    contentPadding: EdgeInsets.all(10),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
+        Icon(Icons.message),
+        Expanded(
+          child: TextField(
+            controller: controller,
+            maxLines: 1,
+            decoration: const InputDecoration(
+              errorStyle: TextStyle(height: 0),
+              contentPadding: EdgeInsets.all(10),
+              border: OutlineInputBorder(),
             ),
-            TextButton(
-                onPressed: () {
-                  insertRecord();
-                },
-                child: Text('Gửi'))
-          ],
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            insertRecord();
+          },
+          child: Text('Gửi'),
         ),
       ],
     );

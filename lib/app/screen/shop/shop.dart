@@ -260,85 +260,30 @@ class _UserListScreenState extends State<UserListScreen> {
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.account_tree_outlined,
-                          size: 18,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          'Mã đại lý ${users[index]['MaDaiLy']}',
+                    Text(
+                      'Mã đại lý ${users[index]['MaDaiLy']}',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      'Tên đại lý: ${users[index]['TenDaiLy']}',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Container(
+                        width: Get.width * 0.6,
+                        child: Text(
+                          'Địa chỉ: ${users[index]['DiaChi']}',
                           overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                        )),
+                    Text(
+                      'Số điện thoại: ${users[index]['DienThoai']}',
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.account_tree_outlined,
-                          size: 18,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          'Tên đại lý: ${users[index]['TenDaiLy']}',
+                    Container(
+                        width: Get.width * 0.6,
+                        child: Text(
+                          'Số tiền nợ: ${users[index]['SoTienNo']}',
                           overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.account_tree_outlined,
-                          size: 18,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                            width: Get.width * 0.6,
-                            child: Text(
-                              'Địa chỉ: ${users[index]['DiaChi']}',
-                              overflow: TextOverflow.ellipsis,
-                            )),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.account_tree_outlined,
-                          size: 18,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          'Số điện thoại: ${users[index]['DienThoai']}',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.account_tree_outlined,
-                          size: 18,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                            width: Get.width * 0.6,
-                            child: Text(
-                              'Số tiền nợ: ${users[index]['SoTienNo']}',
-                              overflow: TextOverflow.ellipsis,
-                            )),
-                      ],
-                    ),
+                        )),
                   ],
                 ),
                 trailing: IconButton(

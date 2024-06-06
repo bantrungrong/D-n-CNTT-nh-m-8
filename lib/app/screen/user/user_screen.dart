@@ -92,7 +92,27 @@ class _UserScreenState extends State<UserScreen> {
       if (response["success"] == "true") {
         Fluttertoast.showToast(msg: 'Sửa thành công');
         Navigator.pop(context);
-        // getRecord(); // Refresh the data
+        getRecord(); // Refresh the data
+      } else {
+        print("some issue");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> updateAvatar(String image) async {
+    try {
+      String uri = "http://192.168.195.206/practice_api/update_avatar.php";
+      var res = await http.post(Uri.parse(uri), body: {
+        "AnhDaiDien": image,
+        "TenDangNhap": widget.idUser,
+      });
+      var response = jsonDecode(res.body);
+      if (response["success"] == "true") {
+        Fluttertoast.showToast(msg: 'Sửa thành công');
+        Navigator.pop(context);
+        getRecord(); // Refresh the data
       } else {
         print("some issue");
       }
@@ -103,12 +123,12 @@ class _UserScreenState extends State<UserScreen> {
 
   // Danh sách các chuỗi
   List<String> _strings = [
-    'item 1',
-    'item 2 ',
-    'item 3',
-    'item 4',
-    'item 5',
-    'item 6',
+    'https://sgweb.vn/wp-content/uploads/2022/12/512x512.883edbf90c46273f2cd3752ad061be02.ai_.1.png',
+    'https://sgweb.vn/wp-content/uploads/2022/12/y-nghia-logo-cua-pepsi.jpg',
+    'https://sgweb.vn/wp-content/uploads/2022/12/7up-logo-2010.jpg',
+    'https://sgweb.vn/wp-content/uploads/2022/12/tung-bung-don-tet-voi-nuoc-ngot-sprite-202101251523452557-768x432.jpg',
+    'https://sgweb.vn/wp-content/uploads/2022/12/thiet-ke-logo-nuoc-giai-khat-768x639.jpg',
+    'https://sgweb.vn/wp-content/uploads/2022/12/image11376.png',
   ];
   var selectedAvatar = ''.obs;
   void updateSelectedAvatar(String avatar) {
@@ -181,9 +201,7 @@ class _UserScreenState extends State<UserScreen> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                selectedAvatar.isEmpty
-                                                    ? ''
-                                                    : '${selectedAvatar.value}',
+                                                'chọn avatar',
                                                 style: TextStyle(fontSize: 18),
                                               ),
                                               GestureDetector(
@@ -196,40 +214,50 @@ class _UserScreenState extends State<UserScreen> {
                                           ),
                                           insetPadding:
                                               const EdgeInsets.all(12),
-                                          content: Container(
-                                            height: Get.height * 0.3,
-                                            width: Get.width * 0.8,
-                                            child: GridView.builder(
-                                              gridDelegate:
-                                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 3, // Số cột
-                                                crossAxisSpacing:
-                                                    10.0, // Khoảng cách giữa các cột
-                                                mainAxisSpacing:
-                                                    10.0, // Khoảng cách giữa các hàng
-                                              ),
-                                              itemCount: _strings
-                                                  .length, // Tổng số phần tử (3 hàng * 3 cột)
-                                              itemBuilder: (context, index) {
-                                                return GestureDetector(
-                                                  onTap: () {
-                                                    updateSelectedAvatar(
-                                                        _strings[index]);
-                                                    print('${_strings[index]}');
-                                                  },
-                                                  child: Container(
-                                                    alignment: Alignment.center,
-                                                    color: Colors.blueAccent,
-                                                    child: Text(
-                                                      '${_strings[index]}',
-                                                      style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 20),
-                                                    ),
+                                          content: Column(
+                                            children: [
+                                              Container(
+                                                height: Get.height * 0.3,
+                                                width: Get.width * 0.8,
+                                                child: GridView.builder(
+                                                  gridDelegate:
+                                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: 3,
+                                                    crossAxisSpacing: 10.0,
+                                                    mainAxisSpacing: 10.0,
                                                   ),
-                                                );
-                                              },
-                                            ),
+                                                  itemCount: _strings.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        updateSelectedAvatar(
+                                                            _strings[index]);
+                                                        print(
+                                                            '${_strings[index]}');
+                                                      },
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(100),
+                                                        child: Image.network(
+                                                          _strings[index],
+                                                          width: 88,
+                                                          height: 88,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    updateAvatar(
+                                                        selectedAvatar.value);
+                                                  },
+                                                  child: Text('Đồng ý'))
+                                            ],
                                           ));
                                     });
                               },
