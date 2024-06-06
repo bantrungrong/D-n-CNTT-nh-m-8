@@ -350,11 +350,20 @@ class _ProductScreenState extends State<ProductScreen> {
                   ));
                 },
                 child: ListTile(
-                  // leading: Container(
-                  //     height: 80,
-                  //     width: 80,
-                  //     child:
-                  //         Image.network('${filteredUsers[index]['HinhAnh']}')),
+                  leading: filteredUsers[index]['HinhAnh'] != ''
+                      ? Container(
+                          height: 80,
+                          width: 80,
+                          child: Image.network(
+                              '${filteredUsers[index]['HinhAnh']}'))
+                      : Container(
+                          height: 80,
+                          width: 80,
+                          child: TextButton(
+                            onPressed: () {},
+                            child: Text('Không có hình'),
+                          ),
+                        ),
                   title: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -391,21 +400,18 @@ class _ProductScreenState extends State<ProductScreen> {
                       Row(
                         children: [
                           Text(
-                            'Trạng thái:',
+                            '',
                             style: AppStyle.regular(fontSize: 13),
                           ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              filteredUsers[index]['SoLuongTon'] == '0'
-                                  ? 'Hết hàng'
-                                  : 'Còn hàng',
-                              style: AppStyle.bold(
-                                fontSize: 13,
-                                color: filteredUsers[index]['SoLuongTon'] == '0'
-                                    ? Colors.red
-                                    : Colors.green,
-                              ),
+                          Text(
+                            filteredUsers[index]['SoLuongTon'] == '0'
+                                ? 'Hết hàng'
+                                : 'Còn hàng',
+                            style: AppStyle.bold(
+                              fontSize: 13,
+                              color: filteredUsers[index]['SoLuongTon'] == '0'
+                                  ? Colors.red
+                                  : Colors.green,
                             ),
                           ),
                         ],

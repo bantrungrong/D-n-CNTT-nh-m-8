@@ -1,6 +1,3 @@
-
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../core/values/colors.dart';
@@ -10,10 +7,10 @@ import '../../data/services/storage/reponsitory.dart';
 import '../../screen/home_page/home_page.dart';
 import '../../screen/home_page_guest.dart/home_page_guest.dart';
 import '../../screen/login_screen/login_screen.dart';
-import '../../screen/noti_screen/noti_screeen.dart';
 import '../../widget/button.dart';
 import 'home_controller.dart';
 import 'package:get/get.dart';
+
 class HomePage extends GetView<HomeController> {
   const HomePage({Key? key}) : super(key: key);
 
@@ -24,7 +21,7 @@ class HomePage extends GetView<HomeController> {
     final selectedIndex = RxInt(0);
     final List<Widget> widgetOptions = <Widget>[
       const HomePageScreen(),
-      const NotiScreen(),
+      Container(),
       const HomePageGuest(),
     ];
 

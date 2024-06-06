@@ -3,19 +3,20 @@ import 'dart:convert';
 
 import 'package:drink_app_getx/app/core/values/icons.dart';
 import 'package:drink_app_getx/app/screen/input_product/input_product.dart';
+import 'package:drink_app_getx/app/screen/message_screen/message_screen.dart';
 import 'package:drink_app_getx/app/screen/report/home_report.dart';
 // import 'package:drink_app_getx/app/screen/product/product_detail.dart';
-import 'package:drink_app_getx/app/screen/report/report_screen.dart';
+// import 'package:drink_app_getx/app/screen/report/report_screen.dart';
 import 'package:drink_app_getx/app/screen/shop/shop.dart';
 import 'package:drink_app_getx/app/screen/user/user_screen.dart';
 import 'package:drink_app_getx/app/widget/widget_detail_user.dart';
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gap/gap.dart';
 import '../../core/values/strings.dart';
 import '../factory/factory_screen.dart';
 import '../home_page_guest.dart/home_page_guest.dart';
-import '../noti_screen/noti_screeen.dart';
 import '../product/product.dart';
 import '../travel_product/travel_ticket.dart';
 import 'home_page.dart';
@@ -39,17 +40,21 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
   final selectedIndex = RxInt(0);
   final List<IconData> selectedIcons = [
     Icons.home,
-    Icons.notification_add,
+    Icons.message_outlined,
     Icons.person,
   ];
   final List<IconData> unselectedIcons = [
     Icons.home_outlined,
-    Icons.notifications,
+    Icons.message,
     Icons.person_outline,
   ];
   final List<Widget> widgetOptions = <Widget>[
     const HomePageScreen(),
-    const NotiScreen(),
+    MessageScreen(
+      name: '',
+      avatar: '',
+      tier: '',
+    ),
     const HomePageGuest(),
   ];
   List<Map<String, dynamic>> product = [];
@@ -106,13 +111,16 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
             },
             child: Row(
               children: [
-                Container(
-                  height: 66,
-                  width: 66,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.white),
-                  child: arg6 == '' ? Container() : Image.network('${arg6}'),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: arg6 == ''
+                      ? Container()
+                      : Image.network(
+                          '${arg6}',
+                          width: 66,
+                          height: 66,
+                          fit: BoxFit.cover,
+                        ),
                 ),
                 const Gap(10),
                 Column(
@@ -145,10 +153,19 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
                 label: 'Trang chủ',
               ),
               BottomNavigationBarItem(
-                icon: Icon(selectedIndex.value == 1
-                    ? selectedIcons[1]
-                    : unselectedIcons[1]),
-                label: 'Thông báo',
+                icon: GestureDetector(
+                  onTap: () {
+                    Get.to(MessageScreen(
+                      name: arg1,
+                      avatar: arg6,
+                      tier: arg3,
+                    ));
+                  },
+                  child: Icon(selectedIndex.value == 1
+                      ? selectedIcons[1]
+                      : unselectedIcons[1]),
+                ),
+                label: 'Tin nhắn',
               ),
               BottomNavigationBarItem(
                 icon: GestureDetector(

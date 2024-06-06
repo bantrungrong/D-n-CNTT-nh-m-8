@@ -100,6 +100,7 @@ class _UserListScreenState extends State<UserListScreen> {
       var response = jsonDecode(res.body);
       if (response['success'] == 'true') {
         print('record delete complete');
+        getRecord();
       } else {
         print('some issue');
       }
@@ -163,7 +164,7 @@ class _UserListScreenState extends State<UserListScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Thêm sản phẩm',
+                            'Thêm đại lý',
                             style: AppStyle.bold(fontSize: 18),
                           ),
                           GestureDetector(
@@ -342,7 +343,7 @@ class _UserListScreenState extends State<UserListScreen> {
                 ),
                 trailing: IconButton(
                   onPressed: () {
-                    delShop('Mã đại lý ${users[index]['MaDaiLy']}');
+                    delShop('${users[index]['MaDaiLy']}');
                   },
                   icon: Icon(Icons.delete),
                 ),
