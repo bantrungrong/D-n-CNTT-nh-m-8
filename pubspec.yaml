@@ -68,7 +68,8 @@ dev_dependencies:
   firebase_storage: ^11.7.6
   animated_size_and_fade: ^4.0.0
   web_socket_channel: ^2.1.0
-  
+  qr_flutter: 
+  qr_code_scanner: 
   # image_picker: 
   # gallery_picker: 
   ##cloud_firestore:

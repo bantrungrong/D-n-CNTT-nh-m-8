@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:drink_app_getx/app/core/values/icons.dart';
 import 'package:drink_app_getx/app/screen/input_product/input_product.dart';
 import 'package:drink_app_getx/app/screen/message_screen/message_screen.dart';
+import 'package:drink_app_getx/app/screen/qr_code/qr_code_screen.dart';
 import 'package:drink_app_getx/app/screen/report/home_report.dart';
 // import 'package:drink_app_getx/app/screen/product/product_detail.dart';
 // import 'package:drink_app_getx/app/screen/report/report_screen.dart';
@@ -92,6 +93,18 @@ class _HomePageScreenLoginedState extends State<HomePageScreenLogined> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.to(QRcodeScreen());
+        },
+        child: Icon(
+          Icons.qr_code,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.red,
+        focusColor: Colors.white,
+      ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         toolbarHeight: Get.height * 0.1,
